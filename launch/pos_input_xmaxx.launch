@@ -1,0 +1,6 @@
+<launch>
+  <arg name="robot_namespace" default="xmaxx"/>
+  <node name="pos_input_xmaxx" pkg="controller_xmaxx" type="pos_input_xmaxx" output="screen" clear_params="true" ns="$(arg robot_namespace)">
+		<rosparam file="$(find controller_xmaxx)/cfg/pos_input_xmaxx_params.yaml" command="load"/>
+	</node>
+</launch>

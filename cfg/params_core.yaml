@@ -1,0 +1,78 @@
+controller_freq: 100
+flying_min_thrust: 0.45
+flying_max_thrust: 0.99
+fc_highpass_accel: 0.1
+fc_lowpass_ang_vel: 100.0
+callback_timeout_duration: 1 #sec
+setpoint_callback_timeout_duration: 0.2 #sec
+cascaded_flight_control: true
+
+# Flying Gains (cascaded)
+flying_kp_x: 1.0
+flying_kp_y: 1.0
+flying_kp_z: 2.0
+
+flying_kd_x: 3.0 # when cascaded, this is the gain that multiplies velocity
+flying_kd_y: 3.0
+flying_kd_z: 3.0
+
+flying_ki_x: 0.1 #x,y zero because always giving carrots from LP
+flying_ki_y: 0.1
+flying_ki_z: 0.2
+
+flying_max_x_error_to_integrate: 0.5 # this ignores transient errors and only allows steady state error to the integrator
+flying_max_y_error_to_integrate: 0.5
+flying_max_z_error_to_integrate: 0.5
+flying_max_xI: 0.5 # cap ki_x * I.value < max_xI.  units are m/s^2.
+flying_max_yI: 0.5
+flying_max_zI: 1.0
+
+flying_max_e_pos: 1.0
+flying_max_e_vel: 1.0
+flying_max_acc_xy: 3.0
+flying_max_acc_z: 20.0
+flying_min_acc_z: 6.0
+
+# Rolling Direct Params
+pitch_testing_mode: 0
+yaw_testing_mode: 0
+velocity_testing_mode: 0
+
+rolling_thrust_max: 0.45
+rolling_thrust_min: 0.01
+deadzone_radius: 0.45
+rolling_max_pitch: 0.3
+rolling_COM_length: 0.0
+rolling_moment_roll_scale: 0.25
+rolling_moment_pitch_scale: 0.25
+rolling_moment_yaw_scale: 0.125
+
+rolling_max_velocity: 0.5
+rolling_pitch_offset: 0.0
+rolling_point_and_shoot_angle: 99 #0.536 #pi/6
+
+# Rolling Gains
+rolling_kp_pos: 0.5
+rolling_kd_pos: 0.0
+rolling_ki_pos: 0.0
+
+rolling_kp_vel: 0.05
+rolling_kd_vel: 0.0 #feedforward term from local planner
+rolling_ki_vel: 0.1
+
+rolling_kp_yaw: 3.0
+rolling_ki_yaw: 0.0
+rolling_kd_yaw: 1.0
+
+rolling_kp_pitch: 2.0
+rolling_kd_pitch: 0.9
+rolling_ki_pitch: 0.5
+
+rolling_max_vel_error: 0.05
+rolling_max_yaw_error: 0.5
+rolling_max_yaw_rate_error: 3
+rolling_max_pitch_error: 0.5
+rolling_max_pitch_rate_error: 3
+rolling_max_velI: 1.0
+rolling_max_yawI: 10.0
+rolling_max_pitchI: 10.0

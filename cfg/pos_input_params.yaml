@@ -1,0 +1,15 @@
+time_step: 5.0  # Time between each waypoint
+freq: 100.0  # Freq at which pose_d will be published
+# Waypoints
+pos_x: [0,1,0,0,0]
+pos_y: [0,0,0,1,0]
+pos_z: [1,1,1,1,1]
+vel_y: [0,0,0,0,0]
+vel_x: [0,0,0,0,0]
+vel_z: [0,0,0,0,0]
+yaw:   [0,0,0,0,0]
+vel_mode_y: [false, false, false, false, false]
+vel_mode_x: [false, false, false, false, false]
+vel_mode_z: [false, false, false, false, false]
+ground_frame_z: [1,1,1,1,1]
+mode: [1,1,1,1,1] #0 rolling, 1 flying
