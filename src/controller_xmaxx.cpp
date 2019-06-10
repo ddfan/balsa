@@ -6,13 +6,11 @@
 
 #include <controller_xmaxx/DebugData.h>
 #include <controller_xmaxx/ParamsData.h>
-// #include <mobility_msgs/Clearance.h>
 #include <mavros_msgs/State.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <cmath>
 #include <tuple>
-#include "controller_xmaxx/ChangeMode.h"
 #include "controllers.hpp"
 #include "mobility_msgs/PositionTargetMode.h"
 #include "mobility_msgs/ResiliencyLogicStatus.h"
@@ -30,8 +28,6 @@ geometry_msgs::WrenchStamped accel_est_;
 geometry_msgs::TwistStamped ang_vel_lp_;
 ros::Time odom_time_stamp_(0);
 ros::Time setpoint_time_stamp_(0);
-ros::Time last_bottom_clearance_cb_time_(0);
-ros::Time last_top_clearance_cb_time_(0);
 double fc_highpass_accel = 100;
 double fc_lowpass_ang_vel = 10;
 double controller_freq;
@@ -39,10 +35,7 @@ double callback_timeout_duration;
 double setpoint_callback_timeout_duration;
 double mass_;
 double max_thrust_rating_;
-int mobility_mode_ = mobility_msgs::PositionTargetMode::MODE_GROUND;
-double bottom_clearance_ = -1;
-double top_clearance_ = -1;
-ros::Duration total_flight_time_ = ros::Duration(0);
+ros::Duration total_operation_time_ = ros::Duration(0);
 bool imu_only_ = false;
 
 void setpoint_callback(const mobility_msgs::PositionTargetMode::ConstPtr &msg) {
@@ -149,16 +142,6 @@ void vel_est_encoders_callback(
   }
 }
 
-void botClearanceCB(const sensor_msgs::Range &msg) {
-  last_bottom_clearance_cb_time_ = ros::Time::now();
-  bottom_clearance_ = msg.range;
-}
-
-void topClearanceCB(const sensor_msgs::Range &msg) {
-  last_top_clearance_cb_time_ = ros::Time::now();
-  top_clearance_ = msg.range;
-}
-
 int main(int argc, char **argv) {
   /* Initialize Ros Node */
   odom_est_.pose.pose.position.x = 0;
@@ -215,8 +198,8 @@ int main(int argc, char **argv) {
       pnh.advertise<controller_xmaxx::DebugData>("debug", 1);
   ros::Publisher params_pub =
       pnh.advertise<controller_xmaxx::ParamsData>("params", 1);
-  ros::Publisher flight_time_pub =
-      pnh.advertise<std_msgs::Duration>("total_flight_time", 1);
+  ros::Publisher operation_time_pub =
+      pnh.advertise<std_msgs::Duration>("total_operation_time", 1);
 
   ros::Subscriber x_d_sub =
       nh.subscribe("command/setpoint_raw/local", 1, setpoint_callback);
@@ -228,11 +211,6 @@ int main(int argc, char **argv) {
   ros::Subscriber vel_est_encoders_sub =
       nh.subscribe("encoder/velocity_filtered", 1, vel_est_encoders_callback);
 
-  ros::Subscriber bot_clearance_sub =
-      nh.subscribe("bottom_clearance", 1, botClearanceCB);
-  ros::Subscriber top_clearance_sub =
-      nh.subscribe("top_clearance", 1, topClearanceCB);
-
   ros::Subscriber resiliency_status_sub =
       nh.subscribe("resiliency_logic/status", 1, resiliency_status_callback);
 
@@ -240,20 +218,17 @@ int main(int argc, char **argv) {
   mavros_msgs::AttitudeTarget att_msg;
   controller_xmaxx::DebugData debug_msg;
   controller_xmaxx::ParamsData params_msg;
-  RollingControllerDirect rolling_controller;
-  FlyingControllerBasic flying_controller;
-  ControlInputMessage control_input_message;
+  RollingControllerDirect controller;
+  mavros_msgs::ActuatorControl actuator_control;
 
   int loop_rate_downsample = 0;
 
   while (ros::ok()) {
     ros::spinOnce();
-    mobility_mode_ = x_d_.mode;
     bool in_offboard = false;
     if (mavros_state_.mode == "OFFBOARD" && mavros_state_.armed)
       in_offboard = true;
-    rolling_controller.setOffboard(in_offboard);
-    flying_controller.setOffboard(in_offboard);
+    controller.setOffboard(in_offboard);
 
     if ((ros::Time::now() - setpoint_time_stamp_).toSec() >
         setpoint_callback_timeout_duration) {
@@ -264,37 +239,12 @@ int main(int argc, char **argv) {
       x_d_.acceleration_or_force.y = 0;
       // x_d_.acceleration_or_force.z = 0;
 
-      if (imu_only_ &&
-          mobility_mode_ == mobility_msgs::PositionTargetMode::MODE_AIR) {
-        x_d_.type_mask = x_d_.type_mask | Goal::IGNORE_PX | Goal::IGNORE_PY;
-      }
-
       ROS_WARN("Controller setpoint callback timeout!!");
     }
 
-    double clearance = sqrt(-1);  // use nan to indicate goal in odom frame
-    if (x_d_.frame_id_z.find("ground") != std::string::npos) {
-      clearance = bottom_clearance_;
-    } else if (x_d_.frame_id_z.find("ceiling") != std::string::npos) {
-      clearance = -top_clearance_;
-    }
-
-    if (mobility_mode_ == mobility_msgs::PositionTargetMode::MODE_GROUND ||
-        mobility_mode_ ==
-            mobility_msgs::PositionTargetMode::MODE_ROLLING_BOUNCING) {
-      rolling_controller.get_control_input(
-          x_d_, rc_, odom_est_, vel_est_encoders_, accel_est_, clearance,
-          control_input_message, debug_msg, params_msg);
-    } else if (mobility_mode_ == mobility_msgs::PositionTargetMode::MODE_AIR ||
-               mobility_mode_ ==
-                   mobility_msgs::PositionTargetMode::MODE_FLYING_BOUNCING) {
-      flying_controller.get_control_input(
-          x_d_, rc_, odom_est_, vel_est_encoders_, accel_est_, clearance,
-          control_input_message, debug_msg, params_msg);
-    } else {
-      ROS_ERROR("Invalid mobility mode received in PositionTargetMode!");
-      break;
-    }
+    controller.get_control_input(x_d_, rc_, odom_est_, vel_est_encoders_,
+                                 accel_est_, actuator_control, debug_msg,
+                                 params_msg);
 
     /* check callback timeouts.  If no state estimate updates, publish zeros */
     bool callback_timeout = false;
@@ -304,69 +254,30 @@ int main(int argc, char **argv) {
       callback_timeout = true;
     }
 
-    if (x_d_.frame_id_z.find("ground") != std::string::npos &&
-        (ros::Time::now() - last_bottom_clearance_cb_time_).toSec() >
-            callback_timeout_duration) {
-      ROS_ERROR("Bottom clearance estimate callback timeout!");
-      callback_timeout = true;
-    }
-
     /* if callback timeout, publish zeros or safely land */
     if (callback_timeout) {
-      if (mobility_mode_ == mobility_msgs::PositionTargetMode::MODE_GROUND ||
-          mobility_mode_ ==
-              mobility_msgs::PositionTargetMode::MODE_ROLLING_BOUNCING) {
-        control_input_message.control_input_type =
-            ControlInputType::ACTUATOR_CONTROL;
-        control_input_message.actuator_control.group_mix =
-            mavros_msgs::ActuatorControl::PX4_MIX_FLIGHT_CONTROL;
-        control_input_message.actuator_control.controls[0] = 0;
-        control_input_message.actuator_control.controls[1] = 0;
-        control_input_message.actuator_control.controls[2] = 0;
-        control_input_message.actuator_control.controls[3] = 0;
-      } else if (mobility_mode_ ==
-                     mobility_msgs::PositionTargetMode::MODE_AIR ||
-                 mobility_mode_ ==
-                     mobility_msgs::PositionTargetMode::MODE_FLYING_BOUNCING) {
-        control_input_message.control_input_type =
-            ControlInputType::ATTITUDE_TARGET;
-        control_input_message.attitude_target.orientation.x =
-            0;  // TODO:  update these to be zero roll/pitch
-        control_input_message.attitude_target.orientation.y = 0;
-        control_input_message.attitude_target.orientation.z = 0;
-        control_input_message.attitude_target.orientation.w = 1;
-        control_input_message.attitude_target.thrust =
-            (mass_ * 9.81 / max_thrust_rating_) * 0.9;
-      }
+      actuator_control.group_mix =
+          mavros_msgs::ActuatorControl::PX4_MIX_FLIGHT_CONTROL;
+      actuator_control.controls[0] = 0;
+      actuator_control.controls[3] = 0;
+      actuator_control.controls[2] = 0;
+      actuator_control.controls[1] = 0;
     }
 
     /* parse out control_input_message and publish to correct topic */
-    if (control_input_message.control_input_type ==
-        ControlInputType::ATTITUDE_TARGET) {
-      control_input_message.attitude_target.header.stamp = ros::Time::now();
-      attitude_target_pub.publish(control_input_message.attitude_target);
-    } else if (control_input_message.control_input_type ==
-               ControlInputType::ACTUATOR_CONTROL) {
-      control_input_message.actuator_control.header.stamp = ros::Time::now();
-      actuator_control_pub.publish(control_input_message.actuator_control);
-    } else {
-      ROS_ERROR("No message in control_input_message.");
-    }
+    actuator_control.header.stamp = ros::Time::now();
+    actuator_control_pub.publish(actuator_control);
 
-    /* keep track of flight time */
+    /* keep track of operation time */
     double flying_thrust = mass_ * 9.81 / max_thrust_rating_ * 0.8;
-    if (in_offboard &&
-        control_input_message.control_input_type ==
-            ControlInputType::ATTITUDE_TARGET &&
-        !callback_timeout && mavros_state_.armed &&
-        control_input_message.attitude_target.thrust > flying_thrust) {
-      total_flight_time_ += ros::Duration(1.0 / controller_freq);
+    if (in_offboard && !callback_timeout && mavros_state_.armed) {
+      total_operation_time_ += ros::Duration(1.0 / controller_freq);
     }
 
     std_msgs::Duration dur_msg;
-    dur_msg.data = total_flight_time_;
-    flight_time_pub.publish(dur_msg);
-    debug_msg.total_flight_time = total_flight_time_.toSec();
+    dur_msg.data = total_operation_time_;
+    operation_time_pub.publish(dur_msg);
+    debug_msg.total_operation_time = total_operation_time_.toSec();
 
     /* publish debug */
     debug_msg.header.stamp = ros::Time::now();

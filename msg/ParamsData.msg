@@ -1,28 +1,10 @@
 Header header
 # Controller Params
 float64 controller_freq
-float64 flying_min_thrust
-float64 flying_max_thrust
 float64 mass
 bool using_encoders
 bool cascaded_flight_control
 
-# Flying Params
-float64 flying_kp_x
-float64 flying_kp_y
-float64 flying_kp_z
-float64 flying_kd_x
-float64 flying_kd_y
-float64 flying_kd_z
-float64 flying_ki_x
-float64 flying_ki_y
-float64 flying_ki_z
-float64 flying_max_x_error_to_integrate
-float64 flying_max_y_error_to_integrate
-float64 flying_max_z_error_to_integrate
-float64 flying_max_xI
-float64 flying_max_yI
-float64 flying_max_zI
 # Rolling Params
 float64 rolling_kp_x 
 float64 rolling_kp_y 

@@ -118,7 +118,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES controller_xmaxx
-  CATKIN_DEPENDS roscpp rospy std_msgs mavros_msgs nav_msgs geometry_msgs message_runtime localizer_clearance
+  CATKIN_DEPENDS roscpp rospy std_msgs mavros_msgs nav_msgs geometry_msgs message_runtime
 #  DEPENDS system_lib
 )
 

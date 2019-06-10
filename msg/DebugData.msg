@@ -1,7 +1,6 @@
 Header header
 mobility_msgs/PositionTargetMode target
 mavros_msgs/ActuatorControl actuator_control
-mavros_msgs/AttitudeTarget attitude_target
 mavros_msgs/RCOut rcout
 nav_msgs/Odometry odom
 geometry_msgs/TwistStamped vel_est_encoders
@@ -11,7 +10,6 @@ geometry_msgs/Vector3 accel_body
 geometry_msgs/Vector3 error_pos
 geometry_msgs/Vector3 error_vel
 geometry_msgs/Vector3 thrust
-float64 clearance
 float64 roll_desired
 float64 pitch_desired
 float64 yaw_desired
@@ -33,4 +31,4 @@ float64 pitchI
 float64 xI
 float64 yI
 float64 zI
-float64 total_flight_time
+float64 total_operation_time

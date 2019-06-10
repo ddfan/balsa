@@ -10,18 +10,10 @@
 #include <iomanip>
 #include <tuple>
 #include "mavros_msgs/ActuatorControl.h"
-#include "mavros_msgs/AttitudeTarget.h"
 #include "mavros_msgs/RCOut.h"
 #include "mobility_msgs/PositionTargetMode.h"
 
-enum class ControlInputType { ATTITUDE_TARGET, ACTUATOR_CONTROL };
 typedef mobility_msgs::PositionTargetMode Goal;
-
-struct ControlInputMessage {
-  ControlInputType control_input_type;
-  mavros_msgs::AttitudeTarget attitude_target;
-  mavros_msgs::ActuatorControl actuator_control;
-};
 
 // Integrator
 struct Integrator {
@@ -48,8 +40,7 @@ struct.*/
 class PositionController {
   /* Define config params */
  protected:
-  double mass_ = 2.0, flying_max_thrust_ = 0.75, flying_min_thrust_ = 0.45,
-         max_thrust_rating_ = 60.0, controller_freq_ = 50;
+  double mass_ = 2.0, max_thrust_rating_ = 60.0, controller_freq_ = 50;
   const double pi_ = 3.1415962;
   bool in_offboard_ = false;
 
@@ -60,8 +51,8 @@ class PositionController {
       const mobility_msgs::PositionTargetMode& x_d,
       const mavros_msgs::RCOut& rc, const nav_msgs::Odometry& odom_est,
       const geometry_msgs::TwistStamped& vel_est_encoders,
-      const geometry_msgs::WrenchStamped& accel_est, const double clearance_,
-      ControlInputMessage& control_input_message,
+      const geometry_msgs::WrenchStamped& accel_est,
+      mavros_msgs::ActuatorControl& actuator_control,
       controller_xmaxx::DebugData& debug_data,
       controller_xmaxx::ParamsData& params_data) = 0;
 
@@ -71,56 +62,12 @@ class PositionController {
     /* Read ros params, if not available then set to initialized value */
     ros::NodeHandle nhp("~");
     nhp.param<double>("mass", mass_, mass_);
-    nhp.param<double>("flying_max_thrust", flying_max_thrust_,
-                      flying_max_thrust_);
-    nhp.param<double>("flying_min_thrust", flying_min_thrust_,
-                      flying_min_thrust_);
     nhp.param<double>("max_thrust_rating", max_thrust_rating_,
                       max_thrust_rating_);
     nhp.param<double>("controller_freq", controller_freq_, controller_freq_);
   }
 
  protected:
-  mavros_msgs::AttitudeTarget get_attitude_target() {
-    // check we have the correct type
-    if (control_input_type_ == ControlInputType::ATTITUDE_TARGET)
-      return attitude_target_;
-    else
-      ROS_ERROR("Cannot get target attitude in actuator control mode.");
-  }
-
-  mavros_msgs::ActuatorControl get_actuator_control() {
-    // check we have the correct type
-    if (control_input_type_ == ControlInputType::ACTUATOR_CONTROL)
-      return actuator_control_;
-    else
-      ROS_ERROR("Cannot get actuator control mode in attitude target mode.");
-  }
-
-  ControlInputMessage update_attitude_target(
-      mavros_msgs::AttitudeTarget& attitude_target) {
-    attitude_target_ = attitude_target;
-    control_input_type_ = ControlInputType::ATTITUDE_TARGET;
-
-    ControlInputMessage message;
-    message.control_input_type = control_input_type_;
-    message.attitude_target = attitude_target_;
-    message.actuator_control = actuator_control_;
-    return message;
-  }
-
-  ControlInputMessage update_actuator_control(
-      mavros_msgs::ActuatorControl& actuator_control) {
-    actuator_control_ = actuator_control;
-    control_input_type_ = ControlInputType::ACTUATOR_CONTROL;
-
-    ControlInputMessage message;
-    message.control_input_type = control_input_type_;
-    message.attitude_target = attitude_target_;
-    message.actuator_control = actuator_control_;
-    return message;
-  }
-
   bool rc_has_throttle(const mavros_msgs::RCOut& rc) {
     /*check if first 4 values have value of 900*/
     if (rc.channels.size() > 0 && rc.channels[0] != 900 &&
@@ -186,11 +133,6 @@ class PositionController {
       y = unwrap(y + pi_);
     }
   }
-
- private:
-  mavros_msgs::AttitudeTarget attitude_target_;
-  mavros_msgs::ActuatorControl actuator_control_;
-  ControlInputType control_input_type_;
 };
 
 /* Direct control of actuator moments using ActuatorControl message.
@@ -283,8 +225,7 @@ class RollingControllerDirect : public PositionController {
                          const nav_msgs::Odometry& odom_est,
                          const geometry_msgs::TwistStamped& vel_est_encoders,
                          const geometry_msgs::WrenchStamped& accel_est,
-                         const double clearance_,
-                         ControlInputMessage& control_input_message,
+                         mavros_msgs::ActuatorControl& actuator_control,
                          controller_xmaxx::DebugData& debug_data,
                          controller_xmaxx::ParamsData& params_data) {
     double roll_est, pitch_est, yaw_est;
@@ -506,7 +447,6 @@ class RollingControllerDirect : public PositionController {
     tf::Matrix3x3 R(q);
     tf::Vector3 r_M(r_M_x, r_M_y, r_M_z);
     tf::Vector3 b_M = R * r_M;
-    mavros_msgs::ActuatorControl actuator_control;
 
     actuator_control.group_mix =
         mavros_msgs::ActuatorControl::PX4_MIX_FLIGHT_CONTROL;
@@ -535,16 +475,13 @@ class RollingControllerDirect : public PositionController {
     actuator_control.controls[2] = -mom_z;            // yaw
     actuator_control.controls[3] = thrust_magnitude;  // throttle
 
-    control_input_message = update_actuator_control(actuator_control);
-
     /* build debug data */
     debug_data.target = x_d;
     debug_data.odom = odom_est;
     debug_data.vel_est_encoders = vel_est_encoders;
     debug_data.accel = accel_est;
     debug_data.rcout = rc;
-    debug_data.actuator_control = control_input_message.actuator_control;
-    debug_data.clearance = clearance_;
+    debug_data.actuator_control = actuator_control;
 
     debug_data.vel_body.x = current_velocity_body_x;
     debug_data.vel_body.y = current_velocity_body_y;
@@ -618,325 +555,4 @@ class RollingControllerDirect : public PositionController {
   Integrator posI, velI, yawI, pitchI;
   double yaw_deadzone_target;
   bool in_deadzone;
-};
-
-class FlyingControllerBasic : public PositionController {
-  double kp_x_ = 1, kp_y_ = 1, kp_z_ = 1, kd_x_ = 1, kd_y_ = 1, kd_z_ = 1,
-         ki_x_ = 0, ki_y_ = 0, ki_z_ = 0, max_x_error_to_integrate_ = 1,
-         max_y_error_to_integrate_ = 1, max_z_error_to_integrate_ = 1,
-         max_xI_ = 0, max_yI_ = 0, max_zI_ = 0, max_e_pos_ = 1, max_e_vel_ = 1,
-         max_acc_xy_ = 1, max_acc_z_ = 10.81, min_acc_z_ = 8.81;
-  bool cascaded_flight_control_ = true;
-
- public:
-  FlyingControllerBasic() : PositionController() {
-    load_params();
-    xI = Integrator();
-    yI = Integrator();
-    zI = Integrator();
-  }
-
-  void load_params() {
-    /* Read ros params, if not available then set to initialized value */
-    ros::NodeHandle nhp("~");
-    nhp.param<double>("flying_kp_x", kp_x_, kp_x_);
-    nhp.param<double>("flying_kp_y", kp_y_, kp_y_);
-    nhp.param<double>("flying_kp_z", kp_z_, kp_z_);
-    nhp.param<double>("flying_kd_x", kd_x_, kd_x_);
-    nhp.param<double>("flying_kd_y", kd_y_, kd_y_);
-    nhp.param<double>("flying_kd_z", kd_z_, kd_z_);
-    nhp.param<double>("flying_ki_x", ki_x_, ki_x_);
-    nhp.param<double>("flying_ki_y", ki_y_, ki_y_);
-    nhp.param<double>("flying_ki_z", ki_z_, ki_z_);
-    nhp.param<double>("flying_max_x_error_to_integrate",
-                      max_x_error_to_integrate_, max_x_error_to_integrate_);
-    nhp.param<double>("flying_max_y_error_to_integrate",
-                      max_y_error_to_integrate_, max_y_error_to_integrate_);
-    nhp.param<double>("flying_max_z_error_to_integrate",
-                      max_z_error_to_integrate_, max_z_error_to_integrate_);
-    nhp.param<double>("flying_max_xI", max_xI_, max_xI_);
-    nhp.param<double>("flying_max_yI", max_yI_, max_yI_);
-    nhp.param<double>("flying_max_zI", max_zI_, max_zI_);
-    nhp.param<double>("flying_max_e_pos", max_e_pos_, max_e_pos_);
-    nhp.param<double>("flying_max_e_vel", max_e_vel_, max_e_vel_);
-    nhp.param<double>("flying_max_acc_xy", max_acc_xy_, max_acc_xy_);
-    nhp.param<double>("flying_max_acc_z", max_acc_z_, max_acc_z_);
-    nhp.param<double>("flying_min_acc_z", min_acc_z_, min_acc_z_);
-
-    nhp.param<bool>("cascaded_flight_control", cascaded_flight_control_,
-                    cascaded_flight_control_);
-  }
-
-  bool get_control_input(const mobility_msgs::PositionTargetMode& x_d,
-                         const mavros_msgs::RCOut& rc,
-                         const nav_msgs::Odometry& odom_est,
-                         const geometry_msgs::TwistStamped& vel_est_encoders,
-                         const geometry_msgs::WrenchStamped& accel_est,
-                         double clearance_,
-                         ControlInputMessage& control_input_message,
-                         controller_xmaxx::DebugData& debug_data,
-                         controller_xmaxx::ParamsData& params_data) {
-    double z_pos;
-    if (clearance_ != clearance_)
-      z_pos = odom_est.pose.pose.position.z;
-    else
-      z_pos = clearance_;
-
-    /* Calculate error and saturate for sanity */
-    double e_x = 0, e_y = 0, e_z = 0;
-    /* Update error in position if position is not ignored */
-    if ((x_d.type_mask & Goal::IGNORE_PX) != Goal::IGNORE_PX)
-      e_x = x_d.position.x - odom_est.pose.pose.position.x;
-    if ((x_d.type_mask & Goal::IGNORE_PY) != Goal::IGNORE_PY)
-      e_y = x_d.position.y - odom_est.pose.pose.position.y;
-    if ((x_d.type_mask & Goal::IGNORE_PZ) != Goal::IGNORE_PZ) {
-      e_z = x_d.position.z - z_pos;
-    }
-    saturate(e_x, max_e_pos_, -max_e_pos_);
-    saturate(e_y, max_e_pos_, -max_e_pos_);
-    saturate(e_z, max_e_pos_, -max_e_pos_);
-
-    double int_x = e_x, int_y = e_y, int_z = e_z;
-
-    /* odom msg has velocity in base_link frame, transform to map */
-    Eigen::Vector3d vel_est(odom_est.twist.twist.linear.x,
-                            odom_est.twist.twist.linear.y,
-                            odom_est.twist.twist.linear.z);
-    Eigen::Quaterniond temp_q(
-        odom_est.pose.pose.orientation.w, odom_est.pose.pose.orientation.x,
-        odom_est.pose.pose.orientation.y, odom_est.pose.pose.orientation.z);
-    Eigen::Matrix3d R = temp_q.toRotationMatrix();
-    vel_est = R * vel_est;
-
-    double de_x = 0, de_y = 0, de_z = 0;
-    if ((x_d.type_mask & Goal::IGNORE_VX) != Goal::IGNORE_VX)
-      de_x = x_d.velocity.x - vel_est(0);
-    if ((x_d.type_mask & Goal::IGNORE_VY) != Goal::IGNORE_VY)
-      de_y = x_d.velocity.y - vel_est(1);
-    if ((x_d.type_mask & Goal::IGNORE_VZ) != Goal::IGNORE_VZ)
-      de_z = x_d.velocity.z - vel_est(2);
-
-    /* transform e_x, e_y and de_x, de_y by yaw to get base_link_g_aligned frame
-     */
-    double roll, pitch, yaw;
-    get_rpy_from_pose(odom_est.pose.pose.orientation, roll, pitch, yaw);
-    double e_x_body, e_y_body, de_x_body, de_y_body;
-    e_x_body = cos(yaw) * e_x + sin(yaw) * e_y;
-    e_y_body = -sin(yaw) * e_x + cos(yaw) * e_y;
-    de_x_body = cos(yaw) * de_x + sin(yaw) * de_y;
-    de_y_body = -sin(yaw) * de_x + cos(yaw) * de_y;
-
-    if (cascaded_flight_control_) {
-      de_x_body += e_x_body * kp_x_;
-      de_y_body += e_y_body * kp_y_;
-      de_z += e_z * kp_z_;
-
-      e_x_body = 0;
-      e_y_body = 0;
-      e_z = 0;
-
-      int_x = de_x_body;
-      int_y = de_y_body;
-      int_z = de_z;
-    }
-
-    saturate(de_x_body, max_e_vel_, -max_e_vel_);
-    saturate(de_y_body, max_e_vel_, -max_e_vel_);
-    saturate(de_z, max_e_vel_, -max_e_vel_);
-
-    if (rc_has_throttle(rc) && in_offboard_ &&
-        fabs(int_x) < max_x_error_to_integrate_ &&
-        fabs(xI.value) * ki_x_ < max_xI_)
-      xI.increment(int_x, 1.0 / controller_freq_);
-    if (rc_has_throttle(rc) && in_offboard_ &&
-        fabs(int_y) < max_y_error_to_integrate_ &&
-        fabs(yI.value) * ki_y_ < max_yI_)
-      yI.increment(int_y, 1.0 / controller_freq_);
-    if (rc_has_throttle(rc) && in_offboard_ &&
-        fabs(int_z) < max_z_error_to_integrate_ &&
-        fabs(zI.value) * ki_z_ < max_zI_)
-      zI.increment(int_z, 1.0 / controller_freq_);
-
-    double des_accel_x_body =
-        kp_x_ * e_x_body + kd_x_ * de_x_body + ki_x_ * xI.value;
-    double des_accel_y_body =
-        kp_y_ * e_y_body + kd_y_ * de_y_body + ki_y_ * yI.value;
-    double des_accel_z = kp_z_ * e_z + kd_z_ * de_z + ki_z_ * zI.value;
-
-    /* convert desired accelerations back to map frame */
-    double des_accel_x =
-        cos(yaw) * des_accel_x_body - sin(yaw) * des_accel_y_body;
-    double des_accel_y =
-        sin(yaw) * des_accel_x_body + cos(yaw) * des_accel_y_body;
-
-    /* PID Control Law with Feedfoward Acceleration */
-    Eigen::Vector3d thrust;
-    thrust(0) = mass_ * (des_accel_x + x_d.acceleration_or_force.x);
-    thrust(1) = mass_ * (des_accel_y + x_d.acceleration_or_force.y);
-    thrust(2) = mass_ * (des_accel_z + x_d.acceleration_or_force.z + 9.81);
-    thrust(0) =
-        mass_ * saturate_by_value(thrust(0) / mass_, max_acc_xy_, -max_acc_xy_);
-    thrust(1) =
-        mass_ * saturate_by_value(thrust(1) / mass_, max_acc_xy_, -max_acc_xy_);
-    thrust(2) =
-        mass_ * saturate_by_value(thrust(2) / mass_, max_acc_z_, -min_acc_z_);
-    double thrust_mag = thrust.norm();
-
-    /* Generate target attitude from desired thrust */
-    // BASED ON TAEYOUNG LEE's PAPER
-    double yaw_des = x_d.yaw;
-    Eigen::Vector3d heading_axis(1, 0, 0);
-    Eigen::Matrix3d R_yaw(3, 3);
-    R_yaw(0, 0) = cos(yaw_des);
-    R_yaw(0, 1) = -sin(yaw_des);
-    R_yaw(0, 2) = 0;
-    R_yaw(1, 0) = sin(yaw_des);
-    R_yaw(1, 1) = cos(yaw_des);
-    R_yaw(1, 2) = 0;
-    R_yaw(2, 0) = 0;
-    R_yaw(2, 1) = 0;
-    R_yaw(2, 2) = 1;
-
-    Eigen::Quaternion<double> q_test(R_yaw);
-    tf::Quaternion quat_test(q_test.x(), q_test.y(), q_test.z(), q_test.w());
-    tf::Matrix3x3 m_test(quat_test);
-    double roll_test, pitch_test, yaw_test;
-    m_test.getRPY(roll_test, pitch_test, yaw_test);
-
-    // std::cout << "yaw_t: " << yaw_test << "\tpitch_t: " << pitch_test
-    //          << "\troll_t: " << roll_test << std::endl;
-
-    Eigen::Vector3d des_heading_vect = R_yaw * heading_axis;
-    Eigen::Vector3d b3_axis = thrust.normalized();
-    Eigen::Vector3d b2_axis = b3_axis.cross(des_heading_vect);
-    Eigen::Vector3d b1_axis = b2_axis.cross(b3_axis);
-
-    Eigen::Matrix3d orientation(3, 3);
-    orientation.col(0) = b1_axis;
-    orientation.col(1) = b2_axis;
-    orientation.col(2) = b3_axis;
-    Eigen::Quaternion<double> q(orientation);
-
-    mavros_msgs::AttitudeTarget att_des;
-    att_des.orientation.x = q.x();
-    att_des.orientation.y = q.y();
-    att_des.orientation.z = q.z();
-    att_des.orientation.w = q.w();
-    att_des.thrust = thrust_mag / max_thrust_rating_;
-    att_des.thrust = saturate_by_value(att_des.thrust, flying_max_thrust_,
-                                       flying_min_thrust_);
-
-    /* if ignoring pos and velocity both, make sure desired orientation is flat.
-     * for use in flying idling on the ground.
-     */
-    if ((x_d.type_mask & Goal::IGNORE_PX) == Goal::IGNORE_PX &&
-        (x_d.type_mask & Goal::IGNORE_PY) == Goal::IGNORE_PY &&
-        (x_d.type_mask & Goal::IGNORE_PZ) == Goal::IGNORE_PZ &&
-        (x_d.type_mask & Goal::IGNORE_VX) == Goal::IGNORE_VX &&
-        (x_d.type_mask & Goal::IGNORE_VY) == Goal::IGNORE_VY &&
-        (x_d.type_mask & Goal::IGNORE_VZ) == Goal::IGNORE_VZ) {
-      tf::Quaternion q_yaw(0, 0, 0, 0);
-      q_yaw.setW(cos(yaw_des / 2));
-      q_yaw.setZ(sin(yaw_des / 2));
-
-      att_des.orientation.x = q_yaw.x();
-      att_des.orientation.y = q_yaw.y();
-      att_des.orientation.z = q_yaw.z();
-      att_des.orientation.w = q_yaw.w();
-    }
-
-    /* check if desired attitude commands are nan */
-    if (att_des.orientation.x != att_des.orientation.x ||
-        att_des.orientation.y != att_des.orientation.y ||
-        att_des.orientation.z != att_des.orientation.z ||
-        att_des.orientation.w != att_des.orientation.w ||
-        att_des.thrust != att_des.thrust) {
-      att_des.orientation.x = 0;  // TODO:  update these to be zero roll/pitch
-      att_des.orientation.y = 0;
-      att_des.orientation.z = 0;
-      att_des.orientation.w = 1;
-      att_des.thrust = mass_ * 9.81 / max_thrust_rating_;
-      ROS_ERROR("Got NaNs in actuator control message!");
-    }
-
-    /* Get rpy angles from x_est quaternions */
-    tf::Quaternion quat(
-        odom_est.pose.pose.orientation.x, odom_est.pose.pose.orientation.y,
-        odom_est.pose.pose.orientation.z, odom_est.pose.pose.orientation.w);
-    tf::Matrix3x3 m(quat);
-    m.getRPY(roll, pitch, yaw);
-
-    /* Get rpy angles from att_des quaternions */
-    tf::Quaternion quat2(att_des.orientation.x, att_des.orientation.y,
-                         att_des.orientation.z, att_des.orientation.w);
-    tf::Matrix3x3 m2(quat2);
-    double roll_desired, pitch_desired, yaw_desired;
-    m2.getRPY(roll_desired, pitch_desired, yaw_desired);
-
-    control_input_message = update_attitude_target(att_des);
-
-    /* build debug data */
-    debug_data.target = x_d;
-    debug_data.odom = odom_est;
-    debug_data.vel_est_encoders = vel_est_encoders;
-    debug_data.accel = accel_est;
-    debug_data.clearance = clearance_;
-    debug_data.roll_desired = roll_desired;
-    debug_data.pitch_desired = pitch_desired;
-    debug_data.yaw_desired = yaw_desired;
-    debug_data.roll = roll;
-    debug_data.pitch = pitch;
-    debug_data.yaw = yaw;
-    debug_data.throttle = att_des.thrust;
-    debug_data.attitude_target = control_input_message.attitude_target;
-
-    debug_data.error_pos.x = e_x;
-    debug_data.error_pos.y = e_y;
-    debug_data.error_pos.z = e_z;
-
-    debug_data.error_vel.x = de_x;
-    debug_data.error_vel.y = de_y;
-    debug_data.error_vel.z = de_z;
-
-    debug_data.thrust.x = thrust(0) / mass_;
-    debug_data.thrust.y = thrust(1) / mass_;
-    debug_data.thrust.z = thrust(2) / mass_;
-
-    debug_data.xI = xI.value;
-    debug_data.yI = yI.value;
-    debug_data.zI = zI.value;
-
-    /* Controller Params */
-    params_data.cascaded_flight_control = cascaded_flight_control_;
-    params_data.flying_min_thrust = flying_min_thrust_;
-    params_data.flying_max_thrust = flying_max_thrust_;
-    params_data.mass = mass_;
-    params_data.controller_freq = controller_freq_;
-    params_data.flying_kp_x = kp_x_;
-    params_data.flying_kp_y = kp_y_;
-    params_data.flying_kp_z = kp_z_;
-    params_data.flying_kd_x = kd_x_;
-    params_data.flying_kd_y = kd_y_;
-    params_data.flying_kd_z = kd_z_;
-    params_data.flying_ki_x = ki_x_;
-    params_data.flying_ki_y = ki_y_;
-    params_data.flying_ki_z = ki_z_;
-    params_data.flying_max_x_error_to_integrate = max_x_error_to_integrate_;
-    params_data.flying_max_y_error_to_integrate = max_y_error_to_integrate_;
-    params_data.flying_max_z_error_to_integrate = max_z_error_to_integrate_;
-    params_data.flying_max_xI = max_xI_;
-    params_data.flying_max_yI = max_yI_;
-    params_data.flying_max_zI = max_zI_;
-
-    std::cout << "\nFLYING MODE:"
-              << "\nroll: " << roll << "\npitch: " << pitch << "\nyaw: " << yaw
-              << "\nroll_des: " << roll_desired
-              << "\npitch_des: " << pitch_desired
-              << "\nyaw_des: " << yaw_desired << "\nthrust: " << att_des.thrust
-              << std::endl;
-    return true;
-  }
-
- private:
-  Integrator xI, yI, zI;
 };
