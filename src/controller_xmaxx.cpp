@@ -4,23 +4,19 @@
  * Update Add checks for NAN
  */
 
+#include <ackermann_msgs/AckermannDriveStamped.h>
 #include <controller_xmaxx/DebugData.h>
 #include <controller_xmaxx/ParamsData.h>
-#include <mavros_msgs/State.h>
+#include <mobility_msgs/ResiliencyLogicStatus.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <cmath>
 #include <tuple>
 #include "controllers.hpp"
-#include "mobility_msgs/PositionTargetMode.h"
-#include "mobility_msgs/ResiliencyLogicStatus.h"
 #include "ros/ros.h"
-#include "sensor_msgs/Range.h"
 #include "std_msgs/Duration.h"
 
-mobility_msgs::PositionTargetMode x_d_;
-mavros_msgs::RCOut rc_;
-mavros_msgs::State mavros_state_;
+ackermann_msgs::AckermannDriveStamped x_d_;
 nav_msgs::Odometry odom_est_;
 geometry_msgs::TwistStamped vel_est_encoders_;
 std::vector<double> vel_prev = {0, 0, 0};
@@ -33,24 +29,17 @@ double fc_lowpass_ang_vel = 10;
 double controller_freq;
 double callback_timeout_duration;
 double setpoint_callback_timeout_duration;
-double mass_;
-double max_thrust_rating_;
 ros::Duration total_operation_time_ = ros::Duration(0);
-bool imu_only_ = false;
+int imu_only_;
 
-void setpoint_callback(const mobility_msgs::PositionTargetMode::ConstPtr &msg) {
+void setpoint_callback(
+    const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
   setpoint_time_stamp_ = msg->header.stamp;
   /* Check if frame id is accurate */
   if (msg->header.frame_id.find("odom")) {
     x_d_ = *msg;
   } else
     ROS_ERROR("Position Target cordinate frame should be odom frame");
-}
-
-void rc_callback(const mavros_msgs::RCOut::ConstPtr &msg) { rc_ = *msg; }
-
-void mavros_state_callback(const mavros_msgs::State::ConstPtr &msg) {
-  mavros_state_ = *msg;
 }
 
 void resiliency_status_callback(
@@ -182,18 +171,11 @@ int main(int argc, char **argv) {
                     setpoint_callback_timeout_duration,
                     setpoint_callback_timeout_duration);
   std::cout << callback_timeout_duration << "\n";
-
-  pnh.param<double>("mass", mass_, mass_);
-  pnh.param<double>("max_thrust_rating", max_thrust_rating_,
-                    max_thrust_rating_);
   ros::Rate loop_rate(controller_freq);
 
   /* Create subscribers and publishers */
-  ros::Publisher attitude_target_pub =
-      nh.advertise<mavros_msgs::AttitudeTarget>("mavros/setpoint_raw/attitude",
-                                                1);
-  ros::Publisher actuator_control_pub =
-      nh.advertise<mavros_msgs::ActuatorControl>("mavros/actuator_control", 1);
+  ros::Publisher output_pub =
+      nh.advertise<ackermann_msgs::AckermannDriveStamped>("output", 1);
   ros::Publisher debug_pub =
       pnh.advertise<controller_xmaxx::DebugData>("debug", 1);
   ros::Publisher params_pub =
@@ -201,50 +183,38 @@ int main(int argc, char **argv) {
   ros::Publisher operation_time_pub =
       pnh.advertise<std_msgs::Duration>("total_operation_time", 1);
 
-  ros::Subscriber x_d_sub =
-      nh.subscribe("command/setpoint_raw/local", 1, setpoint_callback);
-  ros::Subscriber rc_sub = nh.subscribe("mavros/rc/out", 1, rc_callback);
-  ros::Subscriber mavros_state_sub =
-      nh.subscribe("mavros/state", 1, mavros_state_callback);
+  ros::Subscriber x_d_sub = nh.subscribe("target", 1, setpoint_callback);
   ros::Subscriber odom_est_sub =
       nh.subscribe("resiliency/odometry", 1, odom_est_callback);
   ros::Subscriber vel_est_encoders_sub =
       nh.subscribe("encoder/velocity_filtered", 1, vel_est_encoders_callback);
-
   ros::Subscriber resiliency_status_sub =
       nh.subscribe("resiliency_logic/status", 1, resiliency_status_callback);
 
   /* Define attitude_desired msgs and initialize controllers */
-  mavros_msgs::AttitudeTarget att_msg;
   controller_xmaxx::DebugData debug_msg;
   controller_xmaxx::ParamsData params_msg;
-  RollingControllerDirect controller;
-  mavros_msgs::ActuatorControl actuator_control;
+  AckermannController controller;
+  ackermann_msgs::AckermannDriveStamped output;
 
   int loop_rate_downsample = 0;
 
   while (ros::ok()) {
     ros::spinOnce();
-    bool in_offboard = false;
-    if (mavros_state_.mode == "OFFBOARD" && mavros_state_.armed)
-      in_offboard = true;
-    controller.setOffboard(in_offboard);
 
     if ((ros::Time::now() - setpoint_time_stamp_).toSec() >
         setpoint_callback_timeout_duration) {
-      x_d_.velocity.x = 0;
-      x_d_.velocity.y = 0;
-      x_d_.velocity.z = 0;
-      x_d_.acceleration_or_force.x = 0;
-      x_d_.acceleration_or_force.y = 0;
-      // x_d_.acceleration_or_force.z = 0;
+      x_d_.drive.steering_angle = 0;
+      x_d_.drive.steering_angle_velocity = 0;
+      x_d_.drive.speed = 0;
+      x_d_.drive.acceleration = 0;
+      x_d_.drive.jerk = 0;
 
       ROS_WARN("Controller setpoint callback timeout!!");
     }
 
-    controller.get_control_input(x_d_, rc_, odom_est_, vel_est_encoders_,
-                                 accel_est_, actuator_control, debug_msg,
-                                 params_msg);
+    controller.get_control_input(x_d_, odom_est_, vel_est_encoders_, accel_est_,
+                                 output, debug_msg, params_msg);
 
     /* check callback timeouts.  If no state estimate updates, publish zeros */
     bool callback_timeout = false;
@@ -255,22 +225,20 @@ int main(int argc, char **argv) {
     }
 
     /* if callback timeout, publish zeros or safely land */
-    if (callback_timeout) {
-      actuator_control.group_mix =
-          mavros_msgs::ActuatorControl::PX4_MIX_FLIGHT_CONTROL;
-      actuator_control.controls[0] = 0;
-      actuator_control.controls[3] = 0;
-      actuator_control.controls[2] = 0;
-      actuator_control.controls[1] = 0;
+    if (callback_timeout || imu_only_) {
+      output.drive.steering_angle = 0;
+      output.drive.steering_angle_velocity = 0;
+      output.drive.speed = 0;
+      output.drive.acceleration = 0;
+      output.drive.jerk = 0;
     }
 
     /* parse out control_input_message and publish to correct topic */
-    actuator_control.header.stamp = ros::Time::now();
-    actuator_control_pub.publish(actuator_control);
+    output.header.stamp = ros::Time::now();
+    output_pub.publish(output);
 
     /* keep track of operation time */
-    double flying_thrust = mass_ * 9.81 / max_thrust_rating_ * 0.8;
-    if (in_offboard && !callback_timeout && mavros_state_.armed) {
+    if (true) {  // condition for vehicle armed and running
       total_operation_time_ += ros::Duration(1.0 / controller_freq);
     }
 

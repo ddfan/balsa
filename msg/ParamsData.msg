@@ -1,40 +1,12 @@
 Header header
 # Controller Params
 float64 controller_freq
-float64 mass
 bool using_encoders
-bool cascaded_flight_control
 
 # Rolling Params
-float64 rolling_kp_x 
-float64 rolling_kp_y 
-float64 rolling_kd_x 
-float64 rolling_kd_y 
-float64 rolling_thrust_max
-float64 rolling_thrust_min
-# Rolling Direct Params
-float64 rolling_kp_pos
-float64 rolling_kd_pos
-float64 rolling_ki_pos
 float64 rolling_kp_vel
+float64 rolling_kd_vel
 float64 rolling_ki_vel
-float64 rolling_kp_yaw
-float64 rolling_ki_yaw
-float64 rolling_kd_yaw
 float64 rolling_max_vel_error
-float64 rolling_max_yaw_error
-float64 rolling_max_pitch_error
 float64 rolling_max_velI
-float64 rolling_max_yawI
-float64 rolling_max_pitchI
-float64 rolling_max_pitch
-float64 rolling_COM_length
-float64 rolling_kp_pitch
-float64 rolling_kd_pitch
-float64 rolling_ki_pitch
-float64 rolling_moment_roll_scale
-float64 rolling_moment_pitch_scale
-float64 rolling_moment_yaw_scale
 float64 rolling_max_velocity
-float64 rolling_pitch_offset
-float64 rolling_point_and_shoot_angle

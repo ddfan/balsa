@@ -12,12 +12,12 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  mavros_msgs
   nav_msgs
-  mobility_msgs
   geometry_msgs
   message_generation
   sensor_msgs
+  ackermann_msgs
+  mobility_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -80,9 +80,9 @@ add_message_files(
 generate_messages(
   DEPENDENCIES
   std_msgs
-  mavros_msgs
   nav_msgs
   geometry_msgs
+  ackermann_msgs
   mobility_msgs
 )
 
@@ -118,7 +118,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES controller_xmaxx
-  CATKIN_DEPENDS roscpp rospy std_msgs mavros_msgs nav_msgs geometry_msgs message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs nav_msgs geometry_msgs message_runtime ackermann_msgs mobility_msgs
 #  DEPENDS system_lib
 )
 
@@ -146,7 +146,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/controller_hybrid_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/controller_xmaxx_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -203,7 +203,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_controller_hybrid.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_controller_xmaxx.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
@@ -212,8 +212,5 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(controller_xmaxx src/controller_xmaxx.cpp)
-add_dependencies(controller_xmaxx controller_hybrid_generate_messages_cpp)
+add_dependencies(controller_xmaxx controller_xmaxx_generate_messages_cpp)
 target_link_libraries(controller_xmaxx ${catkin_LIBRARIES})
-
-add_executable(pos_input_xmaxx src/pos_input_xmaxx.cpp)
-target_link_libraries(pos_input_xmaxx ${catkin_LIBRARIES})

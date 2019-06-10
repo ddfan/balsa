@@ -3,7 +3,7 @@
   <arg name="simulation"      default="false"/>
   <arg name="robot_name" 	  default="sim"/>
   <param name="robot_name" value="$(env HOSTNAME)" unless="$(arg simulation)"/>
-  <node name="controller_xmaxx" pkg="controller_xmaxx" type="controller_xmaxx" output="screen" clear_params="true" ns="$(arg robot_namespace)">
+ 	<node name="controller_xmaxx" pkg="controller_xmaxx" type="controller_xmaxx" output="screen" clear_params="true" ns="$(arg robot_namespace)">
 		<rosparam file="$(find controller_xmaxx)/cfg/params_core.yaml" command="load"/>
 		<!-- rosparam file="$(find controller_xmaxx)/cfg/params_$(arg robot_name).yaml" command="load" -->
 	</node>
