@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <tuple>
 
+#include <tf/transform_listener.h>
+
 // Integrator
 struct Integrator {
   double value;
@@ -129,6 +131,7 @@ class AckermannController : public PositionController {
   AckermannController() : PositionController() {
     load_params();
     velI = Integrator();
+
   }
 
   void load_params() {
@@ -152,6 +155,29 @@ class AckermannController : public PositionController {
                          ackermann_msgs::AckermannDriveStamped& output,
                          controller_xmaxx::DebugData& debug_data,
                          controller_xmaxx::ParamsData& params_data) {
+    //###################################################################
+    if(first_)
+    {
+      tf::TransformListener listener;
+      tf::StampedTransform transform;
+      try{
+        listener.lookupTransform("/imu", "/base_linkFW", ros::Time(0), transform); // ToDo: Get parent frame from odometry msg.
+      }
+      catch (tf::TransformException ex){
+        ROS_ERROR("%s",ex.what());
+        ros::Duration(1.0).sleep();
+      }
+
+    }
+
+    tf::Quaternion rotquat_ImuBlf = transform.getRotation();
+    tf::Matrix3x3 rotmat_ImuBLf;
+    rotmat_IB.setRotation (rotquat_ImuBlf);
+    
+
+
+    //###################################################################
+
     double roll_est, pitch_est, yaw_est;
     get_rpy_from_pose(odom_est.pose.pose.orientation, roll_est, pitch_est,
                       yaw_est);
@@ -177,6 +203,7 @@ class AckermannController : public PositionController {
       current_velocity_body_x = vel_est_encoders.twist.linear.x;
       current_velocity_body_y = vel_est_encoders.twist.linear.y;
     } else {
+      // ToDo
       current_velocity_body_x = odom_est.twist.twist.linear.x;
       current_velocity_body_y = odom_est.twist.twist.linear.y;
     }
