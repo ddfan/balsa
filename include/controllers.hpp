@@ -40,7 +40,9 @@ class PositionController {
  protected:
   double controller_freq_ = 50;
   const double pi_ = 3.1415962;
-
+  
+  bool first_ = true;
+  tf::StampedTransform T_Imu_Blf_;
  public:
   PositionController() { load_params_common(); }
 
@@ -159,9 +161,10 @@ class AckermannController : public PositionController {
     if(first_)
     {
       tf::TransformListener listener;
-      tf::StampedTransform transform;
+      
       try{
-        listener.lookupTransform("/imu", "/base_linkFW", ros::Time(0), transform); // ToDo: Get parent frame from odometry msg.
+        listener.lookupTransform("/imu", "/base_link", ros::Time(0), T_Imu_Blf_); // ToDo: Get parent frame from odometry msg.
+        first_ = false;
       }
       catch (tf::TransformException ex){
         ROS_ERROR("%s",ex.what());
@@ -170,11 +173,20 @@ class AckermannController : public PositionController {
 
     }
 
-    tf::Quaternion rotquat_ImuBlf = transform.getRotation();
+    tf::Quaternion rotquat_ImuBlf = T_Imu_Blf_.getRotation();
     tf::Matrix3x3 rotmat_ImuBLf;
-    rotmat_IB.setRotation (rotquat_ImuBlf);
-    
+    rotmat_ImuBLf.setRotation(rotquat_ImuBlf);
 
+    // Transpose matrix.
+    tf::Matrix3x3 rotmat_ImuBLf_trp = rotmat_ImuBLf.transpose();
+
+    // Create vector 3 with tdotx, tdoty, tdotz.
+    tf::Vector3 velocity_map_frame = tf::Vector3(odom_est.twist.twist.linear.x,
+      odom_est.twist.twist.linear.y,
+      odom_est.twist.twist.linear.z );
+    tf::Vector3 velocity_body_frame = tf::Vector3(rotmat_ImuBLf_trp.tdotx(velocity_map_frame),
+      rotmat_ImuBLf_trp.tdoty(velocity_map_frame),
+      rotmat_ImuBLf_trp.tdotz(velocity_map_frame));
 
     //###################################################################
 
@@ -204,8 +216,8 @@ class AckermannController : public PositionController {
       current_velocity_body_y = vel_est_encoders.twist.linear.y;
     } else {
       // ToDo
-      current_velocity_body_x = odom_est.twist.twist.linear.x;
-      current_velocity_body_y = odom_est.twist.twist.linear.y;
+      current_velocity_body_x = velocity_body_frame.x();//odom_est.twist.twist.linear.x;
+      current_velocity_body_y = velocity_body_frame.y();//odom_est.twist.twist.linear.y;
     }
 
     // double current_accel_body_x = cos(yaw_est) * accel_est.wrench.force.x +
@@ -232,7 +244,7 @@ class AckermannController : public PositionController {
     /* create message */
     output = x_d;
     double speed_output = x_d.drive.speed + r_a_x;
-    saturate(speed_output, max_speed, -max_speed);
+    saturate(speed_output, max_velocity_, -max_velocity_);
     output.drive.speed = x_d.drive.speed + r_a_x;
 
     /* check if actuator commands are nan */
@@ -250,8 +262,8 @@ class AckermannController : public PositionController {
 
     debug_data.vel_body.x = current_velocity_body_x;
     debug_data.vel_body.y = current_velocity_body_y;
-    debug_data.accel_body.x = current_accel_body_x;
-    debug_data.accel_body.y = current_accel_body_y;
+    //debug_data.accel_body.x = current_accel_body_x;
+    //debug_data.accel_body.y = current_accel_body_y;
     debug_data.roll = roll_est;
     debug_data.pitch = pitch_est;
     debug_data.yaw = yaw_est;
