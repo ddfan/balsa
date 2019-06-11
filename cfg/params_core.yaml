@@ -3,6 +3,7 @@ fc_highpass_accel: 0.1
 fc_lowpass_ang_vel: 100.0
 callback_timeout_duration: 1 #sec
 setpoint_callback_timeout_duration: 0.2 #sec
+using_encoders: false
 
 rolling_max_velocity: 0.5
 

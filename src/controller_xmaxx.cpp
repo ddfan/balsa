@@ -225,7 +225,7 @@ int main(int argc, char **argv) {
     }
 
     /* if callback timeout, publish zeros or safely land */
-    if (callback_timeout || imu_only_) {
+    if (callback_timeout) {
       output.drive.steering_angle = 0;
       output.drive.steering_angle_velocity = 0;
       output.drive.speed = 0;

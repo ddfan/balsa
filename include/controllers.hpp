@@ -166,16 +166,6 @@ class AckermannController : public PositionController {
       yaw_rate_est = odom_est.twist.twist.angular.z;
     }
 
-    /* odom msg has velocity in base_link frame, transform to map */
-    Eigen::Vector3d vel_est(odom_est.twist.twist.linear.x,
-                            odom_est.twist.twist.linear.y,
-                            odom_est.twist.twist.linear.z);
-    Eigen::Quaterniond temp_q(
-        odom_est.pose.pose.orientation.w, odom_est.pose.pose.orientation.x,
-        odom_est.pose.pose.orientation.y, odom_est.pose.pose.orientation.z);
-    Eigen::Matrix3d Rot = temp_q.toRotationMatrix();
-    vel_est = Rot * vel_est;
-
     double desired_velocity = x_d.drive.speed;
 
     /* Expect x_d.position and x_d.velocity in the world frame.  need to
@@ -191,12 +181,12 @@ class AckermannController : public PositionController {
       current_velocity_body_y = odom_est.twist.twist.linear.y;
     }
 
-    double current_accel_body_x = cos(yaw_est) * accel_est.wrench.force.x +
-                                  sin(yaw_est) * accel_est.wrench.force.y;
+    // double current_accel_body_x = cos(yaw_est) * accel_est.wrench.force.x +
+    //                              sin(yaw_est) * accel_est.wrench.force.y;
 
     /* don't really need these but might be informative */
-    double current_accel_body_y = -sin(yaw_est) * accel_est.wrench.force.x +
-                                  cos(yaw_est) * accel_est.wrench.force.y;
+    // double current_accel_body_y = -sin(yaw_est) * accel_est.wrench.force.x +
+    //                              cos(yaw_est) * accel_est.wrench.force.y;
 
     saturate(desired_velocity, max_velocity_, -max_velocity_);
 
@@ -214,6 +204,8 @@ class AckermannController : public PositionController {
 
     /* create message */
     output = x_d;
+    double speed_output = x_d.drive.speed + r_a_x;
+    saturate(speed_output, max_speed, -max_speed);
     output.drive.speed = x_d.drive.speed + r_a_x;
 
     /* check if actuator commands are nan */
