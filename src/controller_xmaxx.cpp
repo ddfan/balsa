@@ -36,7 +36,7 @@ void setpoint_callback(
     const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
   setpoint_time_stamp_ = msg->header.stamp;
   /* Check if frame id is accurate */
-  if (msg->header.frame_id.find("odom")) {
+  if (msg->header.frame_id.find("base_link")) {
     x_d_ = *msg;
   } else
     ROS_ERROR("Position Target cordinate frame should be odom frame");
