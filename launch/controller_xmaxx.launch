@@ -5,8 +5,8 @@
   <param name="robot_name" value="$(env HOSTNAME)" unless="$(arg simulation)"/>
  	<node name="controller_xmaxx" pkg="controller_xmaxx" type="controller_xmaxx" output="screen" clear_params="true" ns="$(arg robot_namespace)">
 		<rosparam file="$(find controller_xmaxx)/cfg/params_core.yaml" command="load"/>
-		<remap from="output" to="ackermann_cmd" />
-		<remap from="target" to="ackermann_cmd_openloop" />
+		<remap from="output" to="/ackermann_cmd" />
+		<remap from="target" to="/ackermann_cmd_openloop" />
 		<remap from="resiliency/odometry" to="/downward/vio/odometry" />
 		<!-- rosparam file="$(find controller_xmaxx)/cfg/params_$(arg robot_name).yaml" command="load" -->
 	</node>
