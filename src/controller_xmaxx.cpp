@@ -248,7 +248,7 @@ int main(int argc, char **argv) {
   tfScalar roll;
   tfScalar pitch; 
   tfScalar yaw;
-  rotmat_ImuBLf_trp.getRPY  (roll, pitch, yaw, 1); 
+  rotmat_ImuBLf.getRPY(roll, pitch, yaw, 1); 
 
   std::cout << "roll= " << roll<<std::endl;
   std::cout << "pitch= " << pitch<<std::endl;
