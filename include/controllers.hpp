@@ -139,9 +139,10 @@ class AckermannController : public PositionController {
 
   void change_pid_gains(controller_xmaxx::PidConfig &config, uint32_t level){
     ROS_INFO("Changing params");
-    kp_vel_ = config.rolling_kp_vel;
-    kd_vel_ = config.rolling_kd_vel;
-    ki_vel_ = config.rolling_ki_vel;
+    std::cout<<"rolling_kp_vel "<<config.rolling_kp_vel<<std::endl;
+    this->kp_vel_ = config.rolling_kp_vel;
+    this->kd_vel_ = config.rolling_kd_vel;
+    this->ki_vel_ = config.rolling_ki_vel;
   }
 
   void load_params() {
@@ -214,13 +215,13 @@ class AckermannController : public PositionController {
     if (fabs(e_vel) < max_vel_error_ && fabs(velI.value) < max_velI_)
       velI.increment(e_vel, 1.0 / controller_freq_);
     double r_a_x = kp_vel_ * e_vel + ki_vel_ * velI.value;  // kd_vel_ * de_vel;
-    std::cout << "velocity_body_frame_x= " << velocity_body_frame.x()<<std::endl;
-    std::cout << "velocity_body_frame_y= " << velocity_body_frame.y()<<std::endl;
+    //std::cout << "velocity_body_frame_x= " << velocity_body_frame.x()<<std::endl;
+    //std::cout << "velocity_body_frame_y= " << velocity_body_frame.y()<<std::endl;
 
-    std::cout << "e_vel= " << e_vel<<std::endl;
+    //std::cout << "e_vel= " << e_vel<<std::endl;
     std::cout << " kp_vel= " << kp_vel_<<std::endl;
-    std::cout << " ki_vel= " << ki_vel_<<std::endl;
-    std::cout << " velI.value= " << velI.value<<std::endl;
+    //std::cout << " ki_vel= " << ki_vel_<<std::endl;
+    //std::cout << " velI.value= " << velI.value<<std::endl;
     // std::cout << " acc_ff= " << x_d.acceleration_or_force.x;
 
     /* create message */
