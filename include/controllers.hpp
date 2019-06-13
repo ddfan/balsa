@@ -139,7 +139,6 @@ class AckermannController : public PositionController {
 
   void change_pid_gains(controller_xmaxx::PidConfig &config, uint32_t level){
     ROS_INFO("Changing params");
-    std::cout<<"rolling_kp_vel "<<config.rolling_kp_vel<<std::endl;
     this->kp_vel_ = config.rolling_kp_vel;
     this->kd_vel_ = config.rolling_kd_vel;
     this->ki_vel_ = config.rolling_ki_vel;
@@ -219,7 +218,7 @@ class AckermannController : public PositionController {
     //std::cout << "velocity_body_frame_y= " << velocity_body_frame.y()<<std::endl;
 
     //std::cout << "e_vel= " << e_vel<<std::endl;
-    std::cout << " kp_vel= " << kp_vel_<<std::endl;
+    //std::cout << " kp_vel= " << kp_vel_<<std::endl;
     //std::cout << " ki_vel= " << ki_vel_<<std::endl;
     //std::cout << " velI.value= " << velI.value<<std::endl;
     // std::cout << " acc_ff= " << x_d.acceleration_or_force.x;
@@ -265,13 +264,13 @@ class AckermannController : public PositionController {
     params_data.using_encoders = using_encoders_;
 
     // TODO: Add Testing mode information to debug/info
-    /*std::cout << std::setprecision(4) << std::fixed
+    std::cout << std::setprecision(4) << std::fixed
               << "\n\n CONTROLLER_XMAXX DEBUG: "
               << "\nyaw: " << yaw_est << "\npitch: " << pitch_est
               << "\nroll: " << roll_est << "\nvel_d: " << desired_velocity
               << "\nvel_bx: " << current_velocity_body_x
               << "\nsteering_angle: " << output.drive.steering_angle;
-    */
+    
     return true;
   }
 
