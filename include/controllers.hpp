@@ -11,7 +11,6 @@
 #include <iomanip>
 #include <tuple>
 
-#include <tf/transform_listener.h>
 #include <controller_xmaxx/PidConfig.h>
 
 // Integrator
@@ -42,8 +41,6 @@ class PositionController {
   double controller_freq_ = 50;
   const double pi_ = 3.1415962;
   
-  bool first_ = true;
-  tf::StampedTransform T_Imu_Blf_;
  public:
   PositionController() { load_params_common(); }
 
@@ -54,7 +51,9 @@ class PositionController {
       const geometry_msgs::WrenchStamped& accel_est,
       ackermann_msgs::AckermannDriveStamped& output,
       controller_xmaxx::DebugData& debug_data,
-      controller_xmaxx::ParamsData& params_data) = 0;
+      controller_xmaxx::ParamsData& params_data,
+
+      const tf::Vector3 velocity_body_frame) = 0;
 
   void load_params_common() {
     /* Read ros params, if not available then set to initialized value */
@@ -130,18 +129,12 @@ class AckermannController : public PositionController {
 
   bool using_encoders_ = false;
 
-  bool lol = false; 
-
-  
-
-
  public:
-  tf::TransformListener listener_ss;
+  
   AckermannController() : PositionController() {
     load_params();
     velI = Integrator();
     ROS_INFO("PID Controller Created!");
-
   }
 
   void change_pid_gains(controller_xmaxx::PidConfig &config, uint32_t level){
@@ -171,39 +164,10 @@ class AckermannController : public PositionController {
                          const geometry_msgs::WrenchStamped& accel_est,
                          ackermann_msgs::AckermannDriveStamped& output,
                          controller_xmaxx::DebugData& debug_data,
-                         controller_xmaxx::ParamsData& params_data) {
-    //###################################################################
-    if(first_)
-    {
-      tf::TransformListener listener;
-      
-      try{
-        listener.lookupTransform("/imu", "/base_link", ros::Time(0), T_Imu_Blf_); // ToDo: Get parent frame from odometry msg.
-        first_ = false;
-      }
-      catch (tf::TransformException ex){
-        ROS_ERROR("%s",ex.what());
-        ros::Duration(1.0).sleep();
-      }
+                         controller_xmaxx::ParamsData& params_data,
 
-    }
-
-    tf::Quaternion rotquat_ImuBlf = T_Imu_Blf_.getRotation();
-    tf::Matrix3x3 rotmat_ImuBLf;
-    rotmat_ImuBLf.setRotation(rotquat_ImuBlf);
-
-    // Transpose matrix.
-    tf::Matrix3x3 rotmat_ImuBLf_trp = rotmat_ImuBLf.transpose();
-
-    // Create vector 3 with tdotx, tdoty, tdotz.
-    tf::Vector3 velocity_map_frame = tf::Vector3(odom_est.twist.twist.linear.x,
-      odom_est.twist.twist.linear.y,
-      odom_est.twist.twist.linear.z );
-    tf::Vector3 velocity_body_frame = tf::Vector3(rotmat_ImuBLf_trp.tdotx(velocity_map_frame),
-      rotmat_ImuBLf_trp.tdoty(velocity_map_frame),
-      rotmat_ImuBLf_trp.tdotz(velocity_map_frame));
-
-    //###################################################################
+                         const tf::Vector3 velocity_body_frame) {
+    
 
     double roll_est, pitch_est, yaw_est;
     get_rpy_from_pose(odom_est.pose.pose.orientation, roll_est, pitch_est,
@@ -250,10 +214,13 @@ class AckermannController : public PositionController {
     if (fabs(e_vel) < max_vel_error_ && fabs(velI.value) < max_velI_)
       velI.increment(e_vel, 1.0 / controller_freq_);
     double r_a_x = kp_vel_ * e_vel + ki_vel_ * velI.value;  // kd_vel_ * de_vel;
-    // std::cout << "e_vel= " << e_vel;
-    // std::cout << " kp_vel= " << kp_vel_;
-    // std::cout << " ki_vel= " << ki_vel_;
-    // std::cout << " velI.value= " << velI.value;
+    std::cout << "velocity_body_frame_x= " << velocity_body_frame.x()<<std::endl;
+    std::cout << "velocity_body_frame_y= " << velocity_body_frame.y()<<std::endl;
+
+    std::cout << "e_vel= " << e_vel<<std::endl;
+    std::cout << " kp_vel= " << kp_vel_<<std::endl;
+    std::cout << " ki_vel= " << ki_vel_<<std::endl;
+    std::cout << " velI.value= " << velI.value<<std::endl;
     // std::cout << " acc_ff= " << x_d.acceleration_or_force.x;
 
     /* create message */
@@ -265,7 +232,7 @@ class AckermannController : public PositionController {
     /* check if actuator commands are nan */
     if (output.drive.speed != output.drive.speed) {
       output.drive.speed = 0;
-      ROS_ERROR("Got NaNs in actuator control message!");
+      //ROS_ERROR("Got NaNs in actuator control message!");
     }
 
     /* build debug data */

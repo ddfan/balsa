@@ -5,12 +5,12 @@ callback_timeout_duration: 1 #sec
 setpoint_callback_timeout_duration: 0.2 #sec
 using_encoders: false
 
-rolling_max_velocity: 0.5
+rolling_max_velocity: 5.0 #0.5
 
 # Rolling Gains
-#rolling_kp_vel: 0.05
-#rolling_kd_vel: 0.0 #feedforward term from local planner
-#rolling_ki_vel: 0.1
+rolling_kp_vel: 10.0 #5
+rolling_kd_vel: 0.0 #feedforward term from local planner
+rolling_ki_vel: 0.0
 
 rolling_max_vel_error: 0.05
 rolling_max_velI: 1.0

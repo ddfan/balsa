@@ -1,0 +1,36 @@
+---------------------------------------------------------------
+Profile:                     default
+Extending:          [cached] /opt/ros/kinetic
+Workspace:                   /home/nikhilesh/traxxas_ws
+---------------------------------------------------------------
+Build Space:        [exists] /home/nikhilesh/traxxas_ws/build
+Devel Space:        [exists] /home/nikhilesh/traxxas_ws/devel
+Install Space:      [unused] /home/nikhilesh/traxxas_ws/install
+Log Space:          [exists] /home/nikhilesh/traxxas_ws/logs
+Source Space:       [exists] /home/nikhilesh/traxxas_ws/src
+DESTDIR:            [unused] None
+---------------------------------------------------------------
+Devel Space Layout:          linked
+Install Space Layout:        None
+---------------------------------------------------------------
+Additional CMake Args:       None
+Additional Make Args:        None
+Additional catkin Make Args: None
+Internal Make Job Server:    True
+Cache Job Environments:      False
+---------------------------------------------------------------
+Whitelisted Packages:        None
+Blacklisted Packages:        None
+---------------------------------------------------------------
+Workspace configuration appears valid.
+---------------------------------------------------------------
+[build] Found '46' packages in 0.0 seconds.                     
+[build] Package table is up to date.                            
+Starting >>> std_msgs                                           
+[build 0.3 s] [0/7 complete] [4/4 jobs] [0 queued] [std_msgs... [build] Interrupted by user!                                    
+[build] Summary: 0 of 7 packages succeeded.                     
+[build] Ignored: 39 packages were skipped or are blacklisted.   
+[build] Warnings: None.                                         
+[build] Abandoned: 7 packages were abandoned.                   
+[build] Failed: No packages failed.                             
+[build] Runtime: 0.3 seconds total.                             

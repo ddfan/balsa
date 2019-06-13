@@ -18,6 +18,7 @@
 
 #include <dynamic_reconfigure/server.h>
 #include <controller_xmaxx/PidConfig.h>
+#include <tf/transform_listener.h>
 
 
 
@@ -213,72 +214,51 @@ int main(int argc, char **argv) {
   dynamic_reconfigure::Server<controller_xmaxx::PidConfig>::CallbackType f;
   f = boost::bind(&AckermannController::change_pid_gains, controller, _1, _2);
   drc_server.setCallback(f);
+
+  tf::StampedTransform T_Imu_Blf;
+  tf::TransformListener listener;
+
+  bool wait_for_tf = true;
+  while (wait_for_tf)
+  {
+    try{
+    listener.lookupTransform("/imu", "/base_link", ros::Time(0), T_Imu_Blf); // ToDo: Get parent frame from odometry msg.
+    ROS_INFO("Try");
+    wait_for_tf = false;
+
+    }
+      catch (tf::TransformException ex){
+      ROS_ERROR("%s",ex.what());
+      wait_for_tf = true;
+      ROS_INFO("Catch");  
+      ros::Duration(1.0).sleep();
+    }
+
+  }
+
+  
+
+  tf::Quaternion rotquat_ImuBlf = T_Imu_Blf.getRotation();
+  tf::Matrix3x3 rotmat_ImuBLf;
+  rotmat_ImuBLf.setRotation(rotquat_ImuBlf);
+
+  // Transpose matrix.
+  tf::Matrix3x3 rotmat_ImuBLf_trp = rotmat_ImuBLf.transpose();
+
+  tfScalar roll;
+  tfScalar pitch; 
+  tfScalar yaw;
+  rotmat_ImuBLf_trp.getRPY  (roll, pitch, yaw, 1); 
+
+  std::cout << "roll= " << roll<<std::endl;
+  std::cout << "pitch= " << pitch<<std::endl;
+  std::cout << "yaw= " << yaw<<std::endl;
   //######################################
 
 
   int loop_rate_downsample = 0;
+  
+  
 
-  while (ros::ok()) {
-    ros::spinOnce();
-
-    if ((ros::Time::now() - setpoint_time_stamp_).toSec() >
-        setpoint_callback_timeout_duration) {
-      x_d_.drive.steering_angle = 0;
-      x_d_.drive.steering_angle_velocity = 0;
-      x_d_.drive.speed = 0;
-      x_d_.drive.acceleration = 0;
-      x_d_.drive.jerk = 0;
-
-      ROS_WARN("Controller setpoint callback timeout!!");
-    }
-
-    controller.get_control_input(x_d_, odom_est_, vel_est_encoders_, accel_est_,
-                                 output, debug_msg, params_msg);
-
-    /* check callback timeouts.  If no state estimate updates, publish zeros */
-    bool callback_timeout = false;
-    if ((ros::Time::now() - odom_time_stamp_).toSec() >
-        callback_timeout_duration) {
-      ROS_ERROR("Odometry estimate callback timeout!");
-      callback_timeout = true;
-    }
-
-    /* if callback timeout, publish zeros or safely land */
-    if (callback_timeout) {
-      output.drive.steering_angle = 0;
-      output.drive.steering_angle_velocity = 0;
-      output.drive.speed = 0;
-      output.drive.acceleration = 0;
-      output.drive.jerk = 0;
-    }
-
-    /* parse out control_input_message and publish to correct topic */
-    output.header.stamp = ros::Time::now();
-    output_pub.publish(output);
-
-    /* keep track of operation time */
-    if (true) {  // condition for vehicle armed and running
-      total_operation_time_ += ros::Duration(1.0 / controller_freq);
-    }
-
-    std_msgs::Duration dur_msg;
-    dur_msg.data = total_operation_time_;
-    operation_time_pub.publish(dur_msg);
-    debug_msg.total_operation_time = total_operation_time_.toSec();
-
-    /* publish debug */
-    debug_msg.header.stamp = ros::Time::now();
-    debug_pub.publish(debug_msg);
-
-    /* publish params at a lower rate, every 10 sec. */
-    if (loop_rate_downsample > controller_freq * 10) {
-      params_pub.publish(params_msg);
-      loop_rate_downsample = 0;
-    } else {
-      loop_rate_downsample++;
-    }
-
-    loop_rate.sleep();
-  }
   return 0;
 }
