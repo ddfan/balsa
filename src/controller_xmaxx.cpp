@@ -16,6 +16,11 @@
 #include "ros/ros.h"
 #include "std_msgs/Duration.h"
 
+#include <dynamic_reconfigure/server.h>
+#include <controller_xmaxx/PidConfig.h>
+
+
+
 ackermann_msgs::AckermannDriveStamped x_d_;
 nav_msgs::Odometry odom_est_;
 geometry_msgs::TwistStamped vel_est_encoders_;
@@ -32,14 +37,18 @@ double setpoint_callback_timeout_duration;
 ros::Duration total_operation_time_ = ros::Duration(0);
 int imu_only_;
 
+
 void setpoint_callback(
     const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
-  setpoint_time_stamp_ = msg->header.stamp;
+    ROS_INFO("New setpoint");
+
+  setpoint_time_stamp_ = ros::Time::now(); //msg->header.stamp; //TODO: Only for sanity check. Revert after.
   /* Check if frame id is accurate */
   if (msg->header.frame_id.find("base_link")) {
     x_d_ = *msg;
-  } else
-    ROS_ERROR("Position Target cordinate frame should be odom frame");
+  } else{
+    ROS_ERROR("Ackermann Command cordinate frame should be base_link frame");
+  }
 }
 
 void resiliency_status_callback(
@@ -160,6 +169,8 @@ int main(int argc, char **argv) {
   accel_est_.wrench.torque.z = 0;
 
   ros::init(argc, argv, "controller_xmaxx");
+
+
   ros::NodeHandle nh, pnh("~");
   pnh.param<double>("controller_freq", controller_freq, controller_freq);
   pnh.param<double>("fc_highpass_accel", fc_highpass_accel, fc_highpass_accel);
@@ -196,6 +207,14 @@ int main(int argc, char **argv) {
   controller_xmaxx::ParamsData params_msg;
   AckermannController controller;
   ackermann_msgs::AckermannDriveStamped output;
+
+  //######################################
+  dynamic_reconfigure::Server<controller_xmaxx::PidConfig> drc_server;
+  dynamic_reconfigure::Server<controller_xmaxx::PidConfig>::CallbackType f;
+  f = boost::bind(&AckermannController::change_pid_gains, controller, _1, _2);
+  drc_server.setCallback(f);
+  //######################################
+
 
   int loop_rate_downsample = 0;
 

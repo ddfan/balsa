@@ -18,6 +18,15 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   ackermann_msgs
   mobility_msgs
+
+  dynamic_reconfigure
+)
+
+# Add dynamic reconfigure api
+#find_package(catkin REQUIRED dynamic_reconfigure)
+generate_dynamic_reconfigure_options(
+  cfg/PidConfig.cfg
+  #...
 )
 
 ## System dependencies are found with CMake's conventions
@@ -118,7 +127,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES controller_xmaxx
-  CATKIN_DEPENDS roscpp rospy std_msgs nav_msgs geometry_msgs message_runtime ackermann_msgs mobility_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs nav_msgs geometry_msgs message_runtime ackermann_msgs mobility_msgs dynamic_reconfigure
 #  DEPENDS system_lib
 )
 
@@ -214,3 +223,6 @@ include_directories(
 add_executable(controller_xmaxx src/controller_xmaxx.cpp)
 add_dependencies(controller_xmaxx controller_xmaxx_generate_messages_cpp)
 target_link_libraries(controller_xmaxx ${catkin_LIBRARIES})
+
+# make sure configure headers are built before any node using them
+add_dependencies(controller_xmaxx ${PROJECT_NAME}_gencfg)
