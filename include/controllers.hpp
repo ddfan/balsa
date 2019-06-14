@@ -264,13 +264,13 @@ class AckermannController : public PositionController {
     params_data.using_encoders = using_encoders_;
 
     // TODO: Add Testing mode information to debug/info
-    std::cout << std::setprecision(4) << std::fixed
+    /*std::cout << std::setprecision(4) << std::fixed
               << "\n\n CONTROLLER_XMAXX DEBUG: "
               << "\nyaw: " << yaw_est << "\npitch: " << pitch_est
               << "\nroll: " << roll_est << "\nvel_d: " << desired_velocity
               << "\nvel_bx: " << current_velocity_body_x
               << "\nsteering_angle: " << output.drive.steering_angle;
-    
+    */
     return true;
   }
 

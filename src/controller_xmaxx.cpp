@@ -43,8 +43,13 @@ void setpoint_callback(
     const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
     //ROS_INFO("New setpoint");
 
-  setpoint_time_stamp_ = ros::Time::now();
-  x_d_ = *msg;
+  setpoint_time_stamp_ = ros::Time::now(); //msg->header.stamp; //TODO: Only for sanity check. Revert after.
+  /* Check if frame id is accurate */
+  if (msg->header.frame_id.find("base_link")) {
+    x_d_ = *msg;
+  } else{
+    ROS_ERROR("Ackermann Command cordinate frame should be base_link frame");
+  }
 }
 
 void resiliency_status_callback(
@@ -210,14 +215,15 @@ int main(int argc, char **argv) {
   f = boost::bind(&AckermannController::change_pid_gains, &controller, _1, _2);
   drc_server.setCallback(f);
 
-  tf::StampedTransform T_Imu_Blf;
+  // Get the static transform from Imu->Bl
+  tf::StampedTransform T_Imu_Bl;
   tf::TransformListener listener;
 
   bool wait_for_tf = true;
   while (wait_for_tf)
   {
     try{
-    listener.lookupTransform("/imu", "/base_link", ros::Time(0), T_Imu_Blf); // ToDo: Get parent frame from odometry msg.
+    listener.lookupTransform("/imu", "/base_link", ros::Time(0), T_Imu_Bl); // ToDo: Get parent frame from odometry msg.
     ROS_INFO("Try");
     wait_for_tf = false;
 
@@ -231,23 +237,22 @@ int main(int argc, char **argv) {
 
   }
 
-  
-
-  tf::Quaternion rotquat_ImuBlf = T_Imu_Blf.getRotation();
-  tf::Matrix3x3 rotmat_ImuBLf;
-  rotmat_ImuBLf.setRotation(rotquat_ImuBlf);
+  tf::Quaternion q_Imu_Bl = T_Imu_Bl.getRotation();
+  tf::Matrix3x3 R_Imu_Bl;
+  R_Imu_Bl.setRotation(q_Imu_Bl);
 
   // Transpose matrix.
-  tf::Matrix3x3 rotmat_ImuBLf_trp = rotmat_ImuBLf.transpose();
+  //tf::Matrix3x3 R_ImuBL_tp = R_ImuBL.transpose();
 
-  tfScalar roll;
+  /*tfScalar roll;
   tfScalar pitch; 
   tfScalar yaw;
-  rotmat_ImuBLf.getRPY(roll, pitch, yaw, 1); 
+  R_ImuBL.getRPY(roll, pitch, yaw, 1); 
 
   std::cout << "roll= " << roll<<std::endl;
   std::cout << "pitch= " << pitch<<std::endl;
   std::cout << "yaw= " << yaw<<std::endl;
+  */
   //######################################
 
 
@@ -264,19 +269,43 @@ int main(int argc, char **argv) {
       x_d_.drive.acceleration = 0;
       x_d_.drive.jerk = 0;
 
-      ROS_WARN("Controller setpoint callback timeout!!");
+      //ROS_WARN("Controller setpoint callback timeout!!");
     }
 
-    // Create vector 3 with tdotx, tdoty, tdotz.
-    tf::Vector3 velocity_map_frame = tf::Vector3(odom_est_.twist.twist.linear.x,
+    //######################################
+    // Get the quaternion q_ImuSImu
+    tf::Quaternion q_ImuS_Imu(odom_est_.pose.pose.orientation.x,
+      odom_est_.pose.pose.orientation.y,
+      odom_est_.pose.pose.orientation.z,
+      odom_est_.pose.pose.orientation.w);
+
+    // Create Rotmat R_ImuS_Imu
+    tf::Matrix3x3 R_ImuS_Imu;
+    R_ImuS_Imu.setRotation(q_ImuS_Imu);
+
+    // Get rotation matrix R_Bl_ImuS.
+    tf::Matrix3x3 R_ImuS_Bl = R_ImuS_Imu*R_Imu_Bl;
+    tf::Matrix3x3 R_Bl_ImuS = R_ImuS_Bl.transpose();
+
+    // Get velocity in ImuS frame.
+    tf::Vector3 velocity_ImuS = tf::Vector3(odom_est_.twist.twist.linear.x,
       odom_est_.twist.twist.linear.y,
       odom_est_.twist.twist.linear.z);
-    tf::Vector3 velocity_body_frame = tf::Vector3(rotmat_ImuBLf_trp.tdotx(velocity_map_frame),
-      rotmat_ImuBLf_trp.tdoty(velocity_map_frame),
-      rotmat_ImuBLf_trp.tdotz(velocity_map_frame));
+
+    // Transform twist from ImuS to baselink. R_Bl_ImuS*v_ImuS
+    tf::Vector3 velocity_Bl = tf::Vector3(R_ImuS_Bl.tdotx(velocity_ImuS),
+      R_ImuS_Bl.tdoty(velocity_ImuS),
+      R_ImuS_Bl.tdotz(velocity_ImuS));
+
+    // Print for sanity check.
+    std::cout<<"velocity_Bl.x: "<<velocity_Bl.x()<<std::endl;
+    std::cout<<"velocity_Bl.y: "<<velocity_Bl.y()<<std::endl;
+    std::cout<<"velocity_Bl.z: "<<velocity_Bl.z()<<std::endl;
+
+    //######################################
 
     controller.get_control_input(x_d_, odom_est_, vel_est_encoders_, accel_est_,
-                                 output, debug_msg, params_msg, velocity_body_frame);
+                                 output, debug_msg, params_msg, velocity_Bl);
 
     /* check callback timeouts.  If no state estimate updates, publish zeros */
     bool callback_timeout = false;
