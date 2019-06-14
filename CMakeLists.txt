@@ -18,14 +18,13 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   ackermann_msgs
   mobility_msgs
-
   dynamic_reconfigure
 )
 
 # Add dynamic reconfigure api
 #find_package(catkin REQUIRED dynamic_reconfigure)
 generate_dynamic_reconfigure_options(
-  cfg/PidConfig.cfg
+  cfg/Pid.cfg
   #...
 )
 
@@ -221,8 +220,9 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(controller_xmaxx src/controller_xmaxx.cpp)
-add_dependencies(controller_xmaxx controller_xmaxx_generate_messages_cpp)
-target_link_libraries(controller_xmaxx ${catkin_LIBRARIES})
 
 # make sure configure headers are built before any node using them
-add_dependencies(controller_xmaxx ${PROJECT_NAME}_gencfg)
+add_dependencies(controller_xmaxx controller_xmaxx_generate_messages_cpp ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
+
+target_link_libraries(controller_xmaxx ${catkin_LIBRARIES})
+

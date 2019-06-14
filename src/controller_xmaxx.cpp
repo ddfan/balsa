@@ -43,13 +43,8 @@ void setpoint_callback(
     const ackermann_msgs::AckermannDriveStamped::ConstPtr &msg) {
     //ROS_INFO("New setpoint");
 
-  setpoint_time_stamp_ = ros::Time::now(); //msg->header.stamp; //TODO: Only for sanity check. Revert after.
-  /* Check if frame id is accurate */
-  if (msg->header.frame_id.find("base_link")) {
-    x_d_ = *msg;
-  } else{
-    ROS_ERROR("Ackermann Command cordinate frame should be base_link frame");
-  }
+  setpoint_time_stamp_ = ros::Time::now();
+  x_d_ = *msg;
 }
 
 void resiliency_status_callback(
