@@ -45,11 +45,11 @@ void setpoint_callback(
 
   setpoint_time_stamp_ = ros::Time::now(); //msg->header.stamp; //TODO: Only for sanity check. Revert after.
   /* Check if frame id is accurate */
-  if (msg->header.frame_id.find("base_link")) {
+//  if (msg->header.frame_id.find("base_link")) {
     x_d_ = *msg;
-  } else{
-    ROS_ERROR("Ackermann Command cordinate frame should be base_link frame");
-  }
+//  } else{
+//    ROS_ERROR("Ackermann Command cordinate frame should be base_link frame");
+//  }
 }
 
 void resiliency_status_callback(

@@ -125,7 +125,7 @@ class PositionController {
 and yaw to move towards the desired position. */
 class AckermannController : public PositionController {
   double controller_freq_ = 50, kp_vel_ = 1.0, kd_vel_ = 0.5, ki_vel_ = 0.0,
-         max_vel_error_ = 5.0, max_velI_ = 10.0, max_velocity_ = 0.1;
+         max_vel_error_ = 5.0, max_velI_ = 10.0, max_velocity_ = 0.1, output_deadband_ = 0.7, input_deadband_ = 0.1;
 
   bool using_encoders_ = false;
 
@@ -156,6 +156,8 @@ class AckermannController : public PositionController {
 
     nhp.param<double>("rolling_max_velocity", max_velocity_, max_velocity_);
     nhp.param<bool>("using_encoders", using_encoders_, using_encoders_);
+    nhp.param<double>("output_deadband", output_deadband_, output_deadband_);
+    nhp.param<double>("input_deadband", input_deadband_, input_deadband_);
   }
 
   bool get_control_input(const ackermann_msgs::AckermannDriveStamped& x_d,
@@ -226,8 +228,15 @@ class AckermannController : public PositionController {
     /* create message */
     output = x_d;
     double speed_output = x_d.drive.speed + r_a_x;
+    if (speed_output > input_deadband_)
+       speed_output += output_deadband_;
+    else if (speed_output < -input_deadband_)
+       speed_output -= output_deadband_;
+    else
+       speed_output = 0.0;
+
     saturate(speed_output, max_velocity_, -max_velocity_);
-    output.drive.speed = x_d.drive.speed + r_a_x;
+    output.drive.speed = speed_output;
 
     /* check if actuator commands are nan */
     if (output.drive.speed != output.drive.speed) {
