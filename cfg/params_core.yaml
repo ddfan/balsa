@@ -7,11 +7,11 @@ using_encoders: false
 
 rolling_max_velocity: 5.0 #0.5
 
-output_deadband: 0.7
-input_deadband: 0.1
+output_deadband: 0.0
+input_deadband: 0.0
 
 # Rolling Gains
-rolling_kp_vel: 1.0 #5
+rolling_kp_vel: 0.5 #5
 rolling_kd_vel: 0.0 #feedforward term from local planner
 rolling_ki_vel: 0.0
 
