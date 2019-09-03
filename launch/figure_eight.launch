@@ -1,0 +1,7 @@
+<launch>
+  <arg name="rate" default="30.0"/>
+
+  <node pkg="controller_adaptiveclbf" type="figure_eight.py" name="figure_eight" output="screen" respawn="true">
+    <remap from="target" to="/odometry_goal" />
+  </node>
+</launch>

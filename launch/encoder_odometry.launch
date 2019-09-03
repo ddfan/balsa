@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="controller_adaptiveclbf" type="encoder_odometry.py" name="encoder_odometry" output="screen" respawn="true">
+  </node>
+</launch>
