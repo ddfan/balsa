@@ -134,7 +134,7 @@ class AdaptiveClbfNode(object):
                  goal.pose.orientation.w)
             euler = tr.euler_from_quaternion(q)
             rel_yaw = euler[2]
-            
+
             q2 = (self.odom.pose.pose.orientation.x,
                  self.odom.pose.pose.orientation.y,
                  self.odom.pose.pose.orientation.z,
@@ -166,8 +166,8 @@ class AdaptiveClbfNode(object):
             distance_from_goal = np.sqrt((goal.pose.position.x-self.odom.pose.pose.position.x)**2 + (goal.pose.position.y-self.odom.pose.pose.position.y)**2 )
             desired_vel = np.minimum(self.desired_vel,distance_from_goal * self.kp_goal)
         else:
-            desired_vel = self.desired_vel 
-        
+            desired_vel = self.desired_vel
+
         if self.current_vel_body_x < 0:
             desired_vel = - np.abs(desired_vel)
 
@@ -220,10 +220,10 @@ class AdaptiveClbfNode(object):
             if self.sent_train_goal and (state == GoalStatus.PENDING or state == GoalStatus.ACTIVE):
                 return
             elif state == GoalStatus.SUCCEEDED:
-                self.adaptive_clbf.model_trained = True
-            
+                self.adaptive_clbf.model_trained = self.adaptive_clbf.train_model_action_client.get_result().model_trained
+
             self.sent_train_goal = False
-            
+
             end_time = rospy.get_rostime()
             # if self.params["verbose"]:
             rospy.logwarn(["training latency (ms): ", (end_time-self.train_start_time).to_sec() * 1000.0])
@@ -292,7 +292,7 @@ class AdaptiveClbfNode(object):
             self.timer = rospy.Timer(rospy.Duration(self.dt), self.timer_cb)
             self.sent_train_goal = False
             return
-            
+
         if dt < self.dt / 4.0:
             rospy.logwarn("dt is too small! (%f)  skipping this odometry callback!", dt)
             return
