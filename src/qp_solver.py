@@ -50,6 +50,7 @@ class QPSolve():
         Gsig = np.matmul(self.G,sigDelta)
         GssG = np.matmul(Gsig,Gsig.T)
         trGssGP = np.trace(np.matmul(GssG,self.P))
+        print(trGssGP)
         h_dyn = -1 * ( -0.5*np.matmul(e.T,np.matmul(Q,e))
                     + 0.5*np.matmul(e.T,np.matmul(self.P,e)) / self.clf.epsilon
                     + 0.5*trGssGP)
@@ -116,14 +117,11 @@ class QPSolve():
             print('z_des: ', x_d.T)
             print('u_lim', self.u_lim)
             print('V: ', self.V)
-            print('f:')
-            print(f)
-            print('g:')
-            print(g)
             print('Q:', Q)
             print('p:', np.array(self.p))
             print('G_dyn:', G_dyn)
             print('h_dyn:', h_dyn)
+            print('trGssGP',trGssGP)
             if h_cbf.shape[0] < 10:
                 print('G_cbf:', G_cbf)
                 print('h_cbf:', h_cbf)

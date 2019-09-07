@@ -154,7 +154,7 @@ class AdaptiveClbf(object):
 		self.z_ref_dot = copy.copy(z_ref_dot)
 		mu_rm = self.z_ref_dot[2:-1]
 		mu_l = mu_rm + mu_pd
-		
+
 		mu_model = np.matmul(self.dyn.g(self.z_prev),self.u_prev) + self.dyn.f(self.z_prev)
 
 		if add_data:
@@ -198,11 +198,12 @@ class AdaptiveClbf(object):
 
 					rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
 					mu_ad = mDelta * rho
-					sigDelta = (sigDelta - 1.0) / self.measurement_noise 
+					# sigDelta = (sigDelta - 1.0) / self.measurement_noise 
 			except:
 				print("predict service unavailable")
 		mu_d = mu_rm + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
+		sigDelta = self.measurement_noise * np.ones((self.xdim/2,1))
 		if use_qp:
 			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_d,mu_rm,sigDelta)
 

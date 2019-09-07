@@ -103,13 +103,25 @@ class BarrierAckermannVelocityZ(Barrier):
 		sgn = 1.0
 		if self.bound_from_above:
 			sgn = -1.0
-		return np.stack((np.array([0]),np.array([0]),2*z[2,:],2*z[3,:]))*z[4,:]*sgn
+		z1 = z[0,:]
+		z2 = z[1,:]
+		z3 = z[2,:]
+		z4 = z[3,:]
+		z5 = z[4,:]
+		return np.stack((np.array([0]), np.array([0]), (z3*z5)/(z3**2 + z4**2)**(1/2), (z4*z5)/(z3**2 + z4**2)**(1/2))) * sgn
 
 	def d2h(self,z):
 		sgn = 1.0
 		if self.bound_from_above:
 			sgn = -1.0
-		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),2*sgn*z[4,:]*np.ones((2,2))]])
+		z1 = z[0,:]
+		z2 = z[1,:]
+		z3 = z[2,:]
+		z4 = z[3,:]
+		z5 = z[4,:]
+		H = np.block([[(z4**2*z5)/(z3**2 + z4**2)**(3/2), -(z3*z4*z5)/(z3**2 + z4**2)**(3/2)],
+			[-(z3*z4*z5)/(z3**2 + z4**2)**(3/2),   (z3**2*z5)/(z3**2 + z4**2)**(3/2)]])
+		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),H]]) * sgn
 
 
 class BarrierAckermannPositionZ(Barrier):
