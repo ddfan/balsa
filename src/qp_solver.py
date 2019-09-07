@@ -50,7 +50,6 @@ class QPSolve():
         Gsig = np.matmul(self.G,sigDelta)
         GssG = np.matmul(Gsig,Gsig.T)
         trGssGP = np.trace(np.matmul(GssG,self.P))
-        print(trGssGP)
         h_dyn = -1 * ( -0.5*np.matmul(e.T,np.matmul(Q,e))
                     + 0.5*np.matmul(e.T,np.matmul(self.P,e)) / self.clf.epsilon
                     + 0.5*trGssGP)
