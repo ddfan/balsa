@@ -152,7 +152,9 @@ class AdaptiveClbf(object):
 
 		# self.z_ref_dot = (self.z_ref_next[:-1,:] - self.z_ref[:-1,:]) / dt # use / self.dt for test_adaptive_clbf
 		self.z_ref_dot = copy.copy(z_ref_dot)
-
+		mu_rm = self.z_ref_dot[2:-1]
+		mu_l = mu_rm + mu_pd
+		
 		mu_model = np.matmul(self.dyn.g(self.z_prev),self.u_prev) + self.dyn.f(self.z_prev)
 
 		if add_data:
@@ -196,16 +198,15 @@ class AdaptiveClbf(object):
 
 					rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
 					mu_ad = mDelta * rho
-					sigDelta = (sigDelta - 1.0) / self.measurement_noise * 0
+					sigDelta = (sigDelta - 1.0) / self.measurement_noise 
 			except:
 				print("predict service unavailable")
-		
-		mu_d = self.z_ref_dot[2:-1] + mu_pd - mu_ad
+		mu_d = mu_rm + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
 		if use_qp:
 			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_d,mu_rm,sigDelta)
 
-		self.mu_new = mu_l - mu_ad + self.mu_qp
+		self.mu_new =mu_d + self.mu_qp
 		self.u_new = np.matmul(np.linalg.inv(self.dyn.g(self.z)), (self.mu_new-self.dyn.f(self.z)))
 
 		u_new_unsaturated = copy.copy(self.u_new)
@@ -215,7 +216,7 @@ class AdaptiveClbf(object):
 		if self.verbose:
 			print('z: ', self.z.T)
 			print('z_ref: ', self.z_ref.T)
-			print('mu_rm', self.z_ref_dot)
+			print('mu_rm', mu_rm)
 			print('mu_pd', mu_pd)
 			print('mu_ad', mu_ad)
 			print('mu_d', mu_d)

@@ -174,8 +174,8 @@ class BarrierAckermannPointZ(Barrier):
 		x_pos = self.x
 		y_pos = self.y
 		return sgn * np.stack((
-			(z3*(d^2) - x_pos^2*z3 - z1^2*z3 - gamma_p*x_pos*(d^2) + gamma_p*z1*(d^2) - x_pos*y_pos*z4 + 2*x_pos*z1*z3 + x_pos*z2*z4 + y_pos*z1*z4 - z1*z2*z4)/(d^3),
-			(z4*(d^2) - y_pos^2*z4 - z2^2*z4 - gamma_p*y_pos*(d^2) + gamma_p*z2*(d^2) - x_pos*y_pos*z3 + x_pos*z2*z3 + y_pos*z1*z3 + 2*y_pos*z2*z4 - z1*z2*z3)/(d^3),
+			(z3*(d**2) - x_pos**2*z3 - z1**2*z3 - gamma_p*x_pos*(d**2) + gamma_p*z1*(d**2) - x_pos*y_pos*z4 + 2*x_pos*z1*z3 + x_pos*z2*z4 + y_pos*z1*z4 - z1*z2*z4)/(d**3),
+			(z4*(d**2) - y_pos**2*z4 - z2**2*z4 - gamma_p*y_pos*(d**2) + gamma_p*z2*(d**2) - x_pos*y_pos*z3 + x_pos*z2*z3 + y_pos*z1*z3 + 2*y_pos*z2*z4 - z1*z2*z3)/(d**3),
 			-(x_pos - z1)/d,
 			-(y_pos - z2)/d))
 
@@ -185,16 +185,16 @@ class BarrierAckermannPointZ(Barrier):
 			sgn = -1.0
 
 		d = np.sqrt((z[0,:] - self.x)**2 + (z[1,:] - self.y)**2) + 1.0e-6
-		z1 = z[0]
-		z2 = z[1]
-		z3 = z[2]
-		z4 = z[3]
-		z5 = z[4]
+		z1 = z[0,:]
+		z2 = z[1,:]
+		z3 = z[2,:]
+		z4 = z[3,:]
+		z5 = z[4,:]
 		gamma_p = self.gamma_p
 		x_pos = self.x
 		y_pos = self.y
-		return sgn * np.array([
-			[ ((y_pos - z2)*(gamma_p*x_pos^2*y_pos - gamma_p*x_pos^2*z2 - 2*z4*x_pos^2 - 2*gamma_p*x_pos*y_pos*z1 + 3*z3*x_pos*y_pos + 2*gamma_p*x_pos*z1*z2 + 4*z4*x_pos*z1 - 3*z3*x_pos*z2 + gamma_p*y_pos^3 - 3*gamma_p*y_pos^2*z2 + z4*y_pos^2 + gamma_p*y_pos*z1^2 - 3*z3*y_pos*z1 + 3*gamma_p*y_pos*z2^2 - 2*z4*y_pos*z2 - gamma_p*z1^2*z2 - 2*z4*z1^2 + 3*z3*z1*z2 - gamma_p*z2^3 + z4*z2^2))/(d^2)^(5/2),(z4*(x_pos - z1))/(d^2)^(3/2) + (z3*(y_pos - z2))/(d^2)^(3/2) - (gamma_p*(2*x_pos - 2*z1)*(2*y_pos - 2*z2))/(4*(d^2)^(3/2)) - (3*z3*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(x_pos - z1))/(4*(d^2)^(5/2)) - (3*z4*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(y_pos - z2))/(4*(d^2)^(5/2)),(y_pos - z2)^2/(d^2)^(3/2), -((2*x_pos - 2*z1)*(y_pos - z2))/(2*(d^2)^(3/2))],
-			[(z4*(x_pos - z1))/(d^2)^(3/2) + (z3*(y_pos - z2))/(d^2)^(3/2) - (gamma_p*(2*x_pos - 2*z1)*(2*y_pos - 2*z2))/(4*(d^2)^(3/2)) - (3*z3*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(x_pos - z1))/(4*(d^2)^(5/2)) - (3*z4*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(y_pos - z2))/(4*(d^2)^(5/2)), ((x_pos - z1)*(gamma_p*x_pos^3 - 3*gamma_p*x_pos^2*z1 + z3*x_pos^2 + gamma_p*x_pos*y_pos^2 - 2*gamma_p*x_pos*y_pos*z2 + 3*z4*x_pos*y_pos + 3*gamma_p*x_pos*z1^2 - 2*z3*x_pos*z1 + gamma_p*x_pos*z2^2 - 3*z4*x_pos*z2 - gamma_p*y_pos^2*z1 - 2*z3*y_pos^2 + 2*gamma_p*y_pos*z1*z2 - 3*z4*y_pos*z1 + 4*z3*y_pos*z2 - gamma_p*z1^3 + z3*z1^2 - gamma_p*z1*z2^2 + 3*z4*z1*z2 - 2*z3*z2^2))/(d^2)^(5/2), -((2*y_pos - 2*z2)*(x_pos - z1))/(2*(d^2)^(3/2)),(x_pos - z1)^2/(d^2)^(3/2)],
-			[(y_pos - z2)^2/(d^2)^(3/2),-((2*y_pos - 2*z2)*(x_pos - z1))/(2*(d^2)^(3/2)),0,0],
-			[-((2*x_pos - 2*z1)*(y_pos - z2))/(2*(d^2)^(3/2)),(x_pos - z1)^2/(d^2)^(3/2),0,0]])
+		return sgn * np.block([
+			[ ((y_pos - z2)*(gamma_p*x_pos**2*y_pos - gamma_p*x_pos**2*z2 - 2*z4*x_pos**2 - 2*gamma_p*x_pos*y_pos*z1 + 3*z3*x_pos*y_pos + 2*gamma_p*x_pos*z1*z2 + 4*z4*x_pos*z1 - 3*z3*x_pos*z2 + gamma_p*y_pos**3 - 3*gamma_p*y_pos**2*z2 + z4*y_pos**2 + gamma_p*y_pos*z1**2 - 3*z3*y_pos*z1 + 3*gamma_p*y_pos*z2**2 - 2*z4*y_pos*z2 - gamma_p*z1**2*z2 - 2*z4*z1**2 + 3*z3*z1*z2 - gamma_p*z2**3 + z4*z2**2))/(d**2)**(5/2),(z4*(x_pos - z1))/(d**2)**(3/2) + (z3*(y_pos - z2))/(d**2)**(3/2) - (gamma_p*(2*x_pos - 2*z1)*(2*y_pos - 2*z2))/(4*(d**2)**(3/2)) - (3*z3*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(x_pos - z1))/(4*(d**2)**(5/2)) - (3*z4*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(y_pos - z2))/(4*(d**2)**(5/2)),(y_pos - z2)**2/(d**2)**(3/2), -((2*x_pos - 2*z1)*(y_pos - z2))/(2*(d**2)**(3/2))],
+			[(z4*(x_pos - z1))/(d**2)**(3/2) + (z3*(y_pos - z2))/(d**2)**(3/2) - (gamma_p*(2*x_pos - 2*z1)*(2*y_pos - 2*z2))/(4*(d**2)**(3/2)) - (3*z3*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(x_pos - z1))/(4*(d**2)**(5/2)) - (3*z4*(2*x_pos - 2*z1)*(2*y_pos - 2*z2)*(y_pos - z2))/(4*(d**2)**(5/2)), ((x_pos - z1)*(gamma_p*x_pos**3 - 3*gamma_p*x_pos**2*z1 + z3*x_pos**2 + gamma_p*x_pos*y_pos**2 - 2*gamma_p*x_pos*y_pos*z2 + 3*z4*x_pos*y_pos + 3*gamma_p*x_pos*z1**2 - 2*z3*x_pos*z1 + gamma_p*x_pos*z2**2 - 3*z4*x_pos*z2 - gamma_p*y_pos**2*z1 - 2*z3*y_pos**2 + 2*gamma_p*y_pos*z1*z2 - 3*z4*y_pos*z1 + 4*z3*y_pos*z2 - gamma_p*z1**3 + z3*z1**2 - gamma_p*z1*z2**2 + 3*z4*z1*z2 - 2*z3*z2**2))/(d**2)**(5/2), -((2*y_pos - 2*z2)*(x_pos - z1))/(2*(d**2)**(3/2)),(x_pos - z1)**2/(d**2)**(3/2)],
+			[(y_pos - z2)**2/(d**2)**(3/2),-((2*y_pos - 2*z2)*(x_pos - z1))/(2*(d**2)**(3/2)),0,0],
+			[-((2*x_pos - 2*z1)*(y_pos - z2))/(2*(d**2)**(3/2)),(x_pos - z1)**2/(d**2)**(3/2),0,0]])

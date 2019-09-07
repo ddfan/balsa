@@ -46,10 +46,10 @@ class QPSolve():
         e = x[:-1,:]-x_d[:-1,:]
         e = np.clip(e,-self.max_error,self.max_error)
         eTPG = np.matmul(e.T,np.matmul(self.P,self.G))
-        G_dyn = np.expand_dims(np.append(np.append(eTPAG,1),0),0) #append 1 for clf < d
-        Gsig = np.matmul(G,sigDelta)
+        G_dyn = np.expand_dims(np.append(np.append(eTPG,1),0),0) #append 1 for clf < d
+        Gsig = np.matmul(self.G,sigDelta)
         GssG = np.matmul(Gsig,Gsig.T)
-        trGssGP = np.trace(np.matmul(GssG,P))
+        trGssGP = np.trace(np.matmul(GssG,self.P))
         h_dyn = -1 * ( -0.5*np.matmul(e.T,np.matmul(Q,e))
                     + 0.5*np.matmul(e.T,np.matmul(self.P,e)) / self.clf.epsilon
                     + 0.5*trGssGP)
@@ -58,10 +58,10 @@ class QPSolve():
         N_cbf = len(self.cbf_list)
         G_cbf = np.zeros((N_cbf,self.xdim/2+2))
         h_cbf = np.zeros((N_cbf,1))
-        trGssGd2B = np.trace(np.matmul(GssG,self.cbf_list[i].d2B(x)))
         for i in range(N_cbf):
             dB = self.cbf_list[i].dB(x).T
             G_cbf[i,:] = np.append(np.append(np.matmul(dB,self.G),0),1)
+            trGssGd2B = np.trace(np.matmul(GssG,self.cbf_list[i].d2B(x)))
             h_cbf[i,:] = -1 * ( np.matmul(dB,np.matmul(self.A,e)+np.matmul(self.A0,x_d[:-1,:])+np.matmul(self.G,mu_rm))
                                 - self.cbf_list[i].gamma / self.cbf_list[i].B(x)
                                 + 0.5*trGssGd2B)

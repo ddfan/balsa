@@ -16,3 +16,4 @@ src/lyapunov.pyc
 src/model_gp.pyc
 src/qp_solver.pyc
 src/scaledgp.pyc
+src/vanilla_nn.pyc
