@@ -1,5 +1,4 @@
 float32[] x
-float32[] mu
 float32[] obs
 ---
 # result

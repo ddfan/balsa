@@ -168,7 +168,7 @@ class AdaptiveClbf(object):
 			# check how the model is doing.  compare the model's prediction with the actual sampled data.
 			z_dot = (self.z[2:-1,:]-self.z_prev[2:-1,:])/dt
 			try:
-				result = self.model_predict_srv(self.z_prev.flatten(),z_dot.flatten(),self.obs_prev.flatten())
+				result = self.model_predict_srv(self.z_prev.flatten(),self.obs_prev.flatten())
 				if result.result:
 					y_out = np.expand_dims(result.y_out, axis=0).T
 					var = np.expand_dims(result.var, axis=0).T
@@ -186,7 +186,7 @@ class AdaptiveClbf(object):
 
 		if use_model and self.model_trained:
 			try:
-				result = self.model_predict_srv(self.z.flatten(),mu_l.flatten(),self.obs.flatten())
+				result = self.model_predict_srv(self.z.flatten(),self.obs.flatten())
 				if result.result:
 					mDelta = np.expand_dims(result.y_out, axis=0).T
 					sigDelta = np.expand_dims(result.var, axis=0).T

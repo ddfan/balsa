@@ -31,12 +31,12 @@ class VanillaNN:
 		output_loss = NegativeLogLikelihood()([output_mean,output_var,input_y])
 
 		self.m = Model(inputs=[input_x,input_y], outputs=[output_mean,output_var,output_loss])
-		rmsprop = keras.optimizers.RMSprop(lr=0.003, rho=0.9, epsilon=None, decay=0.0)
+		rmsprop = keras.optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=None, decay=0.0)
 		self.m.compile(loss=identity_loss, loss_weights=[0., 0., 1.], optimizer=rmsprop)
 
 		self.graph = tf.get_default_graph()
 
-	def train(self, Z_train, Y_train,_epoch=50,_batch_size=64,_verbose=0):
+	def train(self, Z_train, Y_train,_epoch=50,_batch_size=64,_verbose=2):
 		with self.graph.as_default():
 			self.m.fit([Z_train,Y_train], [Y_train,Y_train,Y_train],epochs=_epoch,batch_size=_batch_size,verbose=_verbose)
 

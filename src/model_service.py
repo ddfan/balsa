@@ -29,9 +29,8 @@ BASE_PATH = os.path.expanduser('~/Documents')
 class ModelService(object):
 	_train_result = controller_adaptiveclbf.msg.TrainModelResult()
 
-	def __init__(self,xdim,udim,odim,use_obs):
+	def __init__(self,xdim,odim,use_obs):
 		self.xdim=xdim
-		self.udim=udim
 		self.odim=odim
 		self.use_obs = use_obs
 		self.verbose = True
@@ -91,11 +90,11 @@ class ModelService(object):
 			return x * xstd + xmean
 
 class ModelVanillaService(ModelService):
-	def __init__(self,xdim,udim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,udim,odim,use_obs)
+	def __init__(self,xdim,odim,use_obs=False):
+		ModelService.__init__(self,xdim,odim,use_obs)
 
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
-		model_xdim=self.xdim
+		model_xdim=self.xdim/2
 		if self.use_obs:
 			 model_xdim += self.odim
 		model_ydim=self.xdim/2
@@ -118,17 +117,14 @@ class ModelVanillaService(ModelService):
 		x_body[1] = -x[0] * np.sin(theta) + x[1] * np.cos(theta)
 		return x_body
 
-	def make_input(self,x,mu,obs):
+	def make_input(self,x,obs):
 		# format input vector
-		# v = np.sqrt(x[2:3,:]**2 + x[3:4,:]**2) * x[4:5,:]
-		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta = obs[0]
 		x_body = self.rotate(x[2:-1,:],theta)
-		mu_body = self.rotate(mu,theta)
 		if self.use_obs:
-			Z = np.concatenate((x_body,mu_body,obs[1:,:])).T
+			Z = np.concatenate((x_body,obs[1:,:])).T
 		else:
-			Z = np.concatenate((x_body,mu_body)).T
+			Z = np.concatenate((x_body)).T
 
 		Z = self.scale_data(Z,self.Zmean,self.Zstd)
 		return Z
@@ -139,10 +135,9 @@ class ModelVanillaService(ModelService):
 			resp.result = False
 			return resp
 		x = np.expand_dims(req.x, axis=0).T
-		mu = np.expand_dims(req.mu, axis=0).T
 		obs = np.expand_dims(req.obs, axis=0).T
 
-		Z = self.make_input(x,mu,obs)
+		Z = self.make_input(x,obs)
 
 		# needed fix for weird shapes of tensors
 		ZN = np.concatenate((self.Z[-9:,:],Z))
@@ -194,7 +189,7 @@ class ModelVanillaService(ModelService):
 		# add a sample to the history of data
 		x_dot = (x_next[2:-1,:]-x[2:-1,:])/dt
 		ynew = x_dot - mu_model
-		Znew = self.make_input(x,x_dot,obs)
+		Znew = self.make_input(x,obs)
 
 		theta=obs[0]
 		ynew_rotated = self.rotate(ynew,theta)
@@ -221,11 +216,11 @@ class ModelVanillaService(ModelService):
 		return AddData2ModelResponse(True)
 
 class ModelALPaCAService(ModelService):
-	def __init__(self,xdim,udim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,udim,odim,use_obs)
+	def __init__(self,xdim,odim,use_obs=False):
+		ModelService.__init__(self,xdim,odim,use_obs)
 
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
-		model_xdim=self.xdim
+		model_xdim=self.xdim/2
 		if self.use_obs:
 			 model_xdim += self.odim
 		model_ydim=self.xdim/2
@@ -273,17 +268,14 @@ class ModelALPaCAService(ModelService):
 		x_body[1] = -x[0] * np.sin(theta) + x[1] * np.cos(theta)
 		return x_body
 
-	def make_input(self,x,mu,obs):
+	def make_input(self,x,obs):
 		# format input vector
-		# v = np.sqrt(x[2:3,:]**2 + x[3:4,:]**2) * x[4:5,:]
-		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta = obs[0]
 		x_body = self.rotate(x[2:-1,:],theta)
-		mu_body = self.rotate(mu,theta)
 		if self.use_obs:
-			Z = np.concatenate((x_body,mu_body,obs[1:,:])).T
+			Z = np.concatenate((x_body,obs[1:,:])).T
 		else:
-			Z = np.concatenate((x_body,mu_body)).T
+			Z = np.concatenate((x_body)).T
 
 		Z = self.scale_data(Z,self.Zmean,self.Zstd)
 		return Z
@@ -294,14 +286,13 @@ class ModelALPaCAService(ModelService):
 			resp.result = False
 			return resp
 		x = np.expand_dims(req.x, axis=0).T
-		mu = np.expand_dims(req.mu, axis=0).T
 		obs = np.expand_dims(req.obs, axis=0).T
 
 		# format the input and use the model to make a prediction.
 		z_context = np.reshape(self.Z[-self.config["data_horizon"]:,:],(1,np.minimum(self.config["data_horizon"],self.Z.shape[0]),self.config['x_dim']))
 		y_context = np.reshape(self.y[-self.config["data_horizon"]:,:],(1,np.minimum(self.config["data_horizon"],self.y.shape[0]),self.config['y_dim']))
 
-		Z = self.make_input(x,mu,obs)
+		Z = self.make_input(x,obs)
 		Z = np.reshape(Z,(1,1,self.config['x_dim']))
 
 		y, var = self.m.test(z_context,y_context,Z)
@@ -373,7 +364,7 @@ class ModelALPaCAService(ModelService):
 		# add a sample to the history of data
 		x_dot = (x_next[2:-1,:]-x[2:-1,:])/dt
 		ynew = x_dot - mu_model
-		Znew = self.make_input(x,x_dot,obs)
+		Znew = self.make_input(x,obs)
 		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta=obs[0]
 		ynew_rotated = self.rotate(ynew,theta).T
@@ -409,10 +400,10 @@ class ModelALPaCAService(ModelService):
 		return AddData2ModelResponse(True)
 
 class ModelGPService(ModelService):
-	def __init__(self,xdim,udim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,udim,odim,use_obs)
+	def __init__(self,xdim,odim,use_obs=False):
+		ModelService.__init__(self,xdim,odim,use_obs)
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
-		model_xdim=self.xdim
+		model_xdim=self.xdim/2
 		if self.use_obs:
 			 model_xdim += self.odim
 		model_ydim=self.xdim/2
@@ -428,17 +419,14 @@ class ModelGPService(ModelService):
 		x_body[1] = -x[0] * np.sin(theta) + x[1] * np.cos(theta)
 		return x_body
 
-	def make_input(self,x,mu,obs):
+	def make_input(self,x,obs):
 		# format input vector
-		# v = np.sqrt(x[2:3,:]**2 + x[3:4,:]**2) * x[4:5,:]
-		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta = obs[0]
 		x_body = self.rotate(x[2:-1,:],theta)
-		mu_body = self.rotate(mu,theta)
 		if self.use_obs:
-			Z = np.concatenate((x_body,mu_body,obs[1:,:])).T
+			Z = np.concatenate((x_body,obs[1:,:])).T
 		else:
-			Z = np.concatenate((x_body,mu_body)).T
+			Z = np.concatenate((x_body)).T
 
 		#normalize input by mean and variance
 		# Z = (Z - self.Zmean) / self.Zvar
@@ -451,11 +439,10 @@ class ModelGPService(ModelService):
 			resp.result = False
 			return resp
 		x = np.expand_dims(req.x, axis=0).T
-		mu = np.expand_dims(req.mu, axis=0).T
 		obs = np.expand_dims(req.obs, axis=0).T
 
 		# format the input and use the model to make a prediction.
-		Z = self.make_input(x,mu,obs)
+		Z = self.make_input(x,obs)
 		y, var = self.m.predict(Z)
 		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta=obs[0]
@@ -497,7 +484,7 @@ class ModelGPService(ModelService):
 		# add a sample to the history of data
 		x_dot = (x_next[2:-1,:]-x[2:-1,:])/dt
 		ynew = x_dot - mu_model
-		Znew = self.make_input(x,x_dot,obs)
+		Znew = self.make_input(x,obs)
 		# theta = np.arctan2(x[3]*x[4],x[2]*x[4])
 		theta=obs[0]
 		ynew_rotated = self.rotate(ynew,theta)
@@ -527,7 +514,7 @@ class ModelGPService(ModelService):
 
 if __name__ == '__main__':
     rospy.init_node('model_service')
-    # server = ModelVanillaService(4,2,6, use_obs = True) # TODO: put this in yaml or somewhere else
-    server = ModelALPaCAService(4,2,6, use_obs = True) # TODO: put this in yaml or somewhere else
-    # server = ModelGPService(4,2,4, use_obs = True) # TODO: put this in yaml or somewhere else
+    server = ModelVanillaService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
+    # server = ModelALPaCAService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
+    # server = ModelGPService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
     rospy.spin()
