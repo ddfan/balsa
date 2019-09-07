@@ -8,7 +8,7 @@ from controller_adaptiveclbf.srv import *
 
 from qp_solver import QPSolve
 from dynamics import DynamicsAckermannZ
-from cbf import BarrierAckermannVelocityZ, BarrierAckermannPositionZ, BarrierAckermannPointZ
+from cbf import BarrierAckermannVelocityZ, BarrierAckermannPointZ
 from lyapunov import LyapunovAckermannZ
 from model_gp import ModelGP, ModelALPaCA
 
@@ -152,7 +152,6 @@ class AdaptiveClbf(object):
 
 		# self.z_ref_dot = (self.z_ref_next[:-1,:] - self.z_ref[:-1,:]) / dt # use / self.dt for test_adaptive_clbf
 		self.z_ref_dot = copy.copy(z_ref_dot)
-		mu_l = self.z_ref_dot[2:-1] + mu_pd
 
 		mu_model = np.matmul(self.dyn.g(self.z_prev),self.u_prev) + self.dyn.f(self.z_prev)
 
@@ -200,12 +199,13 @@ class AdaptiveClbf(object):
 					sigDelta = (sigDelta - 1.0) / self.measurement_noise * 0
 			except:
 				print("predict service unavailable")
-
+		
+		mu_d = self.z_ref_dot[2:-1] + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
 		if use_qp:
-			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_l,mu_ad,sigDelta)
+			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_d,mu_rm,sigDelta)
 
-		self.mu_new = mu_l - mu_ad - self.mu_qp
+		self.mu_new = mu_l - mu_ad + self.mu_qp
 		self.u_new = np.matmul(np.linalg.inv(self.dyn.g(self.z)), (self.mu_new-self.dyn.f(self.z)))
 
 		u_new_unsaturated = copy.copy(self.u_new)
@@ -218,7 +218,7 @@ class AdaptiveClbf(object):
 			print('mu_rm', self.z_ref_dot)
 			print('mu_pd', mu_pd)
 			print('mu_ad', mu_ad)
-			print('mu_l', mu_l)
+			print('mu_d', mu_d)
 			print('mu_model', mu_model)
 			print('rho', rho)
 			print('mu_qp', self.mu_qp)
