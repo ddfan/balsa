@@ -244,7 +244,7 @@ class AdaptiveClbf(object):
 
 				# log error if true system model is available
 				if self.true_dyn is not None:
-					trueDelta = mu_l - (np.matmul(self.dyn.g(self.z),np.matmul(np.linalg.inv(self.true_dyn.g(self.z)),mu_l - self.true_dyn.f(self.z))) + self.dyn.f(self.z))
+					trueDelta = self.true_dyn.f(self.z) - self.dyn.f(self.z)
 					self.true_predict_error = np.linalg.norm(trueDelta - mDelta)
 
 				# rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
