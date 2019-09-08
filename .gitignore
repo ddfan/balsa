@@ -17,3 +17,4 @@ src/model_gp.pyc
 src/qp_solver.pyc
 src/scaledgp.pyc
 src/vanilla_nn.pyc
+model_service.pyc

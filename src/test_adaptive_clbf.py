@@ -11,11 +11,12 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams['pdf.fonttype'] = 42
 matplotlib.rcParams['ps.fonttype'] = 42
 
+odim = 2
 np.random.seed(0)
-adaptive_clbf = AdaptiveClbf(use_service = False)
-adaptive_clbf_qp = AdaptiveClbf(use_service = False)
-adaptive_clbf_ad = AdaptiveClbf(use_service = False)
-adaptive_clbf_pd = AdaptiveClbf(use_service = False)
+adaptive_clbf = AdaptiveClbf(odim=odim, use_service = False)
+adaptive_clbf_qp = AdaptiveClbf(odim=odim, use_service = False)
+adaptive_clbf_ad = AdaptiveClbf(odim=odim, use_service = False)
+adaptive_clbf_pd = AdaptiveClbf(odim=odim, use_service = False)
 
 params={}
 params["vehicle_length"] = 0.25
@@ -26,7 +27,6 @@ params["kp_z"] = 1.0
 params["kd_z"] = 1.0
 params["clf_epsilon"] = 100.0
 
-params["learning_verbose"] = False
 
 params["qp_u_cost"] = 100.0
 params["qp_u_prev_cost"] = 1.0
@@ -41,6 +41,7 @@ params["barrier_vel_gamma"] = 10.0
 params["use_barrier_vel"] = True
 params["use_barrier_pointcloud"] = True
 params["barrier_radius"] = 0.5
+params["barrier_radius_velocity_scale"] = 0.0
 params["barrier_pc_gamma_p"] = 1.0
 params["barrier_pc_gamma"] = 10.0
 params["verbose"] = False
@@ -48,7 +49,16 @@ params["dt"] = 0.1
 params["max_error"] = 1.0
 
 params["measurement_noise"] = 1.0
+
 params["N_data"] = 600
+params["learning_verbose"] = False
+params["N_updates"] = 50
+params["meta_batch_size"] = 64
+params["data_horizon"] = 50
+params["test_horizon"] = 50
+params["learning_rate"] = 0.001
+params["min_datapoints"] = 500
+params["save_data_interval"] = 10000
 
 true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 2.0)
 
@@ -143,8 +153,8 @@ for i in range(N-2):
 	# prediction_error[i] = adaptive_clbf.predict_error
 	# prediction_error_true[i] = adaptive_clbf.true_predict_error
 	# prediction_var[:,i:i+1] = np.clip(adaptive_clbf.predict_var,0,params["qp_max_var"])
-
-	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=u_ad[:,i:i+1],use_model=True,add_data=add_data,use_qp=False)
+	
+	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
 	if (i - start_training - 1) % train_interval == 0 and i > start_training:
 		adaptive_clbf_ad.model.train()
 	prediction_error_ad[i] = adaptive_clbf_ad.predict_error

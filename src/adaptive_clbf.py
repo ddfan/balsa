@@ -10,13 +10,14 @@ from qp_solver import QPSolve
 from dynamics import DynamicsAckermannZ
 from cbf import BarrierAckermannVelocityZ, BarrierAckermannPointZ
 from lyapunov import LyapunovAckermannZ
-from model_gp import ModelGP, ModelALPaCA
+from model_service import ModelVanillaService, ModelALPaCAService, ModelGPService
 
 class AdaptiveClbf(object):
 	def __init__(self,odim=2, use_service = True):
 		self.xdim = 4
 		self.udim = 2
-		self.odim = odim + 1
+		self.odim = odim
+		self.use_service = use_service
 
 		self.u_lim = np.array([[-2.0,2.0],[-1.0,1.0]])
 		self.K=np.block([[np.zeros((2,2)), np.zeros((2,2))],[np.eye(2), np.eye(2)]])
@@ -25,7 +26,7 @@ class AdaptiveClbf(object):
 
 		self.model_trained = False
 		
-		if use_service:
+		if self.use_service:
 			## train model action
 			self.train_model_action_client = actionlib.SimpleActionClient('train_model_service', controller_adaptiveclbf.msg.TrainModelAction)
 			self.train_model_action_client.wait_for_server()
@@ -38,8 +39,11 @@ class AdaptiveClbf(object):
 			## predict srv
 			rospy.wait_for_service('predict_model')
 			self.model_predict_srv = rospy.ServiceProxy('predict_model', PredictModel)
-		#else:
-			# setup non-service model
+		else:
+			# setup non-service model object
+			self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
+			# self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
+			# self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
 
 		self.clf = LyapunovAckermannZ(w1=10.0,w2=1.0,w3=1.0,epsilon=1.0)
 		self.qpsolve = QPSolve(dyn=self.dyn,cbf_list=[],clf=self.clf,u_lim=self.u_lim,u_cost=0.0,u_prev_cost=1.0,p1_cost=1.0e8,p2_cost=1.0e8,verbose=False)
@@ -108,6 +112,18 @@ class AdaptiveClbf(object):
 
 		self.dt = self.params["dt"]
 
+		# update model params if not using service calls
+		if not self.use_service:
+			self.model.N_data = self.params["N_data"]
+			self.model.verbose = self.params["learning_verbose"]
+			self.model.N_updates = self.params["N_updates"]
+			self.model.config["meta_batch_size"] = self.params["meta_batch_size"]
+			self.model.config["data_horizon"] = self.params["data_horizon"]
+			self.model.config["test_horizon"] = self.params["test_horizon"]
+			self.model.config["learning_rate"] = self.params["learning_rate"]
+			self.model.config["min_datapoints"] = self.params["min_datapoints"]
+			self.model.config["save_data_interval"] = self.params["save_data_interval"]
+
 	def update_barrier_locations(self,x,y,radius):
 		self.barrier_locations["x"] = x
 		self.barrier_locations["y"] = y
@@ -158,49 +174,81 @@ class AdaptiveClbf(object):
 		mu_model = np.matmul(self.dyn.g(self.z_prev),self.u_prev) + self.dyn.f(self.z_prev)
 
 		if add_data:
-			try:
-				self.model_add_data_srv(self.z.flatten(),self.z_prev.flatten(),mu_model.flatten(),self.obs_prev.flatten(),dt)
-			except:
-				print("add data service unavailable")
+			if self.use_service:
+				try:
+					self.model_add_data_srv(self.z.flatten(),self.z_prev.flatten(),mu_model.flatten(),self.obs_prev.flatten(),dt)
+				except:
+					print("add data service unavailable")
+			else:
+				req = AddData2Model()
+				req.x_next = self.z.flatten()
+				req.x = self.z_prev.flatten()
+				req.mu_model = mu_model.flatten()
+				req.obs = self.obs_prev.flatten()
+				req.dt = dt
+				self.model.add_data(req)
 
 		# if check_model and self.model.model_trained:
 		if check_model and self.model_trained:
 			# check how the model is doing.  compare the model's prediction with the actual sampled data.
 			z_dot = (self.z[2:-1,:]-self.z_prev[2:-1,:])/dt
-			try:
-				result = self.model_predict_srv(self.z_prev.flatten(),self.obs_prev.flatten())
-				if result.result:
-					y_out = np.expand_dims(result.y_out, axis=0).T
-					var = np.expand_dims(result.var, axis=0).T
-					ynew = z_dot - mu_model
+			predict_service_success = False
+			if self.use_service:
+				try:
+					result = self.model_predict_srv(self.z_prev.flatten(),self.obs_prev.flatten())
+					if result.result:
+						predict_service_success = True
+				except:
+					print("predict service unavailable")
+			else:
+				req = PredictModel()
+				req.x = self.z_prev.flatten()
+				req.obs = self.obs_prev.flatten()
+				self.model.predict(req)
+				predict_service_success = True
 
-					if self.verbose:
-						print("predicted y_out: ", y_out)
-						print("predicted ynew: ", ynew)
-						print("predicted var: ", var)
+			if predict_service_success:
+				y_out = np.expand_dims(result.y_out, axis=0).T
+				var = np.expand_dims(result.var, axis=0).T
+				ynew = z_dot - mu_model
 
-					self.predict_error = np.linalg.norm(y_out - ynew)
-					self.predict_var = var
-			except:
-				print("predict service unavailable")
+				if self.verbose:
+					print("predicted y_out: ", y_out)
+					print("predicted ynew: ", ynew)
+					print("predicted var: ", var)
+
+				self.predict_error = np.linalg.norm(y_out - ynew)
+				self.predict_var = var
 
 		if use_model and self.model_trained:
-			try:
-				result = self.model_predict_srv(self.z.flatten(),self.obs.flatten())
-				if result.result:
-					mDelta = np.expand_dims(result.y_out, axis=0).T
-					sigDelta = np.expand_dims(result.var, axis=0).T
+			predict_service_success = False
+			if self.use_service:
+				try:
+					result = self.model_predict_srv(self.z.flatten(),self.obs.flatten())
+					if result.result:
+						predict_service_success = True
+				except:
+					print("predict service unavailable")
+			else:
+				req = PredictModel()
+				req.x = self.z_prev.flatten()
+				req.obs = self.obs_prev.flatten()
+				self.model.predict(req)
+				predict_service_success = True
 
-					# log error if true system model is available
-					if self.true_dyn is not None:
-						trueDelta = mu_l - (np.matmul(self.dyn.g(self.z),np.matmul(np.linalg.inv(self.true_dyn.g(self.z)),mu_l - self.true_dyn.f(self.z))) + self.dyn.f(self.z))
-						self.true_predict_error = np.linalg.norm(trueDelta - mDelta)
+			if predict_service_success:
+				mDelta = np.expand_dims(result.y_out, axis=0).T
+				sigDelta = np.expand_dims(result.var, axis=0).T
 
-					rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
-					mu_ad = mDelta * rho
-					# sigDelta = (sigDelta - 1.0) / self.measurement_noise 
-			except:
-				print("predict service unavailable")
+				# log error if true system model is available
+				if self.true_dyn is not None:
+					trueDelta = mu_l - (np.matmul(self.dyn.g(self.z),np.matmul(np.linalg.inv(self.true_dyn.g(self.z)),mu_l - self.true_dyn.f(self.z))) + self.dyn.f(self.z))
+					self.true_predict_error = np.linalg.norm(trueDelta - mDelta)
+
+				rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
+				mu_ad = mDelta * rho
+				# sigDelta = (sigDelta - 1.0) / self.measurement_noise 
+
 		mu_d = mu_rm + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
 		sigDelta = self.measurement_noise * np.ones((self.xdim/2,1)) # TODO:  for testing

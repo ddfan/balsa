@@ -29,7 +29,8 @@ BASE_PATH = os.path.expanduser('~/Documents')
 class ModelService(object):
 	_train_result = controller_adaptiveclbf.msg.TrainModelResult()
 
-	def __init__(self,xdim,odim,use_obs):
+	def __init__(self,xdim,odim,use_obs, use_service = True):
+
 		self.xdim=xdim
 		self.odim=odim
 		self.use_obs = use_obs
@@ -37,21 +38,21 @@ class ModelService(object):
 
 		self.config = {}
 
-		# train action server
-		self._action_service = actionlib.SimpleActionServer('train_model_service', controller_adaptiveclbf.msg.TrainModelAction, execute_cb=self.train, auto_start = False)
-		self._action_service.start()
+		if use_service:
+			# train action server
+			self._action_service = actionlib.SimpleActionServer('train_model_service', controller_adaptiveclbf.msg.TrainModelAction, execute_cb=self.train, auto_start = False)
+			self._action_service.start()
+			# add data service
+			self._add_data_srv = rospy.Service('add_data_2_model', AddData2Model, self.add_data)
+			# predict service
+			self._predict_srv = rospy.Service('predict_model', PredictModel, self.predict)
 
-		# add data service
-		self._add_data_srv = rospy.Service('add_data_2_model', AddData2Model, self.add_data)
+			# Create a dynamic reconfigure client
+			self.dyn_reconfig_client = DynamicReconfigureClient('controller_adaptiveclbf_reconfig', timeout=30, config_callback=self.reconfigure_cb)
 
-		# predict service
-		self._predict_srv = rospy.Service('predict_model', PredictModel, self.predict)
+			self.N_data = rospy.get_param('/controller_adaptiveclbf/N_data',200)
+			self.verbose = rospy.get_param('/controller_adaptiveclbf/learning_verbose',False)
 
-		self.N_data = rospy.get_param('/controller_adaptiveclbf/N_data',200)
-		self.verbose = rospy.get_param('/controller_adaptiveclbf/learning_verbose',False)
-
-		# Create a dynamic reconfigure client
-		self.dyn_reconfig_client = DynamicReconfigureClient('controller_adaptiveclbf_reconfig', timeout=30, config_callback=self.reconfigure_cb)
 
 	def reconfigure_cb(self, config):
 		self.N_data = config["N_data"]
@@ -90,9 +91,8 @@ class ModelService(object):
 			return x * xstd + xmean
 
 class ModelVanillaService(ModelService):
-	def __init__(self,xdim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,odim,use_obs)
-
+	def __init__(self,xdim,odim,use_obs=False,use_service=True):
+		ModelService.__init__(self,xdim,odim,use_obs,use_service)
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
 		model_xdim=self.xdim/2
 		if self.use_obs:
@@ -157,24 +157,27 @@ class ModelVanillaService(ModelService):
 
 		return resp
 
-	def train(self, goal):
+	def train(self, goal=None):
 		success = True
 
-		# goal was cancelled
-		if self._action_service.is_preempt_requested():
-			print("Preempt training request")
-			self._action_service.set_preempted()
-			success = False
+		if goal is not None:
+			# goal was cancelled
+			if self._action_service.is_preempt_requested():
+				print("Preempt training request")
+				self._action_service.set_preempted()
+				success = False
 
 		# train model.  this gets called by the training thread on timer_cb() in adaptive_clbf_node.
 		# print("train z then y shapes: ", self.Z.shape, self.y.shape)
 		if success and self.Z.shape[0] > 0 and self.Z.shape[0] == self.y.shape[0]:
 			self.m.train(self.Z, self.y)
-			self._train_result.model_trained = True
-			self._action_service.set_succeeded(self._train_result)
+			if goal is not None:
+				self._train_result.model_trained = True
+				self._action_service.set_succeeded(self._train_result)
 		else:
-			self._train_result.model_trained = False
-			self._action_service.set_succeeded(self._train_result)
+			if goal is not None:
+				self._train_result.model_trained = False
+				self._action_service.set_succeeded(self._train_result)
 
 	def add_data(self,req):
 		if not hasattr(self, 'y'):
@@ -216,9 +219,8 @@ class ModelVanillaService(ModelService):
 		return AddData2ModelResponse(True)
 
 class ModelALPaCAService(ModelService):
-	def __init__(self,xdim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,odim,use_obs)
-
+	def __init__(self,xdim,odim,use_obs=False,use_service=True):
+		ModelService.__init__(self,xdim,odim,use_obs,use_service)
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
 		model_xdim=self.xdim/2
 		if self.use_obs:
@@ -310,14 +312,15 @@ class ModelALPaCAService(ModelService):
 		resp.result = True
 		return resp
 
-	def train(self,goal):
+	def train(self,goal=None):
 		success = True
 
-		# goal was cancelled
-		if self._action_service.is_preempt_requested():
-			print("Preempt training request")
-			self._action_service.set_preempted()
-			success = False
+		if goal is not None:
+			# goal was cancelled
+			if self._action_service.is_preempt_requested():
+				print("Preempt training request")
+				self._action_service.set_preempted()
+				success = False
 
 		if not hasattr(self, 'Z'):
 			success = False
@@ -345,11 +348,13 @@ class ModelALPaCAService(ModelService):
 			# start_time = time.time()
 			self.m.train(train_dataset, self.N_updates, self.config)
 			# print('trained, elapsed time: ', time.time() - start_time)
-			self._train_result.model_trained = True
-			self._action_service.set_succeeded(self._train_result)
+			if goal is not None:
+				self._train_result.model_trained = True
+				self._action_service.set_succeeded(self._train_result)
 		else:
-			self._train_result.model_trained = False
-			self._action_service.set_succeeded(self._train_result)
+			if goal is not None:
+				self._train_result.model_trained = False
+				self._action_service.set_succeeded(self._train_result)
 
 	def add_data(self,req):
 		if not hasattr(self, 'y'):
@@ -400,8 +405,8 @@ class ModelALPaCAService(ModelService):
 		return AddData2ModelResponse(True)
 
 class ModelGPService(ModelService):
-	def __init__(self,xdim,odim,use_obs=False):
-		ModelService.__init__(self,xdim,odim,use_obs)
+	def __init__(self,xdim,odim,use_obs=False,use_service=True):
+		ModelService.__init__(self,xdim,odim,use_obs,use_service)
 		# note:  use use_obs and observations with caution.  model may overfit to this input.
 		model_xdim=self.xdim/2
 		if self.use_obs:
@@ -455,21 +460,22 @@ class ModelGPService(ModelService):
 
 		return resp
 
-	def train(self, goal):
+	def train(self, goal=None):
 		success = True
 
-		# goal was cancelled
-		if self._action_service.is_preempt_requested():
-			print("Preempt training request")
-			self._action_service.set_preempted()
-			success = False
+		if goal is not None:
+			# goal was cancelled
+			if self._action_service.is_preempt_requested():
+				print("Preempt training request")
+				self._action_service.set_preempted()
+				success = False
 
 		# train model.  this gets called by the training thread on timer_cb() in adaptive_clbf_node.
-		print(self.Z.shape, self.y.shape)
 		if success and self.Z.shape[0] > 0 and self.Z.shape[0] == self.y.shape[0]:
 			self.m.optimize(self.Z,self.y)
-			self._train_result.model_trained = True
-			self._action_service.set_succeeded(self._train_result)
+			if goal is not None:
+				self._train_result.model_trained = True
+				self._action_service.set_succeeded(self._train_result)
 
 	def add_data(self,req):
 		if not hasattr(self, 'y'):
