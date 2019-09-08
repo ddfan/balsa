@@ -44,7 +44,7 @@ params["barrier_radius"] = 0.5
 params["barrier_radius_velocity_scale"] = 0.0
 params["barrier_pc_gamma_p"] = 1.0
 params["barrier_pc_gamma"] = 10.0
-params["verbose"] = False
+params["verbose"] = True
 params["dt"] = 0.1
 params["max_error"] = 1.0
 
@@ -60,7 +60,7 @@ params["learning_rate"] = 0.001
 params["min_datapoints"] = 500
 params["save_data_interval"] = 10000
 
-true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 2.0)
+true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 1.0)
 
 adaptive_clbf.update_params(params)
 adaptive_clbf_qp.update_params(params)
@@ -88,7 +88,7 @@ t = np.linspace(0,T-2*dt,N-1)
 xdim=4
 udim=2
 
-train_interval = 40
+train_interval = 10
 start_training = 100
 
 width = 1.0
@@ -157,6 +157,7 @@ for i in range(N-2):
 	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
 	if (i - start_training - 1) % train_interval == 0 and i > start_training:
 		adaptive_clbf_ad.model.train()
+		adaptive_clbf_ad.model_trained = True
 	prediction_error_ad[i] = adaptive_clbf_ad.predict_error
 	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
 	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])

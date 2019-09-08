@@ -13,7 +13,7 @@ from lyapunov import LyapunovAckermannZ
 from model_service import ModelVanillaService, ModelALPaCAService, ModelGPService
 
 class AdaptiveClbf(object):
-	def __init__(self,odim=2, use_service = True):
+	def __init__(self,odim=2, use_service = True, ):
 		self.xdim = 4
 		self.udim = 2
 		self.odim = odim
@@ -41,8 +41,8 @@ class AdaptiveClbf(object):
 			self.model_predict_srv = rospy.ServiceProxy('predict_model', PredictModel)
 		else:
 			# setup non-service model object
-			self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
-			# self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
+			# self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
+			self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
 			# self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
 
 		self.clf = LyapunovAckermannZ(w1=10.0,w2=1.0,w3=1.0,epsilon=1.0)
@@ -193,6 +193,7 @@ class AdaptiveClbf(object):
 			# check how the model is doing.  compare the model's prediction with the actual sampled data.
 			z_dot = (self.z[2:-1,:]-self.z_prev[2:-1,:])/dt
 			predict_service_success = False
+			result = None
 			if self.use_service:
 				try:
 					result = self.model_predict_srv(self.z_prev.flatten(),self.obs_prev.flatten())
@@ -204,7 +205,7 @@ class AdaptiveClbf(object):
 				req = PredictModel()
 				req.x = self.z_prev.flatten()
 				req.obs = self.obs_prev.flatten()
-				self.model.predict(req)
+				result = self.model.predict(req)
 				predict_service_success = True
 
 			if predict_service_success:
@@ -222,6 +223,7 @@ class AdaptiveClbf(object):
 
 		if use_model and self.model_trained:
 			predict_service_success = False
+			result = None
 			if self.use_service:
 				try:
 					result = self.model_predict_srv(self.z.flatten(),self.obs.flatten())
@@ -233,7 +235,7 @@ class AdaptiveClbf(object):
 				req = PredictModel()
 				req.x = self.z_prev.flatten()
 				req.obs = self.obs_prev.flatten()
-				self.model.predict(req)
+				result = self.model.predict(req)
 				predict_service_success = True
 
 			if predict_service_success:
@@ -245,7 +247,9 @@ class AdaptiveClbf(object):
 					trueDelta = mu_l - (np.matmul(self.dyn.g(self.z),np.matmul(np.linalg.inv(self.true_dyn.g(self.z)),mu_l - self.true_dyn.f(self.z))) + self.dyn.f(self.z))
 					self.true_predict_error = np.linalg.norm(trueDelta - mDelta)
 
-				rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
+				# rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
+				rho = self.measurement_noise / (self.measurement_noise + (sigDelta) + 1e-6)
+				# rho = sigDelta * self.measurement_noise
 				mu_ad = mDelta * rho
 				# sigDelta = (sigDelta - 1.0) / self.measurement_noise 
 
