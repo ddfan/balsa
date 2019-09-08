@@ -233,8 +233,8 @@ class AdaptiveClbf(object):
 					print("predict service unavailable")
 			else:
 				req = PredictModel()
-				req.x = self.z_prev.flatten()
-				req.obs = self.obs_prev.flatten()
+				req.x = self.z.flatten()
+				req.obs = self.obs.flatten()
 				result = self.model.predict(req)
 				predict_service_success = True
 

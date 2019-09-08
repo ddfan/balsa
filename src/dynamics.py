@@ -72,7 +72,7 @@ class DynamicsAckermannZModified(Dynamics):
 		self.control_input_scale = control_input_scale
 		
 	def f(self,z):
-		v=np.sqrt(z[2,:]**2 + z[3,:]**2)
+		v=np.sqrt(z[2,:]**2 + z[3,:]**2) * z[4,:]
 		theta = np.arctan2(z[3]*z[4],z[2]*z[4])
 		v_disturbance_body = [np.tanh(v**2)*self.disturbance_scale_vel, (0.1+v)*self.disturbance_scale_vel]
 		v_disturbance_world = [v_disturbance_body[0] * np.cos(theta) - v_disturbance_body[1] * np.sin(theta),
@@ -80,8 +80,8 @@ class DynamicsAckermannZModified(Dynamics):
 		return np.array([v_disturbance_world[0], v_disturbance_world[1]])
 		
 	def g(self,z):
-		v=np.sqrt(z[2,:]**2 + z[3,:]**2)
-		return self.control_input_scale * np.stack((np.concatenate((-z[3,:]*v,z[2,:]/(v+self.epsilon))),np.concatenate((z[2,:]*v,z[3,:]/(v+self.epsilon)))))
+		v=(np.sqrt(z[2,:]**2 + z[3,:]**2)  + self.epsilon) * z[4,:]
+		return self.control_input_scale * np.stack((np.concatenate((-z[3,:]*v,z[2,:]/v)),np.concatenate((z[2,:]*v,z[3,:]/v))))
 
 	def step(self,z,u,dt):
 		v=np.sqrt(z[2,:]**2 + z[3,:]**2)

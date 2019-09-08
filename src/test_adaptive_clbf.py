@@ -21,10 +21,10 @@ adaptive_clbf_pd = AdaptiveClbf(odim=odim, use_service = False)
 params={}
 params["vehicle_length"] = 0.25
 params["steering_limit"] = 0.75
-params["max_accel"] = 1.0
-params["min_accel"] = -1.0
-params["kp_z"] = 3.0
-params["kd_z"] = 3.0
+params["max_accel"] = 5.0
+params["min_accel"] = -5.0
+params["kp_z"] = 10.0
+params["kd_z"] = 10.0
 params["clf_epsilon"] = 100.0
 
 
@@ -44,7 +44,7 @@ params["barrier_radius"] = 0.5
 params["barrier_radius_velocity_scale"] = 0.0
 params["barrier_pc_gamma_p"] = 1.0
 params["barrier_pc_gamma"] = 10.0
-params["verbose"] = True
+params["verbose"] = False
 params["dt"] = 0.1
 params["max_error"] = 10.0
 
@@ -60,7 +60,7 @@ params["learning_rate"] = 0.001
 params["min_datapoints"] = 500
 params["save_data_interval"] = 10000
 
-true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 1.0)
+true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = 0.0, control_input_scale = 1.0)
 
 adaptive_clbf.update_params(params)
 adaptive_clbf_qp.update_params(params)
@@ -147,24 +147,24 @@ for i in range(N-2):
 	else:
 		add_data = True
 
-	# u[:,i+1] = adaptive_clbf.get_control(z[:,i:i+1],z_d[:,i+1:i+2],dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=True)
+	# u[:,i+1] = adaptive_clbf.get_control(z[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=True)
 	# if (i - start_training -1 ) % train_interval == 0 and i > start_training:
 	# 	adaptive_clbf.model.train()
-	# 	adaptive_clbf_ad.model_trained = True
+	# 	adaptive_clbf.model_trained = True
 	# prediction_error[i] = adaptive_clbf.predict_error
 	# prediction_error_true[i] = adaptive_clbf.true_predict_error
 	# prediction_var[:,i:i+1] = np.clip(adaptive_clbf.predict_var,0,params["qp_max_var"])
+
+	# u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
+	# if (i - start_training - 1) % train_interval == 0 and i > start_training:
+	# 	adaptive_clbf_ad.model.train()
+	# 	adaptive_clbf_ad.model_trained = True
+	# prediction_error_ad[i] = adaptive_clbf_ad.predict_error
+	# prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
+	# prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
 	
-	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
-	if (i - start_training - 1) % train_interval == 0 and i > start_training:
-		adaptive_clbf_ad.model.train()
-		adaptive_clbf_ad.model_trained = True
-	prediction_error_ad[i] = adaptive_clbf_ad.predict_error
-	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
-	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
-	
-	# u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
-	# u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
+	u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
+	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
 	# dt = np.random.uniform(0.05,0.15)
 	c = copy.copy(u[:,i+1:i+2])
@@ -178,9 +178,9 @@ for i in range(N-2):
 	c_pd[0] = np.tan(c_pd[0])/params["vehicle_length"]
 
 	# z[:,i+1:i+2] = true_dyn.step(z[:,i:i+1],c,dt)
-	z_ad[:,i+1:i+2] = true_dyn.step(z_ad[:,i:i+1],c_ad,dt)
-	# z_qp[:,i+1:i+2] = true_dyn.step(z_qp[:,i:i+1],c_qp,dt)
-	# z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
+	# z_ad[:,i+1:i+2] = true_dyn.step(z_ad[:,i:i+1],c_ad,dt)
+	z_qp[:,i+1:i+2] = true_dyn.step(z_qp[:,i:i+1],c_qp,dt)
+	z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
 
 	x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
 	x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
@@ -203,8 +203,8 @@ plt.semilogy(t[:-1],prediction_var[1,:-2],'g-',alpha=0.9)
 plt.ylabel(r"$\sigma_{\bar{\Delta}}(x,\mu)_2$")
 plt.xlabel("Time(s)")
 plt.subplot(313)
-# plt.plot(t[:-1],prediction_error_ad[:-2],'m--',alpha=0.9)
-# plt.plot(t[:-1],prediction_error[:-2],'g-',alpha=0.9)
+plt.plot(t[:-1],prediction_error_ad[:-2],'m--',alpha=0.9)
+plt.plot(t[:-1],prediction_error[:-2],'g-',alpha=0.9)
 plt.plot(t[:-1],prediction_error_true_ad[:-2],'m:',alpha=0.9)
 plt.plot(t[:-1],prediction_error_true[:-2],'g:',alpha=0.9)
 # plt.ylim([0,1.0])
