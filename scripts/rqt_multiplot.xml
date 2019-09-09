@@ -1692,7 +1692,7 @@
                         </curve_2>
                     </curves>
                     <legend>
-                        <visible>false</visible>
+                        <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
                     <title>loss</title>
