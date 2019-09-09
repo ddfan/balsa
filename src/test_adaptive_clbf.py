@@ -52,15 +52,15 @@ params["measurement_noise"] = 1.0
 
 params["N_data"] = 600
 params["learning_verbose"] = False
-params["N_updates"] = 50
+params["N_updates"] = 200
 params["meta_batch_size"] = 64
-params["data_horizon"] = 50
-params["test_horizon"] = 50
+params["data_horizon"] = 10
+params["test_horizon"] = 10
 params["learning_rate"] = 0.001
-params["min_datapoints"] = 500
+params["min_datapoints"] = 50
 params["save_data_interval"] = 10000
 
-true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = 0.0, control_input_scale = 1.0)
+true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 1.0)
 
 adaptive_clbf.update_params(params)
 adaptive_clbf_qp.update_params(params)
@@ -81,7 +81,7 @@ adaptive_clbf_pd.update_barrier_locations(barrier_x,barrier_y,params["barrier_ra
 x0=np.array([[0.0],[0.0],[0.0],[0.0001]])
 z0 = true_dyn.convert_x_to_z(x0)
 
-T = 2.5
+T = 20
 dt = 0.1
 N = int(round(T/dt))
 t = np.linspace(0,T-2*dt,N-1)
@@ -160,15 +160,17 @@ for i in range(N-2):
 	# prediction_error_true[i] = adaptive_clbf.true_predict_error
 	# prediction_var[:,i:i+1] = np.clip(adaptive_clbf.predict_var,0,params["qp_max_var"])
 
-	# u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
-	# if (i - start_training - 1) % train_interval == 0 and i > start_training:
-	# 	adaptive_clbf_ad.model.train()
-	# 	adaptive_clbf_ad.model_trained = True
-	# prediction_error_ad[i] = adaptive_clbf_ad.predict_error
-	# prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
-	# prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
-	u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
-	# u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
+	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
+	if (i - start_training - 1) % train_interval == 0 and i > start_training:
+		adaptive_clbf_ad.model.train()
+		adaptive_clbf_ad.model_trained = True
+	prediction_error_ad[i] = adaptive_clbf_ad.predict_error
+	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
+	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
+	
+	# u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
+	
+	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
 	# dt = np.random.uniform(0.05,0.15)
 	c = copy.copy(u[:,i+1:i+2])
@@ -187,9 +189,9 @@ for i in range(N-2):
 	z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
 
 	# x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
-	# x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
-	x_qp[:,i+1:i+2] = true_dyn.convert_z_to_x(z_qp[:,i+1:i+2])
-	# x_pd[:,i+1:i+2] = true_dyn.convert_z_to_x(z_pd[:,i+1:i+2])
+	x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
+	# x_qp[:,i+1:i+2] = true_dyn.convert_z_to_x(z_qp[:,i+1:i+2])
+	x_pd[:,i+1:i+2] = true_dyn.convert_z_to_x(z_pd[:,i+1:i+2])
 
 	print('Iteration ', i, ', Time elapsed (ms): ', (time.time() - start)*1000)
 

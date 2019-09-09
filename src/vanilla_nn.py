@@ -36,7 +36,7 @@ class VanillaNN:
 
 		self.graph = tf.get_default_graph()
 
-	def train(self, Z_train, Y_train,_epoch=50,_batch_size=64,_verbose=2):
+	def train(self, Z_train, Y_train,_epoch=50,_batch_size=64,_verbose=0):
 		with self.graph.as_default():
 			self.m.fit([Z_train,Y_train], [Y_train,Y_train,Y_train],epochs=_epoch,batch_size=_batch_size,verbose=_verbose)
 

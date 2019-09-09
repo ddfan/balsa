@@ -170,7 +170,7 @@ class ModelVanillaService(ModelService):
 		# train model.  this gets called by the training thread on timer_cb() in adaptive_clbf_node.
 		# print("train z then y shapes: ", self.Z.shape, self.y.shape)
 		if success and self.Z.shape[0] > 0 and self.Z.shape[0] == self.y.shape[0]:
-			self.m.train(self.Z, self.y)
+			self.m.train(self.Z, self.y,_epoch=self.N_updates,_batch_size=self.config["meta_batch_size"])
 			if goal is not None:
 				self._train_result.model_trained = True
 				self._action_service.set_succeeded(self._train_result)

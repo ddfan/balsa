@@ -18,3 +18,11 @@ src/qp_solver.pyc
 src/scaledgp.pyc
 src/vanilla_nn.pyc
 model_service.pyc
+summaries/
+ALPaCA/alpaca.pyc
+ALPaCA/dataset.pyc
+ALPaCA/__init__.pyc
+src/ALPaCA/alpaca.pyc
+src/ALPaCA/dataset.pyc
+src/ALPaCA/__init__.pyc
+alpaca.pyc
