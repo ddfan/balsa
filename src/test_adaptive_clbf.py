@@ -32,7 +32,7 @@ params["qp_u_cost"] = 100.0
 params["qp_u_prev_cost"] = 1.0
 params["qp_p1_cost"] = 1.0
 params["qp_p2_cost"] = 1.0e12
-params["qp_ksig"] = 2.0
+params["qp_ksig"] = 1.0e2
 params["qp_max_var"] = 0.5
 params["qp_verbose"] = False
 params["max_velocity"] = 2.0
@@ -48,7 +48,7 @@ params["verbose"] = False
 params["dt"] = 0.1
 params["max_error"] = 10.0
 
-params["measurement_noise"] = 1.0
+params["measurement_noise"] = 1.0e-2
 
 params["N_data"] = 600
 params["learning_verbose"] = False
@@ -60,7 +60,7 @@ params["learning_rate"] = 0.001
 params["min_datapoints"] = 50
 params["save_data_interval"] = 10000
 
-true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -1.0, control_input_scale = 1.0)
+true_dyn = DynamicsAckermannZModified(disturbance_scale_pos = 0.0, disturbance_scale_vel = -0.5, control_input_scale = 1.0)
 
 adaptive_clbf.update_params(params)
 adaptive_clbf_qp.update_params(params)
@@ -134,6 +134,7 @@ prediction_error = np.zeros(N)
 prediction_error_true = np.zeros(N)
 prediction_var = np.zeros((xdim/2,N))
 prediction_var_ad = np.zeros((xdim/2,N))
+trGssGP = np.zeros(N)
 
 i=0
 z_d[:,i+1:i+2] = true_dyn.convert_x_to_z(x_d[:,i+1:i+2])
@@ -152,25 +153,26 @@ for i in range(N-2):
 	else:
 		add_data = True
 
-	# u[:,i+1] = adaptive_clbf.get_control(z[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=True)
-	# if (i - start_training -1 ) % train_interval == 0 and i > start_training:
-	# 	adaptive_clbf.model.train()
-	# 	adaptive_clbf.model_trained = True
-	# prediction_error[i] = adaptive_clbf.predict_error
-	# prediction_error_true[i] = adaptive_clbf.true_predict_error
-	# prediction_var[:,i:i+1] = np.clip(adaptive_clbf.predict_var,0,params["qp_max_var"])
+	u[:,i+1] = adaptive_clbf.get_control(z[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=True)
+	if (i - start_training -1 ) % train_interval == 0 and i > start_training:
+		adaptive_clbf.model.train()
+		adaptive_clbf.model_trained = True
+	prediction_error[i] = adaptive_clbf.predict_error
+	prediction_error_true[i] = adaptive_clbf.true_predict_error
+	prediction_var[:,i:i+1] = np.clip(adaptive_clbf.predict_var,0,params["qp_max_var"])
+	trGssGP[i] = adaptive_clbf.qpsolve.trGssGP
 
-	u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
-	if (i - start_training - 1) % train_interval == 0 and i > start_training:
-		adaptive_clbf_ad.model.train()
-		adaptive_clbf_ad.model_trained = True
-	prediction_error_ad[i] = adaptive_clbf_ad.predict_error
-	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
-	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
+	# u_ad[:,i+1] = adaptive_clbf_ad.get_control(z_ad[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=np.concatenate([x_ad[2,i:i+1],u_ad[:,i]]),use_model=True,add_data=add_data,use_qp=False)
+	# if (i - start_training - 1) % train_interval == 0 and i > start_training:
+	# 	adaptive_clbf_ad.model.train()
+	# 	adaptive_clbf_ad.model_trained = True
+	# prediction_error_ad[i] = adaptive_clbf_ad.predict_error
+	# prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
+	# prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
 	
 	# u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
 	
-	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
+	# u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
 	# dt = np.random.uniform(0.05,0.15)
 	c = copy.copy(u[:,i+1:i+2])
@@ -183,10 +185,10 @@ for i in range(N-2):
 	c_qp[0] = np.tan(c_qp[0])/params["vehicle_length"]
 	c_pd[0] = np.tan(c_pd[0])/params["vehicle_length"]
 
-	# z[:,i+1:i+2] = true_dyn.step(z[:,i:i+1],c,dt)
-	z_ad[:,i+1:i+2] = true_dyn.step(z_ad[:,i:i+1],c_ad,dt)
+	z[:,i+1:i+2] = true_dyn.step(z[:,i:i+1],c,dt)
+	# z_ad[:,i+1:i+2] = true_dyn.step(z_ad[:,i:i+1],c_ad,dt)
 	# z_qp[:,i+1:i+2] = true_dyn.step(z_qp[:,i:i+1],c_qp,dt)
-	z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
+	# z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
 
 	x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
 	x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
@@ -200,13 +202,15 @@ plt.rcParams.update({'font.size': 12})
 plt.subplot(311)
 plt.semilogy(t[:-1],prediction_var_ad[0,:-2],'m--',alpha=0.9)
 plt.semilogy(t[:-1],prediction_var[0,:-2],'g-',alpha=0.9)
+plt.semilogy(t[:-1],prediction_var_ad[1,:-2],'m:',alpha=0.9)
+plt.semilogy(t[:-1],prediction_var[1,:-2],'g:',alpha=0.9)
 plt.xlabel("Time(s)")
-plt.ylabel(r"$\sigma_{\bar{\Delta}}(x,\mu)_1$")
-plt.legend(['ad','aclbf'],bbox_to_anchor=(0,1.2,1,0.2), loc="upper center", ncol=2)
+plt.ylabel(r"$\sigma_{\bar{\Delta}}(x,\mu)$")
+plt.legend(['ad[1]','aclbf[1]','ad[2]','aclbf[2]'],bbox_to_anchor=(0,1.2,1,0.2), loc="upper center", ncol=2)
+plt.plot([t[0],t[-1]],[params["measurement_noise"],params["measurement_noise"]],'r--')
 plt.subplot(312)
-plt.semilogy(t[:-1],prediction_var_ad[1,:-2],'m--',alpha=0.9)
-plt.semilogy(t[:-1],prediction_var[1,:-2],'g-',alpha=0.9)
-plt.ylabel(r"$\sigma_{\bar{\Delta}}(x,\mu)_2$")
+plt.plot(t[:-1],trGssGP[:-2],'g--',alpha=0.9)
+plt.ylabel("trace(GssGP)")
 plt.xlabel("Time(s)")
 plt.subplot(313)
 plt.plot(t[:-1],prediction_error_ad[:-2],'m--',alpha=0.9)

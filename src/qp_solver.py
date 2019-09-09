@@ -34,6 +34,7 @@ class QPSolve():
         self.P = sl.solve_continuous_are(self.A,np.zeros((self.xdim,self.xdim)),Q,np.eye(self.xdim))
 
     def solve(self,x,x_d,mu_d,sigDelta):
+        sigDelta = sigDelta * self.ksig
         sigDelta = np.clip(sigDelta,0.0,self.max_var)
         # sigDelta = np.ones((self.xdim/2,1)) * self.max_var # for testing
 
@@ -49,10 +50,10 @@ class QPSolve():
         G_dyn = np.expand_dims(np.append(np.append(eTPG,1),0),0) #append 1 for clf < d
         Gsig = np.matmul(self.G,sigDelta)
         GssG = np.matmul(Gsig,Gsig.T)
-        trGssGP = np.trace(np.matmul(GssG,self.P))
+        self.trGssGP = np.trace(np.matmul(GssG,self.P))
         h_dyn = -1 * ( -0.5*np.matmul(e.T,np.matmul(Q,e))
                     + 0.5*np.matmul(e.T,np.matmul(self.P,e)) / self.clf.epsilon
-                    + 0.5*trGssGP)
+                    + 0.5*self.trGssGP)
 
         # build constraints for barriers
         N_cbf = len(self.cbf_list)
@@ -120,7 +121,7 @@ class QPSolve():
             print('p:', np.array(self.p))
             print('G_dyn:', G_dyn)
             print('h_dyn:', h_dyn)
-            print('trGssGP',trGssGP)
+            print('trGssGP',self.trGssGP)
             if h_cbf.shape[0] < 10:
                 print('G_cbf:', G_cbf)
                 print('h_cbf:', h_cbf)
