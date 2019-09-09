@@ -86,6 +86,35 @@ class BarrierAckermannPosition(Barrier):
 		else:
 			return sgn * np.stack((np.array([0]),np.array([self.gamma_p]),x[3,:] * np.cos(x[2,:]),np.sin(x[2,:])),axis=0)
 
+class BarrierAckermannPositionZ(Barrier):
+	def __init__(self,dim=4,gamma=1.0, bound_from_above = True, bound_x = True, pos_lim = 1.0, gamma_p = 1.0):
+		self.bound_from_above = bound_from_above
+		self.bound_x = bound_x
+		self.pos_lim = pos_lim
+		self.gamma_p = gamma_p
+
+		Barrier.__init__(self,dim,gamma)
+
+	def h(self,z):
+		sgn = 1.0
+		if self.bound_from_above:
+			sgn = -1.0
+
+		if self.bound_x:
+			return sgn * (self.gamma_p * (z[0,:] - self.pos_lim) + z[2,:])
+		else:
+			return sgn * (self.gamma_p * (z[1,:] - self.pos_lim) + z[3,:])
+		 
+	def dh(self,z):
+		sgn = 1.0
+		if self.bound_from_above:
+			sgn = -1.0
+
+		if self.bound_x:
+			return np.array([[sgn*self.gamma_p],[0],[sgn],[0]])
+		else:
+			return np.array([[0],[sgn*self.gamma_p],[0],[sgn]])
+
 class BarrierAckermannVelocityZ(Barrier):
 	def __init__(self,dim=4,gamma=1.0,bound_from_above=True, v_lim = 1.0):
 		self.bound_from_above = bound_from_above
@@ -124,37 +153,6 @@ class BarrierAckermannVelocityZ(Barrier):
 		H = np.block([[(z4**2*z5)/(v**3), -(z3*z4*z5)/(v**3)],
 			[-(z3*z4*z5)/(v**3),   (z3**2*z5)/(v**3)]])
 		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),H]]) * sgn
-
-
-class BarrierAckermannPositionZ(Barrier):
-	def __init__(self,dim=4,gamma=1.0, bound_from_above = True, bound_x = True, pos_lim = 1.0, gamma_p = 1.0):
-		self.bound_from_above = bound_from_above
-		self.bound_x = bound_x
-		self.pos_lim = pos_lim
-		self.gamma_p = gamma_p
-
-		Barrier.__init__(self,dim,gamma)
-
-	def h(self,z):
-		sgn = 1.0
-		if self.bound_from_above:
-			sgn = -1.0
-
-		if self.bound_x:
-			return sgn * (self.gamma_p * (z[0,:] - self.pos_lim) + z[2,:])
-		else:
-			return sgn * (self.gamma_p * (z[1,:] - self.pos_lim) + z[3,:])
-		 
-	def dh(self,z):
-		sgn = 1.0
-		if self.bound_from_above:
-			sgn = -1.0
-
-		if self.bound_x:
-			return np.array([[sgn*self.gamma_p],[0],[sgn],[0]])
-		else:
-			return np.array([[0],[sgn*self.gamma_p],[0],[sgn]])
-
 
 class BarrierAckermannPointZ(Barrier):
 	def __init__(self,dim=4,gamma=1.0, x=0.0, y=0.0, radius = 1.0, gamma_p = 1.0):

@@ -68,16 +68,16 @@ class QPSolve():
 
         # build constraints for control limits
         ginv = np.linalg.inv(self.dyn.g(x))
-        l_ctrl = -np.matmul(ginv, - self.dyn.f(x) + mu_d)
-        A_ctrl = -ginv
+        l_ctrl = np.matmul(ginv, mu_d - self.dyn.f(x))
+        A_ctrl = ginv
 
         G_ctrl = np.zeros((self.udim*2,self.xdim/2+2))
         h_ctrl = np.zeros((self.udim*2,1))
         for i in range(self.udim):
-            G_ctrl[i*2,:self.xdim/2] = -1 * A_ctrl[i,:]
-            h_ctrl[i*2] = -self.u_lim[i,0] - l_ctrl[i]
+            G_ctrl[i*2,:self.xdim/2] = - A_ctrl[i,:]
+            h_ctrl[i*2] = - self.u_lim[i,0] + l_ctrl[i]
             G_ctrl[i*2+1,:self.xdim/2] = A_ctrl[i,:]
-            h_ctrl[i*2+1] = self.u_lim[i,1] + l_ctrl[i]
+            h_ctrl[i*2+1] = self.u_lim[i,1] - l_ctrl[i]
 
         # stack into one matrix and vector
         G = np.concatenate((G_dyn,G_cbf,G_ctrl),axis=0)

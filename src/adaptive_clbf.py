@@ -41,8 +41,8 @@ class AdaptiveClbf(object):
 			self.model_predict_srv = rospy.ServiceProxy('predict_model', PredictModel)
 		else:
 			# setup non-service model object
-			self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
-			# self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
+			# self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
+			self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
 			# self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
 
 		self.clf = LyapunovAckermannZ(w1=10.0,w2=1.0,w3=1.0,epsilon=1.0)

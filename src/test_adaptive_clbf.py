@@ -21,8 +21,8 @@ adaptive_clbf_pd = AdaptiveClbf(odim=odim, use_service = False)
 params={}
 params["vehicle_length"] = 0.25
 params["steering_limit"] = 0.75
-params["max_accel"] = 3.0
-params["min_accel"] = -3.0
+params["max_accel"] = 1.0
+params["min_accel"] = -1.0
 params["kp_z"] = 1.0
 params["kd_z"] = 1.0
 params["clf_epsilon"] = 100.0
@@ -42,8 +42,8 @@ params["use_barrier_vel"] = True
 params["use_barrier_pointcloud"] = True
 params["barrier_radius"] = 1.0
 params["barrier_radius_velocity_scale"] = 0.0
-params["barrier_pc_gamma_p"] = 100.0
-params["barrier_pc_gamma"] = 0.01
+params["barrier_pc_gamma_p"] = 1.0
+params["barrier_pc_gamma"] = 1.0
 params["verbose"] = False
 params["dt"] = 0.1
 params["max_error"] = 10.0
@@ -168,7 +168,7 @@ for i in range(N-2):
 	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
 	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
 	
-	u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
+	# u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
 	
 	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
@@ -183,12 +183,12 @@ for i in range(N-2):
 	c_qp[0] = np.tan(c_qp[0])/params["vehicle_length"]
 	c_pd[0] = np.tan(c_pd[0])/params["vehicle_length"]
 
-	z[:,i+1:i+2] = true_dyn.step(z[:,i:i+1],c,dt)
+	# z[:,i+1:i+2] = true_dyn.step(z[:,i:i+1],c,dt)
 	z_ad[:,i+1:i+2] = true_dyn.step(z_ad[:,i:i+1],c_ad,dt)
-	z_qp[:,i+1:i+2] = true_dyn.step(z_qp[:,i:i+1],c_qp,dt)
+	# z_qp[:,i+1:i+2] = true_dyn.step(z_qp[:,i:i+1],c_qp,dt)
 	z_pd[:,i+1:i+2] = true_dyn.step(z_pd[:,i:i+1],c_pd,dt)
 
-	# x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
+	x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
 	x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
 	x_qp[:,i+1:i+2] = true_dyn.convert_z_to_x(z_qp[:,i+1:i+2])
 	x_pd[:,i+1:i+2] = true_dyn.convert_z_to_x(z_pd[:,i+1:i+2])
