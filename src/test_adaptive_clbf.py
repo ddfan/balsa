@@ -21,8 +21,8 @@ adaptive_clbf_pd = AdaptiveClbf(odim=odim, use_service = False)
 params={}
 params["vehicle_length"] = 0.25
 params["steering_limit"] = 0.75
-params["max_accel"] = 10.0
-params["min_accel"] = -10.0
+params["max_accel"] = 3.0
+params["min_accel"] = -3.0
 params["kp_z"] = 1.0
 params["kd_z"] = 1.0
 params["clf_epsilon"] = 100.0
@@ -34,16 +34,16 @@ params["qp_p1_cost"] = 1.0
 params["qp_p2_cost"] = 1.0e12
 params["qp_ksig"] = 2.0
 params["qp_max_var"] = 0.5
-params["qp_verbose"] = True
+params["qp_verbose"] = False
 params["max_velocity"] = 2.0
 params["min_velocity"] = 0.5
 params["barrier_vel_gamma"] = 10.0
 params["use_barrier_vel"] = True
-params["use_barrier_pointcloud"] = False
+params["use_barrier_pointcloud"] = True
 params["barrier_radius"] = 1.0
 params["barrier_radius_velocity_scale"] = 0.0
-params["barrier_pc_gamma_p"] = 1.0
-params["barrier_pc_gamma"] = 10.0
+params["barrier_pc_gamma_p"] = 100.0
+params["barrier_pc_gamma"] = 0.01
 params["verbose"] = False
 params["dt"] = 0.1
 params["max_error"] = 10.0
@@ -81,18 +81,18 @@ adaptive_clbf_pd.update_barrier_locations(barrier_x,barrier_y,params["barrier_ra
 x0=np.array([[0.0],[0.0],[0.0],[0.0001]])
 z0 = true_dyn.convert_x_to_z(x0)
 
-T = 20
+T = 40
 dt = 0.1
 N = int(round(T/dt))
 t = np.linspace(0,T-2*dt,N-1)
 xdim=4
 udim=2
 
-train_interval = 5
-start_training = 50
+train_interval = 20
+start_training = 100
 
 width = 1.0
-speed = 2.0
+speed = 1.0
 freq = 1.0/10
 x_d = np.stack((t * speed, width * np.sin(2 * np.pi * t * freq),np.zeros(N-1), np.zeros(N-1)))
 x_d[2,:-1] = np.arctan2(np.diff(x_d[1,:]),np.diff(x_d[0,:]))
@@ -168,7 +168,7 @@ for i in range(N-2):
 	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
 	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
 	
-	# u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
+	u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
 	
 	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
@@ -190,7 +190,7 @@ for i in range(N-2):
 
 	# x[:,i+1:i+2] = true_dyn.convert_z_to_x(z[:,i+1:i+2])
 	x_ad[:,i+1:i+2] = true_dyn.convert_z_to_x(z_ad[:,i+1:i+2])
-	# x_qp[:,i+1:i+2] = true_dyn.convert_z_to_x(z_qp[:,i+1:i+2])
+	x_qp[:,i+1:i+2] = true_dyn.convert_z_to_x(z_qp[:,i+1:i+2])
 	x_pd[:,i+1:i+2] = true_dyn.convert_z_to_x(z_pd[:,i+1:i+2])
 
 	print('Iteration ', i, ', Time elapsed (ms): ', (time.time() - start)*1000)

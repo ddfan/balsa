@@ -33,7 +33,7 @@ class QPSolve():
         Q = np.eye(self.xdim)
         self.P = sl.solve_continuous_are(self.A,np.zeros((self.xdim,self.xdim)),Q,np.eye(self.xdim))
 
-    def solve(self,x,x_d,mu_d,mu_rm,sigDelta):
+    def solve(self,x,x_d,mu_d,sigDelta):
         sigDelta = np.clip(sigDelta,0.0,self.max_var)
         # sigDelta = np.ones((self.xdim/2,1)) * self.max_var # for testing
 
@@ -62,7 +62,7 @@ class QPSolve():
             dB = self.cbf_list[i].dB(x).T
             G_cbf[i,:] = np.append(np.append(np.matmul(dB,self.G),0),1)
             trGssGd2B = np.trace(np.matmul(GssG,self.cbf_list[i].d2B(x)))
-            h_cbf[i,:] = -1 * ( np.matmul(dB,np.matmul(self.A,e)+np.matmul(self.A0,x_d[:-1,:])+np.matmul(self.G,mu_rm))
+            h_cbf[i,:] = -1 * ( np.matmul(dB,np.matmul(self.A0,x[:-1,:]) + np.matmul(self.G,mu_d))
                                 - self.cbf_list[i].gamma / self.cbf_list[i].B(x)
                                 + 0.5*trGssGd2B)
 
