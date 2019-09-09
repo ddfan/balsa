@@ -50,6 +50,7 @@ class AdaptiveClbfNode(object):
         self.params["kp_z"] = rospy.get_param('~kp_z',1.0)
         self.params["kd_z"] = rospy.get_param('~kd_z',1.0)
         self.params["clf_epsilon"] = rospy.get_param('~clf_epsilon',1.0)
+        self.params["reverse_velocity_goal"] = rospy.get_param('~reverse_velocity_goal',True)
 
         self.params["learning_verbose"] = rospy.get_param('~learning_verbose',False)
         self.params["use_model"] = rospy.get_param('~use_model',True)
@@ -168,7 +169,7 @@ class AdaptiveClbfNode(object):
         else:
             desired_vel = self.desired_vel
 
-        if self.current_vel_body_x < 0:
+        if self.params["reverse_velocity_goal"] and self.current_vel_body_x < 0:
             desired_vel = - np.abs(desired_vel)
 
         x_ref = np.array([[x_des,y_des,desired_heading,desired_vel]]).T
@@ -443,6 +444,7 @@ class AdaptiveClbfNode(object):
         self.params["model_train"] = config["model_train"]
         self.params["add_data"] = config["add_data"]
         self.params["check_model"] = config["check_model"]
+        self.params["reverse_velocity_goal"] = config["reverse_velocity_goal"]
         self.kp_goal = config["kp_goal"]
         self.desired_vel = config["desired_vel"]
 
