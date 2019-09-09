@@ -379,7 +379,7 @@ class AdaptiveClbfNode(object):
 
         # publish debug data
         debug_msg = DebugData()
-        debug_msg.header.stamp = rospy.get_rostime()
+        debug_msg.header.stamp = self.odom.header.stamp
         debug_msg.latency = cb_latency
         debug_msg.dt = dt
         debug_msg.heading = current_heading
@@ -388,6 +388,8 @@ class AdaptiveClbfNode(object):
 
         debug_msg.z = self.adaptive_clbf.debug["z"]
         debug_msg.z_ref = self.adaptive_clbf.debug["z_ref"]
+        debug_msg.z_dot = self.adaptive_clbf.debug["z_dot"]
+        debug_msg.y_out = self.adaptive_clbf.debug["y_out"]
         debug_msg.mu_rm = self.adaptive_clbf.debug["mu_rm"]
         debug_msg.mu_pd = self.adaptive_clbf.debug["mu_pd"]
         debug_msg.mu_ad = self.adaptive_clbf.debug["mu_ad"]

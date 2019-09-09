@@ -6,6 +6,8 @@ float64 vel_x_body
 float64 vel_y_body
 float64[] z
 float64[] z_ref
+float64[] z_dot
+float64[] y_out
 float64[] mu_rm
 float64[] mu_pd
 float64[] mu_ad

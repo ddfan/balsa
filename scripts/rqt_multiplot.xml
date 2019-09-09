@@ -1426,7 +1426,7 @@
                                     <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>mu_model/0</field>
+                                    <field>z_dot/0</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -1459,7 +1459,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>mu_model</title>
+                            <title>z_dot [0]</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -1477,7 +1477,7 @@
                                     <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>mu_l/0</field>
+                                    <field>y_out/0</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -1510,14 +1510,14 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>mu_l</title>
+                            <title>y_out [0]</title>
                         </curve_1>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>model inputs [0]</title>
+                    <title>model vs data [0]</title>
                 </column_3>
             </row_1>
             <row_2>
@@ -1979,7 +1979,7 @@
                                     <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>mu_model/1</field>
+                                    <field>z_dot/1</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -2012,7 +2012,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>mu_model</title>
+                            <title>z_dot [1]</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -2030,7 +2030,7 @@
                                     <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>mu_l/1</field>
+                                    <field>y_out/1</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -2063,14 +2063,14 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>mu_l</title>
+                            <title>y_out [1]</title>
                         </curve_1>
                     </curves>
                     <legend>
                         <visible>true</visible>
                     </legend>
                     <plot_rate>30</plot_rate>
-                    <title>model inputs[1]</title>
+                    <title>model vs data [1]</title>
                 </column_3>
             </row_2>
         </plots>

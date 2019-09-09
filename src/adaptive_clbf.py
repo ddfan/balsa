@@ -53,7 +53,9 @@ class AdaptiveClbf(object):
 		self.z_ref = self.dyn.convert_x_to_z(x_init)
 		self.z = copy.copy(self.z_ref)
 		self.z_ref_dot = np.zeros((self.xdim,1))
+		self.z_dot = np.zeros((self.xdim/2,1))
 		self.z_prev = copy.copy(self.z)
+		self.y_out = np.zeros((self.xdim/2,1))
 		self.mu_prev = np.zeros((self.xdim,1))
 		self.u_prev = np.zeros((self.udim,1))
 		self.u_prev_prev = np.zeros((self.udim,1))
@@ -188,10 +190,11 @@ class AdaptiveClbf(object):
 				req.dt = dt
 				self.model.add_data(req)
 
+		self.z_dot = (self.z[2:-1,:]-self.z_prev[2:-1,:])/dt - mu_model
+
 		# if check_model and self.model.model_trained:
 		if check_model and self.model_trained:
 			# check how the model is doing.  compare the model's prediction with the actual sampled data.
-			z_dot = (self.z[2:-1,:]-self.z_prev[2:-1,:])/dt
 			predict_service_success = False
 			result = None
 			if self.use_service:
@@ -209,16 +212,15 @@ class AdaptiveClbf(object):
 				predict_service_success = True
 
 			if predict_service_success:
-				y_out = np.expand_dims(result.y_out, axis=0).T
+				self.y_out = np.expand_dims(result.y_out, axis=0).T
 				var = np.expand_dims(result.var, axis=0).T
-				ynew = z_dot - mu_model
 
 				if self.verbose:
-					print("predicted y_out: ", y_out)
-					print("predicted ynew: ", ynew)
+					print("predicted y_out: ", self.y_out)
+					print("predicted ynew: ", self.z_dot)
 					print("predicted var: ", var)
 
-				self.predict_error = np.linalg.norm(y_out - ynew)
+				self.predict_error = np.linalg.norm(self.y_out - self.z_dot)
 				self.predict_var = var
 
 		if use_model and self.model_trained:
@@ -285,6 +287,8 @@ class AdaptiveClbf(object):
 
 		self.debug["z"] = self.z.flatten().tolist()
 		self.debug["z_ref"] = self.z_ref.flatten().tolist()
+		self.debug["z_dot"] = self.z_dot.flatten().tolist()
+		self.debug["y_out"] = self.y_out.flatten().tolist()
 		self.debug["mu_rm"] = self.z_ref_dot.flatten().tolist()
 		self.debug["mu_pd"] = mu_pd.flatten().tolist()
 		self.debug["mu_ad"] = mu_ad.flatten().tolist()
