@@ -255,7 +255,6 @@ class AdaptiveClbf(object):
 
 		mu_d = mu_rm + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
-		sigDelta = self.measurement_noise * np.ones((self.xdim/2,1)) # TODO:  for testing
 		if use_qp:
 			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_d,mu_rm,sigDelta)
 
