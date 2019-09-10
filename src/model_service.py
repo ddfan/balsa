@@ -251,6 +251,11 @@ class ModelALPaCAService(ModelService):
 			'save_data_interval': 1000
 		}
 
+		if not use_service:
+			self.config['sigma_eps'] = [0.0001, 0.0001]
+			self.config['nn_layers'] = [128,128,128]
+			self.config['activation'] = 'sigmoid'
+
 		g = tf.Graph()
 		config = tf.ConfigProto(log_device_placement=True)
 		config.gpu_options.allow_growth=True

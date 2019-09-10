@@ -53,9 +53,9 @@ params["measurement_noise"] = 1.0e-2
 params["N_data"] = 600
 params["learning_verbose"] = False
 params["N_updates"] = 200
-params["meta_batch_size"] = 64
-params["data_horizon"] = 10
-params["test_horizon"] = 10
+params["meta_batch_size"] = 50
+params["data_horizon"] = 20
+params["test_horizon"] = 30
 params["learning_rate"] = 0.001
 params["min_datapoints"] = 50
 params["save_data_interval"] = 10000
@@ -143,7 +143,7 @@ bar = Bar(max=N-1)
 for i in range(N-2):
 	bar.next()
 	start = time.time()
-	
+
 	if i < N-3:
 		z_d[:,i+2:i+3] = true_dyn.convert_x_to_z(x_d[:,i+2:i+3])
 		z_d_dot = (z_d[:,i+2:i+3] - z_d[:,i+1:i+2])/dt
@@ -169,9 +169,9 @@ for i in range(N-2):
 	prediction_error_ad[i] = adaptive_clbf_ad.predict_error
 	prediction_error_true_ad[i] = adaptive_clbf_ad.true_predict_error
 	prediction_var_ad[:,i:i+1] = np.clip(adaptive_clbf_ad.predict_var,0,params["qp_max_var"])
-	
+
 	u_qp[:,i+1] = adaptive_clbf_qp.get_control(z_qp[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=True)
-	
+
 	u_pd[:,i+1] = adaptive_clbf_pd.get_control(z_pd[:,i:i+1],z_d[:,i+1:i+2],z_d_dot,dt=dt,obs=[],use_model=False,add_data=False,use_qp=False)
 
 	# dt = np.random.uniform(0.05,0.15)
@@ -196,6 +196,7 @@ for i in range(N-2):
 	x_pd[:,i+1:i+2] = true_dyn.convert_z_to_x(z_pd[:,i+1:i+2])
 
 	print('Iteration ', i, ', Time elapsed (ms): ', (time.time() - start)*1000)
+
 
 plt.figure()
 plt.rcParams.update({'font.size': 12})
@@ -304,4 +305,3 @@ print("mean true error (ad): ", np.mean(prediction_error_true_ad[start_training+
 print("mean position error (ad): ", np.mean(np.sqrt((x_d[0,:]-x_ad[0,:])**2 + (x_d[1,:]-x_ad[1,:])**2)))
 
 plt.show()
-
