@@ -249,6 +249,8 @@ class ModelALPaCAService(ModelService):
 		}
 
 		self.use_service = use_service
+		if not self.use_service:
+			self.config['sigma_eps'] = [1e-2, 1e-2]
 
 		g = tf.Graph()
 		config = tf.ConfigProto(log_device_placement=True)
