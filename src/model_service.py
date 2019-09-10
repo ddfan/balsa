@@ -238,9 +238,6 @@ class ModelALPaCAService(ModelService):
 			'meta_batch_size': 64,
 			'data_horizon': 20,
 			'test_horizon': 20,
-			# 'meta_batch_size': 100,
-			# 'data_horizon': 100,
-			# 'test_horizon': 50,
 			'lr': 0.005,
 			'x_dim': model_xdim,
 			'y_dim': model_ydim,
@@ -251,10 +248,7 @@ class ModelALPaCAService(ModelService):
 			'save_data_interval': 1000
 		}
 
-		if not use_service:
-			self.config['sigma_eps'] = [0.0001, 0.0001]
-			self.config['nn_layers'] = [128,128,128]
-			self.config['activation'] = 'sigmoid'
+		self.use_service = use_service
 
 		g = tf.Graph()
 		config = tf.ConfigProto(log_device_placement=True)
@@ -284,7 +278,8 @@ class ModelALPaCAService(ModelService):
 		else:
 			Z = np.concatenate((x_body)).T
 
-		Z = self.scale_data(Z,self.Zmean,self.Zstd)
+		if self.use_service:
+			Z = self.scale_data(Z,self.Zmean,self.Zstd)
 		return Z
 
 	def predict(self,req):
@@ -335,10 +330,16 @@ class ModelALPaCAService(ModelService):
 			if not self.model_trained:
 				self.Zmean = np.mean(self.Z,axis=0)
 				self.Zstd = np.std(self.Z,axis=0)
-				self.Z = self.scale_data(self.Z,self.Zmean, self.Zstd)
+
+				if self.use_service:
+					self.Z = self.scale_data(self.Z,self.Zmean, self.Zstd)
+
 				self.ymean = np.mean(self.y,axis=0)
 				self.ystd = np.std(self.y,axis=0)
-				self.y = self.scale_data(self.y,self.ymean, self.ystd)
+
+				if self.use_service:
+					self.y = self.scale_data(self.y,self.ymean, self.ystd)
+
 				self.model_trained = True
 				print("Mean and std of data computed with # data points:", self.Z.shape[0])
 				print("Zmean:", self.Zmean)
