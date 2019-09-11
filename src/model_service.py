@@ -140,13 +140,8 @@ class ModelVanillaService(ModelService):
 		Z = self.make_input(x,obs)
 
 		# needed fix for weird shapes of tensors
-		ZN = np.concatenate((self.Z[-9:,:],Z))
-		Y = self.y[-10:,:]
-		# print("predict ZN.shape", ZN.shape)
-		# print("predict Y.shape", Y.shape)
-
-		y, var, _ = self.m.predict(ZN,Y)
-
+		Y = self.y[-1:,:]
+		y, var, _ = self.m.predict(Z,Y)
 		theta = obs[0]
 		y_out = self.rotate(y,-theta).T
 
@@ -245,12 +240,11 @@ class ModelALPaCAService(ModelService):
 			'nn_layers': [128,128,128],
 			'activation': 'tanh',
 			'min_datapoints': 1000,
-			'save_data_interval': 1000
+			'save_data_interval': 1000,
+			'sigma_eps': [1e-2, 1e-2]
 		}
 
 		self.use_service = use_service
-		if not self.use_service:
-			self.config['sigma_eps'] = [1e-2, 1e-2]
 
 		g = tf.Graph()
 		config = tf.ConfigProto(log_device_placement=True)
@@ -310,7 +304,7 @@ class ModelALPaCAService(ModelService):
 		# var = np.expand_dims(var,axis=0).T
 		resp = PredictModelResponse()
 		resp.y_out = y_out.flatten()
-		resp.var = var
+		resp.var = var - self.config["sigma_eps"]
 		resp.result = True
 		return resp
 

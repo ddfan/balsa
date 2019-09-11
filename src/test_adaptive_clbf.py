@@ -32,7 +32,6 @@ params["qp_u_cost"] = 100.0
 params["qp_u_prev_cost"] = 1.0
 params["qp_p1_cost"] = 1.0
 params["qp_p2_cost"] = 1.0e12
-params["qp_ksig"] = 1.0e2
 params["qp_max_var"] = 1.0
 params["qp_verbose"] = False
 params["max_velocity"] = 2.0
@@ -48,11 +47,13 @@ params["verbose"] = False
 params["dt"] = 0.1
 params["max_error"] = 10.0
 
-params["measurement_noise"] = 1.0e-2
+# alpaca params
+params["qp_ksig"] = 2.0e3
+params["measurement_noise"] = 1.0e-3
 
 params["N_data"] = 600
 params["learning_verbose"] = False
-params["N_updates"] = 200
+params["N_updates"] = 50
 params["meta_batch_size"] = 50
 params["data_horizon"] = 20
 params["test_horizon"] = 30
@@ -81,14 +82,14 @@ adaptive_clbf_pd.update_barrier_locations(barrier_x,barrier_y,params["barrier_ra
 x0=np.array([[0.0],[0.0],[0.0],[0.0001]])
 z0 = true_dyn.convert_x_to_z(x0)
 
-T = 40
+T = 60
 dt = 0.1
 N = int(round(T/dt))
 t = np.linspace(0,T-2*dt,N-1)
 xdim=4
 udim=2
 
-train_interval = 20
+train_interval = 40
 start_training = 100
 
 width = 1.0

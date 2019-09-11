@@ -396,7 +396,6 @@ class AdaptiveClbfNode(object):
         debug_msg.mu_ad = self.adaptive_clbf.debug["mu_ad"]
         debug_msg.rho = self.adaptive_clbf.debug["rho"]
         debug_msg.mu_qp = self.adaptive_clbf.debug["mu_qp"]
-        debug_msg.mu_l = self.adaptive_clbf.debug["mu_l"]
         debug_msg.mu_model = self.adaptive_clbf.debug["mu_model"]
         debug_msg.mu = self.adaptive_clbf.debug["mu"]
         debug_msg.u_new = self.adaptive_clbf.debug["u_new"]

@@ -41,9 +41,9 @@ class AdaptiveClbf(object):
 			self.model_predict_srv = rospy.ServiceProxy('predict_model', PredictModel)
 		else:
 			# setup non-service model object
-			self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
+			# self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
 			# self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
-			# self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
+			self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
 
 		self.clf = LyapunovAckermannZ(w1=10.0,w2=1.0,w3=1.0,epsilon=1.0)
 		self.qpsolve = QPSolve(dyn=self.dyn,cbf_list=[],clf=self.clf,u_lim=self.u_lim,u_cost=0.0,u_prev_cost=1.0,p1_cost=1.0e8,p2_cost=1.0e8,verbose=False)
@@ -171,9 +171,9 @@ class AdaptiveClbf(object):
 		# self.z_ref_dot = (self.z_ref_next[:-1,:] - self.z_ref[:-1,:]) / dt # use / self.dt for test_adaptive_clbf
 		self.z_ref_dot = copy.copy(z_ref_dot)
 		mu_rm = self.z_ref_dot[2:-1]
-		mu_l = mu_rm + mu_pd
 
 		mu_model = np.matmul(self.dyn.g(self.z_prev),self.u_prev) + self.dyn.f(self.z_prev)
+		mu_model = np.clip(mu_model,-self.max_error,self.max_error)
 
 		if add_data:
 			if self.use_service:
@@ -260,7 +260,7 @@ class AdaptiveClbf(object):
 		if use_qp:
 			self.mu_qp = self.qpsolve.solve(self.z,self.z_ref,mu_d,sigDelta)
 
-		self.mu_new =mu_d + self.mu_qp
+		self.mu_new = mu_d + self.mu_qp
 		self.u_new = np.matmul(np.linalg.inv(self.dyn.g(self.z)), (self.mu_new-self.dyn.f(self.z)))
 
 		u_new_unsaturated = copy.copy(self.u_new)
@@ -292,7 +292,6 @@ class AdaptiveClbf(object):
 		self.debug["mu_rm"] = self.z_ref_dot.flatten().tolist()
 		self.debug["mu_pd"] = mu_pd.flatten().tolist()
 		self.debug["mu_ad"] = mu_ad.flatten().tolist()
-		self.debug["mu_l"] = mu_l.flatten().tolist()
 		self.debug["mu_model"] = mu_model.flatten().tolist()
 		self.debug["rho"] = rho.flatten().tolist()
 		self.debug["mu_qp"] = self.mu_qp.flatten().tolist()

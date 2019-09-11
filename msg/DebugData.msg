@@ -12,7 +12,6 @@ float64[] mu_rm
 float64[] mu_pd
 float64[] mu_ad
 float64[] mu_model
-float64[] mu_l
 float64[] rho
 float64[] mu_qp
 float64[] mu
