@@ -94,7 +94,7 @@ class AdaptiveClbfNode(object):
         # Create subscribers
         rospy.Subscriber('pose_target', PoseStamped, self.pose_goal_cb, queue_size=1)
         rospy.Subscriber('odometry_target', Odometry, self.odometry_goal_cb, queue_size=1)
-        rospy.Subscriber('resiliency/odometry', Odometry, self.odometry_cb, queue_size=1)
+        rospy.Subscriber('odometry', Odometry, self.odometry_cb, queue_size=1)
         rospy.Subscriber('encoder/odom', Odometry, self.encoders_cb, queue_size=1)
         rospy.Subscriber('scan', LaserScan, self.pointcloud_cb, queue_size=1)
 

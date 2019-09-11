@@ -1,10 +1,12 @@
 <launch>
   <arg name="rate" default="30.0"/>
+  <arg name="robot_namespace" default="xmaxx1"/>
 
-  <node pkg="controller_adaptiveclbf" type="adaptive_clbf_node.py" name="adaptive_clbf" output="screen">
-    <remap from="resiliency/odometry" to="/downward/vio/odometry" />
-    <remap from="output" to="/ackermann_cmd" />
-    <remap from="odometry_target" to="/odometry_goal" />
-    <remap from="pose_target" to="/move_base_simple/goal" />
+  <node pkg="controller_adaptiveclbf" type="adaptive_clbf_node.py" name="adaptive_clbf" output="screen" ns="$(arg robot_namespace)">
+    <remap from="odometry" to="hero/odometry" />
+    <remap from="output" to="ackermann_cmd_openloop" />
+    <remap from="odometry_target" to="odometry_goal" />
+    <remap from="pose_target" to="move_base_simple/goal" />
+    <remap from="scan" to="velodyne_points/local_obstacles" />
   </node>
 </launch>

@@ -1,4 +1,5 @@
 <launch>
-    <node pkg="controller_adaptiveclbf" type="dyn_reconfig_server.py" name="controller_adaptiveclbf_reconfig" output="screen"/>
-    <node pkg="controller_adaptiveclbf" type="model_service.py" name="model_service" output="screen"/>
+    <arg name="robot_namespace" default="xmaxx1"/>
+    <node pkg="controller_adaptiveclbf" type="dyn_reconfig_server.py" name="controller_adaptiveclbf_reconfig" output="screen" ns="$(arg robot_namespace)"/>
+    <node pkg="controller_adaptiveclbf" type="model_service.py" name="model_service" output="screen" ns="$(arg robot_namespace)"/>
 </launch>
