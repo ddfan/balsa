@@ -11,8 +11,8 @@ windows:
       - shell_command:
         - sleep 5
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar_moon gui:=true x:=0 y:=-20
-        # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar gui:=true x:=0 y:=0
-        - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_porto gui:=false x:=0 y:=0
+        - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar gui:=true x:=0 y:=0
+        # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_porto gui:=false x:=0 y:=0
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_porto_bumpy gui:=true x:=0 y:=0
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_barca gui:=true x:=0 y:=0
         # - roslaunch racecar_gazebo racecar.launch world_name:=racecar_subway
@@ -24,8 +24,8 @@ windows:
         - roslaunch controller_adaptiveclbf controller_adaptiveclbf.launch
       - shell_command:
         - sleep 6
-        # - roslaunch controller_adaptiveclbf figure_eight.launch
-        - "rostopic pub -r 50 /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: base_link}, pose: {position: {x: 0.0, y: 0}, orientation: {w: 1.0}}}'"
+        - roslaunch controller_adaptiveclbf figure_eight.launch
+        # - "rostopic pub -r 50 /move_base_simple/goal geometry_msgs/PoseStamped '{header: {frame_id: base_link}, pose: {position: {x: 0.0, y: 0}, orientation: {w: 1.0}}}'"
       - shell_command:
         - sleep 3
         - roslaunch controller_adaptiveclbf encoder_odometry.launch
