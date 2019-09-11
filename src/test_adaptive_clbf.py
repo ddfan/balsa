@@ -32,7 +32,7 @@ params["qp_u_cost"] = 100.0
 params["qp_u_prev_cost"] = 1.0
 params["qp_p1_cost"] = 1.0
 params["qp_p2_cost"] = 1.0e12
-params["qp_max_var"] = 1.0
+params["qp_max_var"] = 1.5
 params["qp_verbose"] = False
 params["max_velocity"] = 2.0
 params["min_velocity"] = 0.5
@@ -48,8 +48,16 @@ params["dt"] = 0.1
 params["max_error"] = 10.0
 
 # alpaca params
-params["qp_ksig"] = 2.0e3
-params["measurement_noise"] = 1.0e-3
+# params["qp_ksig"] = 2.0e3
+# params["measurement_noise"] = 1.0e-3
+
+# gp params
+# params["qp_ksig"] = 1.0e5
+# params["measurement_noise"] = 1.0
+
+# vanilla nn params
+params["qp_ksig"] = 1.0e2
+params["measurement_noise"] = 1.0
 
 params["N_data"] = 600
 params["learning_verbose"] = False
