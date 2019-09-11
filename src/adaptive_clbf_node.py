@@ -45,6 +45,7 @@ class AdaptiveClbfNode(object):
         self.params={}
         self.params["vehicle_length"] = rospy.get_param('~vehicle_length',0.5)
         self.params["steering_limit"] = rospy.get_param('~steering_limit',1.0)
+        self.params["scale_acceleration"] = rospy.get_param('~scale_acceleration', 1.0)
         self.params["max_accel"] = rospy.get_param('~max_accel',1.0)
         self.params["min_accel"] = rospy.get_param('~min_accel',-1.0)
         self.params["kp_z"] = rospy.get_param('~kp_z',1.0)
@@ -349,8 +350,14 @@ class AdaptiveClbfNode(object):
         # make message
         u_msg = AckermannDriveStamped()
         u_msg.drive.steering_angle = u[0]
-        u_msg.drive.acceleration = u[1]
-        # u_msg.header.stamp = rospy.get_rostime()
+        
+        if self.params["scale_acceleration"] == 0.0:
+            # directly apply acclerations
+            u_msg.drive.acceleration = u[1]
+        else:
+            # or, assume underlying velocity controller
+            u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
+
         u_msg.header.stamp = self.odom.header.stamp
 
         self.pub_control.publish(u_msg)
@@ -412,6 +419,7 @@ class AdaptiveClbfNode(object):
         # clients (typically the GUI).
         self.params["vehicle_length"] = config["vehicle_length"]
         self.params["steering_limit"] = config["steering_limit"]
+        self.params["scale_acceleration"] = config["scale_acceleration"]
         self.params["max_accel"] = config["max_accel"]
         self.params["min_accel"] = config["min_accel"]
         self.params["kp_z"] = config["kp_z"]
