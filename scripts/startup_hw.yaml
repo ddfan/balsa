@@ -1,11 +1,11 @@
 session_name: xmaxx
 
-before_script: "../scripts/cleanup.sh"
+# before_script: "../scripts/cleanup.sh"
 
 # Default environment variables; Overwrite from command line
 environment:
   TEST_NAME: test
-  ROBOT_NAME: xmaxx
+  ROBOT_NAME: xmaxx1
 
 options:
   default-command: /bin/bash

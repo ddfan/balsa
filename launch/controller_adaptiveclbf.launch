@@ -8,5 +8,6 @@
     <remap from="odometry_target" to="odometry_goal" />
     <remap from="pose_target" to="move_base_simple/goal" />
     <remap from="scan" to="velodyne_points/local_obstacles" />
+    <remap from="joy_cmd" to="ackermann_cmd_joy" />
   </node>
 </launch>

@@ -12,6 +12,7 @@ from dynamic_reconfigure.client import Client as DynamicReconfigureClient
 from controller_adaptiveclbf.msg import DebugData
 
 from ackermann_msgs.msg import AckermannDriveStamped
+from std_msgs.msg import Empty
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
@@ -25,6 +26,8 @@ class AdaptiveClbfNode(object):
         self.adaptive_clbf = AdaptiveClbf(odim=6)
         self.prev_odom_timestamp = rospy.Time(0)
         self.prev_goal_timestamp = rospy.Time(0)
+        self.joy_cmd_time = rospy.Time(0)
+        self.heartbeat_time = rospy.Time(0)
 
         self.odom = Odometry()
         self.encoder_odom = Odometry()
@@ -97,6 +100,8 @@ class AdaptiveClbfNode(object):
         rospy.Subscriber('odometry', Odometry, self.odometry_cb, queue_size=1)
         rospy.Subscriber('encoder/odom', Odometry, self.encoders_cb, queue_size=1)
         rospy.Subscriber('scan', LaserScan, self.pointcloud_cb, queue_size=1)
+        rospy.Subscriber('joy_cmd', AckermannDriveStamped, self.joy_cmd_cb, queue_size = 1)
+        rospy.Subscriber('heartbeat_base', Empty, self.heartbeat_cb, queue_size = 1)
 
         # training timer
         rate = rospy.get_param('~rate', 30.0)
@@ -230,6 +235,15 @@ class AdaptiveClbfNode(object):
             # if self.params["verbose"]:
             rospy.logwarn(["training latency (ms): ", (end_time-self.train_start_time).to_sec() * 1000.0])
 
+    def joy_cmd_cb(self, ackermann_drive_msg):
+        self.joy_cmd = ackermann_drive_msg
+        self.joy_cmd_time = rospy.get_rostime()
+        rospy.logwarn("Detected joystick override!")
+        self.pub_control.publish(self.joy_cmd)
+
+    def heartbeat_cb(self, msg):
+        self.heartbeat_time = rospy.get_rostime()
+
     def encoders_cb(self,encoder_odom):
         self.encoder_odom = encoder_odom
 
@@ -359,8 +373,13 @@ class AdaptiveClbfNode(object):
             u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
 
         u_msg.header.stamp = self.odom.header.stamp
+        if (rospy.get_rostime() - self.joy_cmd_time).to_sec() > 1.0 and (rospy.get_rostime() - self.heartbeat_time).to_sec() < 2.0:
+            self.pub_control.publish(u_msg)
+        else:
+            rospy.logwarn("Publishing zero command, joystick override or heartbeat lost.")
+            zero_msg = AckermannDriveStamped()
+            self.pub_control.publish(zero_msg)
 
-        self.pub_control.publish(u_msg)
         end_time = rospy.get_rostime()
 
         # publish reference pose for visualization

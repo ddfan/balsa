@@ -1,0 +1,47 @@
+session_name: xmaxx_base
+
+# before_script: "../scripts/cleanup.sh"
+
+# Default environment variables; Overwrite from command line
+environment:
+  TEST_NAME: test
+  ROBOT_NAME: xmaxx1
+
+options:
+  default-command: /bin/bash
+
+windows:
+- window_name: xmaxx_base
+  layout: tiled
+  shell_command_before:
+    - export DATA_DIR=/data/ros/${ROBOT_NAME}_$(date "+%Y-%m-%d-%H-%M-00")_${TEST_NAME}
+    - export ROS_LOG_DIR=$DATA_DIR/log
+  panes:
+    - shell_command:
+      - sleep 2
+      - rosservice call /xmaxx1/move_base/clear_costmaps "{}" \
+    - shell_command:
+      - sleep 2
+      - rosservice call /xmaxx1/voxblox_node/clear_map "{}" \
+    - shell_command:
+      - sleep 2
+      - rostopic pub -r 10 /${ROBOT_NAME}/e_stop std_msgs/Bool true \
+    - shell_command:
+      - sleep 2 
+      - source /opt/ros/melodic/setup.bash
+      - node_manager \
+    - shell_command:
+      - sleep 2
+      - rosrun rqt_reconfigure rqt_reconfigure \
+    - shell_command:
+      - sleep 2
+      - rqt_multiplot --multiplot-config $(rospack find controller_adaptiveclbf)/scripts/rqt_multiplot.xml \
+    - shell_command:
+      - sleep 2
+      - rostopic pub -r 10 /xmaxx1/heartbeat_base std_msgs/Empty "{}"
+    - shell_command:
+      - sleep 2
+      - ROS_NAMESPACE=xmaxx1 rosrun joy joy_node
+    - shell_command:
+      - sleep 2
+      - rostopic echo /xmaxx1/ackermann_cmd_openloop
