@@ -27,6 +27,7 @@ class AdaptiveClbfNode(object):
         self.prev_odom_timestamp = rospy.Time(0)
         self.prev_goal_timestamp = rospy.Time(0)
         self.joy_cmd_time = rospy.Time(0)
+        self.joy_cmd = AckermannDriveStamped()
         self.heartbeat_time = rospy.Time(0)
 
         self.odom = Odometry()
@@ -239,7 +240,6 @@ class AdaptiveClbfNode(object):
         self.joy_cmd = ackermann_drive_msg
         self.joy_cmd_time = rospy.get_rostime()
         rospy.logwarn("Detected joystick override!")
-        self.pub_control.publish(self.joy_cmd)
 
     def heartbeat_cb(self, msg):
         self.heartbeat_time = rospy.get_rostime()
@@ -373,12 +373,15 @@ class AdaptiveClbfNode(object):
             u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
 
         u_msg.header.stamp = self.odom.header.stamp
-        if (rospy.get_rostime() - self.joy_cmd_time).to_sec() > 1.0 and (rospy.get_rostime() - self.heartbeat_time).to_sec() < 2.0:
-            self.pub_control.publish(u_msg)
-        else:
-            rospy.logwarn("Publishing zero command, joystick override or heartbeat lost.")
+        if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0:
+            rospy.logwarn("Publishing zero command, heartbeat lost.")
             zero_msg = AckermannDriveStamped()
             self.pub_control.publish(zero_msg)
+        elif (rospy.get_rostime() - self.joy_cmd_time).to_sec() < 0.5:
+            self.pub_control.publish(self.joy_cmd)
+            rospy.logwarn("Publishing joystick override command.")
+        else:
+            self.pub_control.publish(u_msg)
 
         end_time = rospy.get_rostime()
 
