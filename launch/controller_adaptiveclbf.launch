@@ -7,7 +7,11 @@
     <remap from="output" to="ackermann_cmd_openloop" />
     <remap from="odometry_target" to="odometry_goal" />
     <remap from="pose_target" to="move_base_simple/goal" />
-    <remap from="scan" to="velodyne_points/local_obstacles" />
     <remap from="joy_cmd" to="ackermann_cmd_joy" />
+  </node>
+
+    <!-- run pointcloud_to_laserscan node -->
+  <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" ns="$(arg robot_namespace)">
+        <remap from="cloud_in" to="velodyne_points/local_obstacles"/>
   </node>
 </launch>
