@@ -12,7 +12,7 @@ from dynamic_reconfigure.client import Client as DynamicReconfigureClient
 from controller_adaptiveclbf.msg import DebugData
 
 from ackermann_msgs.msg import AckermannDriveStamped
-from std_msgs.msg import Empty
+from std_msgs.msg import Empty, Bool
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
@@ -27,6 +27,7 @@ class AdaptiveClbfNode(object):
         self.prev_odom_timestamp = rospy.Time(0)
         self.prev_goal_timestamp = rospy.Time(0)
         self.joy_cmd_time = rospy.Time(0)
+        self.e_stop_time = rospy.Time(0)
         self.joy_cmd = AckermannDriveStamped()
         self.heartbeat_time = rospy.Time(0)
 
@@ -103,6 +104,7 @@ class AdaptiveClbfNode(object):
         rospy.Subscriber('scan', LaserScan, self.pointcloud_cb, queue_size=1)
         rospy.Subscriber('joy_cmd', AckermannDriveStamped, self.joy_cmd_cb, queue_size = 1)
         rospy.Subscriber('heartbeat_base', Empty, self.heartbeat_cb, queue_size = 1)
+        rospy.Subscriber('e_stop', Bool, self.e_stop_cb, queue_size = 1)
 
         # training timer
         rate = rospy.get_param('~rate', 30.0)
@@ -244,6 +246,10 @@ class AdaptiveClbfNode(object):
     def heartbeat_cb(self, msg):
         self.heartbeat_time = rospy.get_rostime()
 
+    def e_stop_cb(self, msg):
+        if msg.data:
+            self.e_stop_time = rospy.get_rostime()
+
     def encoders_cb(self,encoder_odom):
         self.encoder_odom = encoder_odom
 
@@ -373,8 +379,8 @@ class AdaptiveClbfNode(object):
             u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
 
         u_msg.header.stamp = self.odom.header.stamp
-        if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0:
-            rospy.logwarn("Publishing zero command, heartbeat lost.")
+        if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0 or (rospy.get_rostime() - self.e_stop_time).to_sec() < 1.0:
+            rospy.logwarn("Publishing zero command, heartbeat lost or e_stopped.")
             zero_msg = AckermannDriveStamped()
             self.pub_control.publish(zero_msg)
         elif (rospy.get_rostime() - self.joy_cmd_time).to_sec() < 0.5:
