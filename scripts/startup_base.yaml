@@ -25,7 +25,7 @@ windows:
       - rosservice call /xmaxx1/voxblox_node/clear_map "{}" \
     - shell_command:
       - sleep 2
-      - rostopic pub -r 10 /${ROBOT_NAME}/e_stop std_msgs/Bool true \
+      - rostopic pub -r 10 /xmaxx1/e_stop std_msgs/Bool true \
     - shell_command:
       - sleep 2 
       - source /opt/ros/melodic/setup.bash

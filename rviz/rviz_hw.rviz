@@ -10,7 +10,6 @@ Panels:
         - /Goal1
         - /Goal1/Shape1
         - /Reference1
-        - /Reference1/Status1
         - /Reference1/Shape1
         - /Reference1/Covariance1
         - /Reference1/Covariance1/Position1
@@ -180,8 +179,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 0.8336364030838013
-        Min Value: 0.2760159373283386
+        Max Value: 3.258847951889038
+        Min Value: 2.689142942428589
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -223,7 +222,7 @@ Visualization Manager:
   Global Options:
     Background Color: 238; 238; 236
     Default Light: true
-    Fixed Frame: world
+    Fixed Frame: xmaxx1/odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -247,25 +246,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 10
+      Distance: 7.196173191070557
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
+        X: -0.0595129132270813
+        Y: -1.952476978302002
         Z: 0
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9203977584838867
+      Pitch: 1.5697963237762451
       Target Frame: xmaxx1/base_link
       Value: ThirdPersonFollower (rviz)
-      Yaw: 3.210399866104126
+      Yaw: 4.065395832061768
     Saved: ~
 Window Geometry:
   Displays:

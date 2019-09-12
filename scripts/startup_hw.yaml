@@ -28,7 +28,7 @@ windows:
       - sleep 2
       - export ROS_NAMESPACE=$ROBOT_NAME
       - rosrun e_stop e_stop &
-      - rostopic pub -r 10 /${ROBOT_NAME}/e_stop std_msgs/Bool true \
+      - rostopic pub -r 10 /xmaxx1/e_stop std_msgs/Bool true \
     - shell_command:
       - sleep 2 
       - source /opt/ros/melodic/setup.bash
