@@ -379,7 +379,7 @@ class AdaptiveClbfNode(object):
             u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
 
         u_msg.header.stamp = self.odom.header.stamp
-        if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0 or (rospy.get_rostime() - self.e_stop_time).to_sec() < 1.0:
+        if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0: # or (rospy.get_rostime() - self.e_stop_time).to_sec() < 1.0:
             rospy.logwarn("Publishing zero command, heartbeat lost or e_stopped.")
             zero_msg = AckermannDriveStamped()
             self.pub_control.publish(zero_msg)
