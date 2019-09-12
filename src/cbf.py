@@ -186,8 +186,8 @@ class BarrierAckermannPointZ(Barrier):
 		x_pos = self.x
 		y_pos = self.y
 		return sgn * np.stack((
-			z3 - gamma_p*(x_pos + z1) + (-x_pos**2*z3 - z1**2*z3 - x_pos*y_pos*z4 + 2*x_pos*z1*z3 + x_pos*z2*z4 + y_pos*z1*z4 - z1*z2*z4)/d,
-			z4 - gamma_p*(y_pos + z2) + (-y_pos**2*z4 - z2**2*z4 - x_pos*y_pos*z3 + x_pos*z2*z3 + y_pos*z1*z3 + 2*y_pos*z2*z4 - z1*z2*z3)/d,
+			(z3*(d**2) - x_pos**2*z3 - z1**2*z3 - gamma_p*x_pos*(d**2) + gamma_p*z1*(d**2) - x_pos*y_pos*z4 + 2*x_pos*z1*z3 + x_pos*z2*z4 + y_pos*z1*z4 - z1*z2*z4)/(d**3),
+			(z4*(d**2) - y_pos**2*z4 - z2**2*z4 - gamma_p*y_pos*(d**2) + gamma_p*z2*(d**2) - x_pos*y_pos*z3 + x_pos*z2*z3 + y_pos*z1*z3 + 2*y_pos*z2*z4 - z1*z2*z3)/(d**3),
 			-(x_pos - z1)/d,
 			-(y_pos - z2)/d))
 
