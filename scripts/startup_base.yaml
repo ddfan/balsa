@@ -32,16 +32,20 @@ windows:
       - node_manager \
     - shell_command:
       - sleep 2
-      - rosrun rqt_reconfigure rqt_reconfigure \
+      - rosrun rqt_reconfigure rqt_reconfigure
     - shell_command:
       - sleep 2
-      - rqt_multiplot --multiplot-config $(rospack find controller_adaptiveclbf)/scripts/rqt_multiplot.xml \
+      - rqt_multiplot --multiplot-config $(rospack find controller_adaptiveclbf)/scripts/rqt_multiplot.xml
     - shell_command:
       - sleep 2
       - rostopic pub -r 10 /xmaxx1/heartbeat_base std_msgs/Empty "{}"
     - shell_command:
       - sleep 2
       - ROS_NAMESPACE=xmaxx1 rosrun joy joy_node
+    - shell_command:
+      - sleep 2
+      - roscd controller_adaptiveclbf
+      - rviz rviz -d rviz/rviz_hw.rviz
     - shell_command:
       - sleep 2
       - rostopic echo /xmaxx1/ackermann_cmd_openloop

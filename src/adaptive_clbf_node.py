@@ -387,7 +387,7 @@ class AdaptiveClbfNode(object):
 
         # publish reference pose for visualization
         x_ref_msg = Odometry()
-        x_ref_msg.header.frame_id = 'map'
+        x_ref_msg.header.frame_id = rospy.get_namespace() + 'odom'
         x_ref_msg.header.stamp = self.odom.header.stamp
         x_ref_msg.pose.pose.position.x = self.x_ref[0]
         x_ref_msg.pose.pose.position.y = self.x_ref[1]
