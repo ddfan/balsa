@@ -10,7 +10,6 @@ from qp_solver import QPSolve
 from dynamics import DynamicsAckermannZ
 from cbf import BarrierAckermannVelocityZ, BarrierAckermannPointZ
 from lyapunov import LyapunovAckermannZ
-from model_service import ModelVanillaService, ModelALPaCAService, ModelGPService
 
 class AdaptiveClbf(object):
 	def __init__(self,odim=2, use_service = True, ):
@@ -41,8 +40,13 @@ class AdaptiveClbf(object):
 			self.model_predict_srv = rospy.ServiceProxy('predict_model', PredictModel)
 		else:
 			# setup non-service model object
+			from model_service import ModelVanillaService
 			self.model = ModelVanillaService(self.xdim,self.odim,use_obs=True,use_service=False)
+
+			# from model_service import ModelGPService
 			# self.model = ModelGPService(self.xdim,self.odim,use_obs=True,use_service=False)
+
+			# from model_service import ModelALPaCAService
 			# self.model = ModelALPaCAService(self.xdim,self.odim,use_obs=True,use_service=False)
 
 		self.clf = LyapunovAckermannZ(w1=10.0,w2=1.0,w3=1.0,epsilon=1.0)
