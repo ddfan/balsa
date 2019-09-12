@@ -47,7 +47,7 @@ windows:
       - roslaunch controller_adaptiveclbf model_service.launch robot_namespace:=${ROBOT_NAME}
     - shell_command:
       - sleep 2
-      - roslaunch controller_adaptiveclbf figure_eight.launch robot_namespace:=${ROBOT_NAME}
+      - roslaunch controller_adaptiveclbf figure_eight.launch robot_namespace:=${ROBOT_NAME} \
     - shell_command:
       - sleep 2
       - rosrun rqt_reconfigure rqt_reconfigure \
