@@ -1,5 +1,9 @@
 #! /usr/bin/env python
 import os
+
+# don't use gpu
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 import rospy
 import actionlib
 import numpy as np

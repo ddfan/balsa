@@ -9,8 +9,7 @@ d2h_velocity = simplify(hessian(h_velocity,z))
 %%
 d = sqrt((z1-x_pos)^2 + (z2-y_pos)^2);
 h_pos = gamma_p * (d - radius) + (z1-x_pos) / d * z3 + (z2-y_pos) / d * z4;
-dh_pos = simplify(jacobian(h_pos,z))
-d2h_pos = simplify(hessian(h_pos,z))
-
+dh_pos = (jacobian(h_pos,z))
+d2h_pos = (hessian(h_pos,z))
 
     
