@@ -268,7 +268,7 @@ class AdaptiveClbfNode(object):
         x_curr = self.odom.pose.pose.position.x
         y_curr = self.odom.pose.pose.position.y
 
-        angles = np.arange(pointcloud.angle_min,pointcloud.angle_max,pointcloud.angle_increment) + current_heading
+        angles = np.arange(pointcloud.angle_min,pointcloud.angle_max-pointcloud.angle_increment,pointcloud.angle_increment) + current_heading
         ranges = np.array(pointcloud.ranges)
         angles = angles[np.isfinite(ranges)]
         ranges = ranges[np.isfinite(ranges)]
