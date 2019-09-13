@@ -325,13 +325,6 @@ class AdaptiveClbfNode(object):
             rospy.logwarn("dt is too small! (%f)  skipping this odometry callback!", dt)
             return
 
-        # dont' add first timestep of data
-        if not self.odom_cb_called:
-            add_data = False
-            self.odom_cb_called = True
-        else:
-            add_data = self.params["add_data"]
-
         self.prev_odom_timestamp = self.odom.header.stamp
 
         if not self.enable:
@@ -364,6 +357,15 @@ class AdaptiveClbfNode(object):
                             ]],dtype=np.float32).T
 
         self.z = self.adaptive_clbf.dyn.convert_x_to_z(self.x)
+
+        add_data = self.params["add_data"]
+        # don't add data if no motion
+        if (self.current_vel_body_x**2 + self.current_vel_body_y**2) < 0.1:
+            add_data = False
+        # dont' add first timestep of data
+        if not self.odom_cb_called:
+            add_data = False
+            self.odom_cb_called = True
 
         # get control!
         u = self.adaptive_clbf.get_control(self.z,self.z_ref,self.z_ref_dot,dt=dt,obs=self.obs,use_model=self.params["use_model"],add_data=add_data,check_model=self.params["check_model"],use_qp=self.params["use_qp"])
