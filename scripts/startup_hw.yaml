@@ -35,6 +35,9 @@ windows:
       - node_manager \
     - shell_command:
       - sleep 2
+      - roslaunch realsense2_camera rs_t265.launch robot_namespace:=${ROBOT_NAME}
+    - shell_command:
+      - sleep 2
       - ROS_NAMESPACE=xmaxx1 roslaunch xmaxx_move_base move_base.launch robot_namespace:=${ROBOT_NAME} \
 - window_name: controller
   layout: tiled
