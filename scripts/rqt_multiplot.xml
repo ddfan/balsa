@@ -35,7 +35,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -48,7 +48,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -137,7 +137,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -150,7 +150,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -262,7 +262,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -275,7 +275,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -313,7 +313,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -326,7 +326,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
@@ -364,7 +364,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
@@ -377,7 +377,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/hero/odometry</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </y_axis>
                             </axes>
