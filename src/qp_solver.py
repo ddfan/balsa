@@ -20,18 +20,18 @@ class QPSolve():
         self.K = 0.0
         self.ksig = 1.0
         self.max_var = 1.0
-        self.mu_qp_prev = np.zeros((self.xdim/2,1))
-        self.P = np.eye(self.xdim)
-        self.A = np.zeros((self.xdim,self.xdim))
-        self.A0 = np.block([[np.zeros((self.xdim/2,self.xdim/2)),np.eye(self.xdim/2)],[np.zeros((self.xdim/2,self.xdim/2)),np.zeros((self.xdim/2,self.xdim/2))]]) 
-        self.G = np.block([[np.zeros((self.xdim/2,self.xdim/2))],[np.eye(self.xdim/2)]])
+        self.mu_qp_prev = np.zeros((self.xdim/2,1), dtype=np.float32)
+        self.P = np.eye(self.xdim, dtype=np.float32)
+        self.A = np.zeros((self.xdim,self.xdim), dtype=np.float32)
+        self.A0 = np.block([[np.zeros((self.xdim/2,self.xdim/2)),np.eye(self.xdim/2)],[np.zeros((self.xdim/2,self.xdim/2)),np.zeros((self.xdim/2,self.xdim/2))]]).astype(np.float32)
+        self.G = np.block([[np.zeros((self.xdim/2,self.xdim/2))],[np.eye(self.xdim/2)]]).astype(np.float32)
         self.res = None
         self.max_error = 1.0
 
     def update_ricatti(self,A):
         self.A = A
-        Q = np.eye(self.xdim)
-        self.P = sl.solve_continuous_are(self.A,np.zeros((self.xdim,self.xdim)),Q,np.eye(self.xdim))
+        Q = np.eye(self.xdim, dtype=np.float32)
+        self.P = sl.solve_continuous_are(self.A,np.zeros((self.xdim,self.xdim), dtype=np.float32),Q,np.eye(self.xdim, dtype=np.float32))
 
     def solve(self,x,x_d,mu_d,sigDelta):
         sigDelta = sigDelta * self.ksig
@@ -39,7 +39,7 @@ class QPSolve():
         # sigDelta = np.ones((self.xdim/2,1)) * self.max_var # for testing
 
         # build Q and p matrices to specify minimization expression
-        Q = np.diag(np.append(np.append(np.ones(self.xdim/2)*(self.u_cost + self.u_prev_cost),self.p1_cost),self.p2_cost))
+        Q = np.diag(np.append(np.append(np.ones(self.xdim/2, dtype=np.float32)*(self.u_cost + self.u_prev_cost),self.p1_cost),self.p2_cost))
         self.Q = sparse.csc_matrix(Q)
         self.p = 2*np.append(np.append(-self.mu_qp_prev*self.u_prev_cost,0),0)
 
@@ -57,14 +57,16 @@ class QPSolve():
 
         # build constraints for barriers
         N_cbf = len(self.cbf_list)
-        G_cbf = np.zeros((N_cbf,self.xdim/2+2))
-        h_cbf = np.zeros((N_cbf,1))
-        for i in range(N_cbf):
-            dB = self.cbf_list[i].dB(x).T
-            G_cbf[i,:] = np.append(np.append(np.matmul(dB,self.G),0),1)
-            trGssGd2B = np.trace(np.matmul(GssG,self.cbf_list[i].d2B(x)))
-            h_cbf[i,:] = -1 * ( np.matmul(dB,np.matmul(self.A0,x[:-1,:]) + np.matmul(self.G,mu_d))
-                                - self.cbf_list[i].gamma / self.cbf_list[i].B(x)
+        G_cbf = np.zeros((N_cbf,self.xdim/2+2), dtype=np.float32)
+        h_cbf = np.zeros((N_cbf,1), dtype=np.float32)
+        A0x_Gmud = np.matmul(self.A0,x[:-1,:]) + np.matmul(self.G,mu_d)
+        GssG_22 = GssG[2:,2:]
+        for i, cbf in enumerate(self.cbf_list):
+            h_x, dB, d2B = cbf.get_B_derivatives(x)
+            G_cbf[i,:] = np.append(np.append(np.einsum('ij,jk',dB,self.G),0),1)
+            trGssGd2B = np.einsum('ii',np.einsum('ij,jk',GssG_22,d2B))
+            h_cbf[i,:] = -1 * (np.einsum('ij,jk',dB,A0x_Gmud)
+                                - cbf.gamma * h_x
                                 + 0.5*trGssGd2B)
 
         # build constraints for control limits
@@ -72,8 +74,8 @@ class QPSolve():
         l_ctrl = np.matmul(ginv, mu_d - self.dyn.f(x))
         A_ctrl = ginv
 
-        G_ctrl = np.zeros((self.udim*2,self.xdim/2+2))
-        h_ctrl = np.zeros((self.udim*2,1))
+        G_ctrl = np.zeros((self.udim*2,self.xdim/2+2), dtype=np.float32)
+        h_ctrl = np.zeros((self.udim*2,1), dtype=np.float32)
         for i in range(self.udim):
             G_ctrl[i*2,:self.xdim/2] = - A_ctrl[i,:]
             h_ctrl[i*2] = - self.u_lim[i,0] + l_ctrl[i]
@@ -88,12 +90,12 @@ class QPSolve():
         self.h = h
 
         # dummy lower bound
-        l = np.ones(h.shape)*np.inf * -1
+        l = np.ones(h.shape, dtype=np.float32)*np.inf * -1
 
         #Solve QP
         self.prob = osqp.OSQP()
         exception_called = False
-        mu_bar = np.zeros((self.xdim+1))
+        mu_bar = np.zeros((self.xdim+1), dtype=np.float32)
         # try:
         self.prob.setup(P=self.Q, q=self.p, A=self.G_csc, l=l, u=self.h, verbose=self.verbose)
         self.res = self.prob.solve()
