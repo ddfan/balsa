@@ -921,7 +921,7 @@
                                     <type>ackermann_msgs/AckermannDriveStamped</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>drive/speed</field>
+                                    <field>drive/acceleration</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
