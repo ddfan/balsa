@@ -52,8 +52,8 @@ class FigureEightNode(object):
         arclength = self.params["width"] * 6
         omega = t * 2 * np.pi * self.params["speed"] / arclength
         y_new = self.params["width"] * np.sin(omega)
-        x_new = self.params["width"] * np.sin(omega) * np.cos(omega)
-        # x_new = self.params["height"] * np.cos(omega)
+        # x_new = self.params["width"] * np.sin(omega) * np.cos(omega)
+        x_new = self.params["height"] * np.cos(omega)
 
         # # for sinusoid
         # y_new = self.params["speed"] * t

@@ -244,6 +244,8 @@ class AdaptiveClbfNode(object):
 
     def joy_cmd_cb(self, ackermann_drive_msg):
         self.joy_cmd = ackermann_drive_msg
+        if self.joy_cmd.drive.speed == 0:
+            self.joy_cmd.drive.jerk = -100
         self.joy_cmd_time = rospy.get_rostime()
         rospy.logwarn("Detected joystick override!")
 
