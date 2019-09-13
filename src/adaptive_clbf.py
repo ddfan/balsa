@@ -88,7 +88,7 @@ class AdaptiveClbf(object):
 
 	def update_params(self,params):
 		self.params = params
-
+                print("updated params!")
 		self.vehicle_length = self.params["vehicle_length"]
 		self.steering_limit = self.params["steering_limit"]
 		self.max_accel = self.params["max_accel"]
