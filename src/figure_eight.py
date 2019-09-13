@@ -71,7 +71,7 @@ class FigureEightNode(object):
 
         # publish reference pose for visualization
         target_msg = Odometry()
-        target_msg.header.frame_id = 'map'
+        target_msg.header.frame_id = rospy.get_namespace() + "odom"
         target_msg.header.stamp = rospy.get_rostime()
         target_msg.pose.pose.position.x = self.x + self.params["x_offset"]
         target_msg.pose.pose.position.y = self.y + self.params["y_offset"]
