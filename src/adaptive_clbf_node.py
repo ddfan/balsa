@@ -395,8 +395,10 @@ class AdaptiveClbfNode(object):
             rospy.logwarn("Publishing zero command, heartbeat lost or e_stopped.")
             zero_msg = AckermannDriveStamped()
             zero_msg.drive.jerk = -100.0
+            zero_msg.header.stamp = self.odom.header.stamp
             self.pub_control.publish(zero_msg)
         elif (rospy.get_rostime() - self.joy_cmd_time).to_sec() < 0.5:
+            self.joy_cmd.header.stamp = self.odom.header.stamp
             self.pub_control.publish(self.joy_cmd)
             rospy.logwarn("Publishing joystick override command.")
         else:
