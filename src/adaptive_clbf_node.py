@@ -84,6 +84,8 @@ class AdaptiveClbfNode(object):
         self.params["barrier_radius_velocity_scale"] = rospy.get_param('~barrier_radius_velocity_scale',1.0)
         self.params["barrier_pc_gamma_p"] = rospy.get_param('~barrier_pc_gamma_p',1.0)
         self.params["barrier_pc_gamma"] = rospy.get_param('~barrier_pc_gamma',1.0)
+        self.params["barrier_max_distance"] = rospy.get_param('~barrier_max_distance',1.0)
+        self.params["barrier_resolution"] = rospy.get_param('~barrier_resolution',1.0)
         self.params["verbose"] = rospy.get_param('~verbose',False)
         self.kp_goal = rospy.get_param('~kp_goal',1.0)
         self.desired_vel = rospy.get_param('~desired_vel',0.5)
@@ -277,8 +279,8 @@ class AdaptiveClbfNode(object):
         y = np.sin(angles) * np.array(ranges) + y_curr
 
         # Downsample pointcloud
-        barrier_max_distance = 3.0
-        barrier_resolution = 0.1
+        barrier_max_distance = self.params["barrier_max_distance"]
+        barrier_resolution = self.params["barrier_resolution"]
         if (x.size > 0):
             x_min = -barrier_max_distance
             x_max = barrier_max_distance
@@ -474,6 +476,8 @@ class AdaptiveClbfNode(object):
         self.params["barrier_radius_velocity_scale"] = config["barrier_radius_velocity_scale"]
         self.params["barrier_pc_gamma_p"] = config["barrier_pc_gamma_p"]
         self.params["barrier_pc_gamma"] = config["barrier_pc_gamma"]
+        self.params["barrier_max_distance"] = config["barrier_max_distance"]
+        self.params["barrier_resolution"] = config["barrier_resolution"]
         self.params["verbose"] = config["verbose"]
         self.params["use_model"] = config["use_model"]
         self.params["model_train"] = config["model_train"]

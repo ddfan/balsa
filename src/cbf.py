@@ -32,7 +32,18 @@ class Barrier():
 		hx = self.h(x)
 		if hx == 0:
 			hx = 1e-3
-		return -1.0/(hx**3)*(self.d2h(x) -2*np.matmul(self.dh(x),self.dh(x).T))
+		# return -1.0/(hx**3)*(self.d2h(x) -2*np.matmul(self.dh(x),self.dh(x).T))
+		# can ignore d2h because taking trace(G*sig*sig^T*G^T d2B).
+		dh = self.dh(x)[2:].T
+		return 1.0/(hx**3)*(2*np.outer(dh,dh))
+
+	def get_B_derivatives(self,x):
+		hx = self.h(x)
+		if hx == 0:
+			hx = 1e-3
+
+		dh = self.dh(x)
+		return hx, -1.0/(hx*hx)*dh.T, 2.0/(hx*hx*hx)*(np.outer(dh[2:],dh[2:]))
 
 
 class BarrierAckermannVelocity(Barrier):
@@ -152,7 +163,7 @@ class BarrierAckermannVelocityZ(Barrier):
 		v = (np.sqrt(z3**2 + z4**2) + 1.0e-6) * z5
 		H = np.block([[(z4**2*z5)/(v**3), -(z3*z4*z5)/(v**3)],
 			[-(z3*z4*z5)/(v**3),   (z3**2*z5)/(v**3)]])
-		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),H]]) * sgn
+		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),H]], dtype=np.float32) * sgn
 
 class BarrierAckermannPointZ(Barrier):
 	def __init__(self,dim=4,gamma=1.0, x=0.0, y=0.0, radius = 1.0, gamma_p = 1.0):
@@ -168,28 +179,24 @@ class BarrierAckermannPointZ(Barrier):
 		if self.radius < 0.0:
 			sgn = -1.0
 
-		d = np.sqrt((z[0,:] - self.x)**2 + (z[1,:] - self.y)**2) + 1.0e-6
-		return sgn * (self.gamma_p * (d - self.radius) + (z[0,:] - self.x) / d * z[2,:] + (z[1,:] - self.y) / d * z[3,:])
+		d = np.sqrt((z[0] - self.x)*(z[0] - self.x) + (z[1] - self.y)*(z[1] - self.y)) + 1.0e-6
+		return sgn * (self.gamma_p * (d - self.radius) + (z[0] - self.x) / d * z[2] + (z[1] - self.y) / d * z[3])
 		 
 	def dh(self,z):
 		sgn = 1.0
 		if self.radius < 0.0:
 			sgn = -1.0
 
-		d = np.sqrt((z[0,:] - self.x)**2 + (z[1,:] - self.y)**2) + 1.0e-6
-		z1 = z[0,:]
-		z2 = z[1,:]
-		z3 = z[2,:]
-		z4 = z[3,:]
-		z5 = z[4,:]
-		gamma_p = self.gamma_p
-		x_pos = self.x
-		y_pos = self.y
-		return sgn * np.stack((
-			(z3*(d**2) - x_pos**2*z3 - z1**2*z3 - gamma_p*x_pos*(d**2) + gamma_p*z1*(d**2) - x_pos*y_pos*z4 + 2*x_pos*z1*z3 + x_pos*z2*z4 + y_pos*z1*z4 - z1*z2*z4)/(d**3),
-			(z4*(d**2) - y_pos**2*z4 - z2**2*z4 - gamma_p*y_pos*(d**2) + gamma_p*z2*(d**2) - x_pos*y_pos*z3 + x_pos*z2*z3 + y_pos*z1*z3 + 2*y_pos*z2*z4 - z1*z2*z3)/(d**3),
-			-(x_pos - z1)/d,
-			-(y_pos - z2)/d))
+		d = np.sqrt((z[0] - self.x)*(z[0] - self.x) + (z[1] - self.y)*(z[1] - self.y)) + 1.0e-6
+		d_2 = d*d
+		d_3 = d*d*d
+		y_pos_m_z2 = (self.y - z[1])
+		x_pos_m_z1 = (self.x - z[0])
+		return sgn * np.array((
+			(z[2]*(d_2 - x_pos_m_z1*x_pos_m_z1) - self.gamma_p * d_2 *x_pos_m_z1 - z[3]*x_pos_m_z1*y_pos_m_z2)/d_3,
+			(z[3]*(d_2 - y_pos_m_z2*y_pos_m_z2) - self.gamma_p * d_2 *y_pos_m_z2 - z[2]*x_pos_m_z1*y_pos_m_z2)/d_3,
+			-x_pos_m_z1/d,
+			-y_pos_m_z2/d), dtype=np.float32)
 
 	def d2h(self,z):
 		sgn = 1.0
@@ -226,4 +233,4 @@ class BarrierAckermannPointZ(Barrier):
 			[ a11, a12, a13, a14],
 			[ a12, a22, a23, a24],
 			[ a13, a23, 0, 0],
-			[ a14, a24, 0, 0]])
+			[ a14, a24, 0, 0]], dtype=np.float32)

@@ -80,6 +80,8 @@ adaptive_clbf_ad.true_dyn = true_dyn
 
 barrier_x = np.array([5,15,25,35,45,55])
 barrier_y = np.array([0,-0.5,0.5,-0.5,0.5,0])
+# barrier_x = np.linspace(0,1,100)
+# barrier_y = np.linspace(0,1,100)
 # barrier_x = np.array([])
 # barrier_y = np.array([])
 adaptive_clbf.update_barrier_locations(barrier_x,barrier_y,params["barrier_radius"])
@@ -90,7 +92,7 @@ adaptive_clbf_pd.update_barrier_locations(barrier_x,barrier_y,params["barrier_ra
 x0=np.array([[0.0],[0.0],[0.0],[0.0001]])
 z0 = true_dyn.convert_x_to_z(x0)
 
-T = 60
+T = 40
 dt = 0.1
 N = int(round(T/dt))
 t = np.linspace(0,T-2*dt,N-1)

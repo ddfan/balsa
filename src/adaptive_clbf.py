@@ -94,14 +94,14 @@ class AdaptiveClbf(object):
 		self.max_accel = self.params["max_accel"]
 		self.min_accel = self.params["min_accel"]
 		self.u_lim = np.array([[np.tan(-self.steering_limit)/self.vehicle_length,np.tan(self.steering_limit)/self.vehicle_length],
-								[self.min_accel,self.max_accel]])
+								[self.min_accel,self.max_accel]],dtype=np.float32)
 		self.qpsolve.u_lim = self.u_lim
 
 		self.k1 = self.params["kp_z"]
 		self.k2 = self.params["kd_z"]
-		self.A=np.block([[np.zeros((2,2)), np.eye(2)],[-self.k1*np.eye(2), -self.k2*np.eye(2)]])
+		self.A=np.block([[np.zeros((2,2),dtype=np.float32), np.eye(2,dtype=np.float32)],[-self.k1*np.eye(2,dtype=np.float32), -self.k2*np.eye(2,dtype=np.float32)]])
 		self.qpsolve.update_ricatti(self.A)
-		self.K=np.block([[self.k1*np.eye(2), self.k2*np.eye(2)]])
+		self.K=np.block([[self.k1*np.eye(2,dtype=np.float32), self.k2*np.eye(2,dtype=np.float32)]])
 		self.max_error = self.params["max_error"]
 
 		self.clf.epsilon = self.params["clf_epsilon"]
@@ -158,15 +158,15 @@ class AdaptiveClbf(object):
 
 		self.update_barriers()
 
-		self.z = copy.copy(z)
-		self.z_ref = copy.copy(z_ref)
-		self.obs = copy.copy(obs)
+		self.z = copy.copy(z.astype(np.float32))
+		self.z_ref = copy.copy(z_ref.astype(np.float32))
+		self.obs = np.array(obs,dtype=np.float32)
 
-		mu_ad = np.zeros((self.xdim/2,1))
-		mDelta = np.zeros((self.xdim/2,1))
-		sigDelta = np.zeros((self.xdim/2,1))
-		rho = np.zeros((self.xdim/2,1))
-		trueDelta = np.zeros((self.xdim/2,1))
+		mu_ad = np.zeros((self.xdim/2,1),dtype=np.float32)
+		mDelta = np.zeros((self.xdim/2,1),dtype=np.float32)
+		sigDelta = np.zeros((self.xdim/2,1),dtype=np.float32)
+		rho = np.zeros((self.xdim/2,1),dtype=np.float32)
+		trueDelta = np.zeros((self.xdim/2,1),dtype=np.float32)
 
 		e = self.z_ref[:-1,:]-self.z[:-1,:]
 		mu_pd = np.matmul(self.K,e)
