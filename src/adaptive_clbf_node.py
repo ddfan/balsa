@@ -51,6 +51,8 @@ class AdaptiveClbfNode(object):
         self.params["vehicle_length"] = rospy.get_param('~vehicle_length',0.5)
         self.params["steering_limit"] = rospy.get_param('~steering_limit',1.0)
         self.params["scale_acceleration"] = rospy.get_param('~scale_acceleration', 1.0)
+        self.params["acceleration_gain"] = rospy.get_param('~acceleration_gain', 1.0)
+        self.params["acceleration_deadband"] = rospy.get_param('~acceleration_deadband', 0.0)
         self.params["max_accel"] = rospy.get_param('~max_accel',1.0)
         self.params["min_accel"] = rospy.get_param('~min_accel',-1.0)
         self.params["kp_z"] = rospy.get_param('~kp_z',1.0)
@@ -375,7 +377,11 @@ class AdaptiveClbfNode(object):
         
         if self.params["scale_acceleration"] == 0.0:
             # directly apply acclerations
-            u_msg.drive.acceleration = u[1]
+            if u[1] > 0:
+                u_msg.drive.acceleration = u[1] * self.params["acceleration_gain"] + self.params["acceleration_deadband"]
+            else:
+                u_msg.drive.acceleration = u[1] * self.params["acceleration_gain"] - self.params["acceleration_deadband"]
+            
         else:
             # or, assume underlying velocity controller
             u_msg.drive.speed = self.current_vel_body_x + self.params["scale_acceleration"] * u[1]
@@ -384,6 +390,7 @@ class AdaptiveClbfNode(object):
         if (rospy.get_rostime() - self.heartbeat_time).to_sec() > 2.0: # or (rospy.get_rostime() - self.e_stop_time).to_sec() < 1.0:
             rospy.logwarn("Publishing zero command, heartbeat lost or e_stopped.")
             zero_msg = AckermannDriveStamped()
+            zero_msg.drive.jerk = -100.0
             self.pub_control.publish(zero_msg)
         elif (rospy.get_rostime() - self.joy_cmd_time).to_sec() < 0.5:
             self.pub_control.publish(self.joy_cmd)
@@ -450,6 +457,8 @@ class AdaptiveClbfNode(object):
         self.params["vehicle_length"] = config["vehicle_length"]
         self.params["steering_limit"] = config["steering_limit"]
         self.params["scale_acceleration"] = config["scale_acceleration"]
+        self.params["acceleration_gain"] = config["acceleration_gain"]
+        self.params["acceleration_deadband"] = config["acceleration_deadband"]
         self.params["max_accel"] = config["max_accel"]
         self.params["min_accel"] = config["min_accel"]
         self.params["kp_z"] = config["kp_z"]
