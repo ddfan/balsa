@@ -148,7 +148,7 @@ class BarrierAckermannVelocityZ(Barrier):
 		z3 = z[2,:]
 		z4 = z[3,:]
 		z5 = z[4,:]
-		v = (np.sqrt(z3**2 + z4**2) + 1.0e-6) * z5
+		v = (np.sqrt(z3**2 + z4**2) + 1.0e-6)
 		return np.stack((np.array([0]), np.array([0]), (z3*z5)/v, (z4*z5)/v)) * sgn
 
 	def d2h(self,z):
@@ -160,7 +160,7 @@ class BarrierAckermannVelocityZ(Barrier):
 		z3 = z[2,:]
 		z4 = z[3,:]
 		z5 = z[4,:]
-		v = (np.sqrt(z3**2 + z4**2) + 1.0e-6) * z5
+		v = (np.sqrt(z3**2 + z4**2) + 1.0e-6)
 		H = np.block([[(z4**2*z5)/(v**3), -(z3*z4*z5)/(v**3)],
 			[-(z3*z4*z5)/(v**3),   (z3**2*z5)/(v**3)]])
 		return np.block([[np.zeros((2,2)),np.zeros((2,2))],[np.zeros((2,2)),H]], dtype=np.float32) * sgn
