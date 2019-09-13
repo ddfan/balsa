@@ -346,9 +346,11 @@ class AdaptiveClbfNode(object):
         current_roll = euler[0]
         current_pitch = euler[1]
         current_heading = euler[2]
-        self.current_vel_body_x = np.cos(current_heading) * self.odom.twist.twist.linear.x + np.sin(current_heading) * self.odom.twist.twist.linear.y
-        self.current_vel_body_y = -np.sin(current_heading) * self.odom.twist.twist.linear.x + np.cos(current_heading) * self.odom.twist.twist.linear.y
-
+        # self.current_vel_body_x = np.cos(current_heading) * self.odom.twist.twist.linear.x + np.sin(current_heading) * self.odom.twist.twist.linear.y
+        # self.current_vel_body_y = -np.sin(current_heading) * self.odom.twist.twist.linear.x + np.cos(current_heading) * self.odom.twist.twist.linear.y
+        self.current_vel_body_x = self.odom.twist.twist.linear.x
+        self.current_vel_body_y = self.odom.twist.twist.linear.y
+        
         self.x=np.array([[self.odom.pose.pose.position.x,self.odom.pose.pose.position.y,current_heading,self.current_vel_body_x]]).T
         self.obs = np.array([[current_heading,
                             self.current_vel_body_y,
