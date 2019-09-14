@@ -13,9 +13,6 @@ options:
 windows:
 - window_name: xmaxx_base
   layout: tiled
-  shell_command_before:
-    - export DATA_DIR=/data/ros/${ROBOT_NAME}_$(date "+%Y-%m-%d-%H-%M-00")_${TEST_NAME}
-    - export ROS_LOG_DIR=$DATA_DIR/log
   panes:
     - shell_command:
       - sleep 2
