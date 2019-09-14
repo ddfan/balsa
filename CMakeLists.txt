@@ -26,7 +26,7 @@ catkin_package(
   CATKIN_DEPENDS dynamic_reconfigure message_runtime roscpp rospy std_msgs
 )
 
-install(PROGRAMS src/adaptive_clbf_node.py src/figure_eight.py src/encoder_odometry.py src/model_service.py src/dyn_reconfig_server.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+install(PROGRAMS src/adaptive_clbf_node.py src/figure_eight.py src/encoder_odometry.py src/model_service.py src/dyn_reconfig_server.py src/bag_data.py DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

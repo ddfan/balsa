@@ -352,7 +352,7 @@ class AdaptiveClbfNode(object):
         # make message
         u_msg = AckermannDriveStamped()
         u_msg.drive.steering_angle = u[0]
-        
+
         if self.params["scale_acceleration"] == 0.0:
             # directly apply acclerations
             u_msg.drive.acceleration = u[1]
