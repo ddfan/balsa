@@ -25,6 +25,7 @@ class AdaptiveClbfNode(object):
         self.adaptive_clbf = AdaptiveClbf(odim=6)
         self.prev_odom_timestamp = rospy.Time(0)
         self.prev_goal_timestamp = rospy.Time(0)
+        self.pointcloud_time = rospy.Time(0)
 
         self.odom = Odometry()
         self.encoder_odom = Odometry()
@@ -237,6 +238,8 @@ class AdaptiveClbfNode(object):
 
     def pointcloud_cb(self,pointcloud):
         # get current state
+        self.pointcloud_time = rospy.get_rostime()
+
         if not self.params["use_barrier_pointcloud"]:
             return
 
@@ -338,6 +341,10 @@ class AdaptiveClbfNode(object):
                             ]],dtype=np.float32).T
 
         self.z = self.adaptive_clbf.dyn.convert_x_to_z(self.x)
+
+        # clear barriers if pointcloud callback is too long ago.
+        if (rospy.get_rostime() - self.pointcloud_time).to_sec() > 1.0:
+            self.adaptive_clbf.update_barrier_locations(x=np.array([]),y=np.array([]),radius=0)
 
         # get control!
         u = self.adaptive_clbf.get_control(self.z,self.z_ref,self.z_ref_dot,dt=dt,obs=self.obs,use_model=self.params["use_model"],add_data=add_data,check_model=self.params["check_model"],use_qp=self.params["use_qp"])
