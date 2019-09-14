@@ -14,5 +14,7 @@
     <!-- run pointcloud_to_laserscan node -->
   <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" ns="$(arg robot_namespace)">
         <remap from="cloud_in" to="velodyne_points/local_obstacles"/>
+        <param name="min_height" value="-1000.0"/>
+        <param name="max_height" value="1000.0"/>
   </node>
 </launch>
