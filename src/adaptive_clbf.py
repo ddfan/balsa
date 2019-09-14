@@ -258,7 +258,9 @@ class AdaptiveClbf(object):
 				#rho = np.linalg.norm(sigDelta) * self.measurement_noise
 				mu_ad = mDelta * rho[0]
 				sigDelta = sigDelta * (1.0 - rho[0]) 
-
+		else:
+			sigDelta = np.ones((self.xdim/2,1))
+			
 		mu_d = mu_rm + mu_pd - mu_ad
 		self.mu_qp = np.zeros((self.xdim/2,1))
 		if use_qp:
