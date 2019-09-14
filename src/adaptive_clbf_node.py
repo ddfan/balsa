@@ -30,6 +30,7 @@ class AdaptiveClbfNode(object):
         self.e_stop_time = rospy.Time(0)
         self.joy_cmd = AckermannDriveStamped()
         self.heartbeat_time = rospy.Time(0)
+        self.pointcloud_time = rospy.Time(0)
 
         self.odom = Odometry()
         self.encoder_odom = Odometry()
@@ -261,6 +262,8 @@ class AdaptiveClbfNode(object):
 
     def pointcloud_cb(self,pointcloud):
         # get current state
+        self.pointcloud_time = rospy.get_rostime()
+
         if not self.params["use_barrier_pointcloud"]:
             return
 
@@ -370,6 +373,9 @@ class AdaptiveClbfNode(object):
         if not self.odom_cb_called:
             add_data = False
             self.odom_cb_called = True
+        # clear barriers if pointcloud callback is too long ago.
+        if (rospy.get_rostime() - self.pointcloud_time).to_sec() > 1.0:
+            self.adaptive_clbf.update_barrier_locations(x=np.array([]),y=np.array([]),radius=0)
 
         # get control!
         u = self.adaptive_clbf.get_control(self.z,self.z_ref,self.z_ref_dot,dt=dt,obs=self.obs,use_model=self.params["use_model"],add_data=add_data,check_model=self.params["check_model"],use_qp=self.params["use_qp"])
@@ -384,7 +390,7 @@ class AdaptiveClbfNode(object):
         # make message
         u_msg = AckermannDriveStamped()
         u_msg.drive.steering_angle = u[0]
-        
+
         if self.params["scale_acceleration"] == 0.0:
             # directly apply acclerations
             if u[1] > 0:

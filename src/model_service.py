@@ -234,7 +234,7 @@ class ModelALPaCAService(ModelService):
 
 		# TODO: put config someplace better (e.g., yaml file)
 		self.config = {
-			'meta_batch_size': 64,
+			'meta_batch_size': 50,
 			'data_horizon': 20,
 			'test_horizon': 20,
 			'lr': 0.005,
@@ -243,12 +243,16 @@ class ModelALPaCAService(ModelService):
 			'sigma_eps': [1.0, 1.0],
 			'nn_layers': [128,128,128],
 			'activation': 'tanh',
-			'min_datapoints': 1000,
+			# 'min_datapoints': 1000,
+			'min_datapoints': 500,
 			'save_data_interval': 1000,
-			'sigma_eps': [1e-2, 1e-2]
+			# 'sigma_eps': [1e-2, 1e-2]
 		}
 
 		self.use_service = use_service
+		# for test_adaptive_clbf.py
+		if not self.use_service:
+			self.config['sigma_eps'] = [1e-2,1e-2]
 
 		g = tf.Graph()
 		config = tf.ConfigProto(log_device_placement=True)
@@ -390,11 +394,11 @@ class ModelALPaCAService(ModelService):
 			# self.y = np.delete(self.y,random.randint(0,self.N_data-1),axis=0)
 			# self.Z = np.delete(self.Z,random.randint(0,self.N_data-1),axis=0)
 
-		if self.y.shape[0] % self.config["save_data_interval"] == 1:
-			print("Saving data to " + BASE_PATH + "...")
-			np.save(os.path.join(BASE_PATH, "data_input"),self.Z)
-			np.save(os.path.join(BASE_PATH, "data_output"),self.y)
-			print("Data saved!")
+		# if self.y.shape[0] % self.config["save_data_interval"] == 1:
+		# 	print("Saving data to " + BASE_PATH + "...")
+		# 	np.save(os.path.join(BASE_PATH, "data_input"),self.Z)
+		# 	np.save(os.path.join(BASE_PATH, "data_output"),self.y)
+		# 	print("Data saved!")
 
 		if self.verbose:
 			print("obs", obs)
@@ -482,7 +486,10 @@ class ModelGPService(ModelService):
 			if goal is not None:
 				self._train_result.model_trained = True
 				self._action_service.set_succeeded(self._train_result)
-
+		else:
+			if goal is not None:
+				self._train_result.model_trained = False
+				self._action_service.set_succeeded(self._train_result)
 	def add_data(self,req):
 		if not hasattr(self, 'y'):
 			return AddData2ModelResponse(False)
