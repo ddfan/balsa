@@ -361,7 +361,10 @@ class AdaptiveClbfNode(object):
 
         add_data = self.params["add_data"]
         # don't add data if no motion
-        if (self.current_vel_body_x**2 + self.current_vel_body_y**2) < 0.1:
+        if (self.current_vel_body_x**2 + self.current_vel_body_y**2) < 0.01:
+            add_data = False
+        # don't add data if moving backwards
+        if self.current_vel_body_x < -0.1:
             add_data = False
         # dont' add first timestep of data
         if not self.odom_cb_called:
