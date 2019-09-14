@@ -51,14 +51,18 @@ class FigureEightNode(object):
         # for figure eight
         arclength = self.params["width"] * 6
         omega = t * 2 * np.pi * self.params["speed"] / arclength
-        x_new = self.params["height"] * np.sin(omega)
-        y_new = self.params["width"] * np.sin(omega) * np.cos(omega)
+        # x_new = self.params["height"] * np.sin(omega)
+        # y_new = self.params["width"] * np.sin(omega) * np.cos(omega)
         # x_new = self.params["height"] * np.cos(omega)
 
         # # for sinusoid
         # y_new = self.params["speed"] * t
         # x_new = self.params["width"] * np.sin(2 * np.pi * t * self.params["freq"])
 
+        # Lemniscate of bernoulli (fig 8)
+        x_new = self.params["width"] * np.sqrt(2.0) * np.cos(omega) / (np.sin(omega)**2+1)
+        y_new = self.params["width"] * np.sqrt(2.0) * np.cos(omega) * np.sin(omega) / (np.sin(omega)**2+1)
+        
         yaw_new = np.arctan2(y_new - self.y, x_new - self.x)
         if self.prev_time == rospy.Time(0):
             self.vel = 0
