@@ -254,9 +254,9 @@ class AdaptiveClbf(object):
 					self.true_predict_error = np.linalg.norm(trueDelta - mDelta)
 
 				# rho = self.measurement_noise / (self.measurement_noise + (sigDelta - 1.0) + 1e-6)
-				rho = self.measurement_noise / (self.measurement_noise + (sigDelta) + 1e-6)
-				# rho = sigDelta * self.measurement_noise
-				mu_ad = mDelta * rho
+				rho[0] = self.measurement_noise / (self.measurement_noise + np.linalg.norm(sigDelta) + 1e-6)
+				#rho = np.linalg.norm(sigDelta) * self.measurement_noise
+				mu_ad = mDelta * rho[0]
 				# sigDelta = (sigDelta - 1.0) / self.measurement_noise 
 
 		mu_d = mu_rm + mu_pd - mu_ad
