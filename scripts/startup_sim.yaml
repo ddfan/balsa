@@ -8,13 +8,14 @@ windows:
       - shell_command:
         - roscore
         - rosparam set use_sim_time true
-      # - shell_command:
-      #   - rosrun controller_adaptiveclbf bag_data.py
+      - shell_command:
+        - sleep 8
+        - rosrun controller_adaptiveclbf bag_data.py
       - shell_command:
         - sleep 5
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar_moon gui:=true x:=0 y:=-20
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar gui:=true x:=0 y:=0
-        - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar gui:=true x:=0 y:=0
+        - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=racecar gui:=false x:=0 y:=0
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_porto gui:=false x:=0 y:=0
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_porto_bumpy gui:=true x:=0 y:=0
         # - DISABLE_GAZEBO_CAMERA=true DISABLE_GAZEBO_GPS=true roslaunch racecar_gazebo racecar.launch world_name:=track_barca gui:=true x:=0 y:=0
