@@ -13,8 +13,8 @@ from std_msgs.msg import Bool, Time
 import os
 import time
 
-BASE_PATH = '/home/nereid/learn2adapt_ws/'
-BAG_FILENAME = 'alpaca2'
+BASE_PATH = '/home/davidfan/Downloads/'
+BAG_FILENAME = 'vanilla3'
 LEARNING = True
 
 class BagDataNode(object):
@@ -27,7 +27,7 @@ class BagDataNode(object):
 		if not LEARNING:
 			self.dyn_reconfig_client.update_configuration({"model_train": False})
 		else:
-			self.dyn_reconfig_client.update_configuration({"N_updates": 100})
+			self.dyn_reconfig_client.update_configuration({"N_updates": 200})
 
 		self.sub_odom = rospy.Subscriber('/downward/vio/odometry', Odometry, self.odom_cb, queue_size=1)
 		self.sub_ref = rospy.Subscriber('/reference_vis', Odometry, self.ref_cb, queue_size=1)
@@ -69,6 +69,7 @@ if __name__ == '__main__':
 
 		if curr_time.to_sec() - node.start_time.to_sec() > 1e-4 and not node.use_model and curr_time.to_sec() - node.start_time.to_sec() >= 30: # 30 seconds
 			if LEARNING:
+				# node.dyn_reconfig_client.update_configuration({"model_train": False})
 				node.dyn_reconfig_client.update_configuration({"use_model": True})
 			node.use_model = True
 			print("------- Using model -------")

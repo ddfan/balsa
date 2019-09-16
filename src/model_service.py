@@ -533,7 +533,7 @@ class ModelGPService(ModelService):
 
 if __name__ == '__main__':
     rospy.init_node('model_service')
-    # server = ModelVanillaService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
-    server = ModelALPaCAService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
+    server = ModelVanillaService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
+    # server = ModelALPaCAService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
     # server = ModelGPService(4,6, use_obs = True) # TODO: put this in yaml or somewhere else
     rospy.spin()
