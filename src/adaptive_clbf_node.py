@@ -375,6 +375,7 @@ class AdaptiveClbfNode(object):
             self.odom_cb_called = True
         # clear barriers if pointcloud callback is too long ago.
         if (rospy.get_rostime() - self.pointcloud_time).to_sec() > 1.0:
+            rospy.logwarn("Clearing barriers because no points recieved!")
             self.adaptive_clbf.update_barrier_locations(x=np.array([]),y=np.array([]),radius=0)
 
         # get control!
