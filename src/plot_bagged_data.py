@@ -53,6 +53,30 @@ with rosbag.Bag(BASE_PATH + 'gp2.bag', 'r') as bag:
 	gp_err = error(gp_odom, gp_ref)
 	bag.close()
 
+# -- plotting uncertainty
+time = alpaca_time[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2].tolist()
+x = alpaca_odom[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2,0].tolist()
+y = alpaca_odom[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2,1].tolist()
+varx = alpaca_var[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2,0].tolist()
+vary = alpaca_var[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2,1].tolist()
+refx = alpaca_ref[alpaca_time.shape[0]/4:-alpaca_time.shape[0]/2,0].tolist()
+
+plt.figure()
+plt.rcParams.update({'font.size': 12})
+plt.subplot(411)
+plt.title('ALPaCA')
+# 95% conf intervals
+varx = [1.96*np.sqrt(v) for v in varx]
+upperx = [xx + c for xx,c in zip(x,varx)]
+lowerx = [xx - c for xx,c in zip(x,varx)]
+plt.fill_between(time, upperx, lowerx, alpha=0.5)
+plt.plot(time,x)
+plt.plot(time,refx,'r')
+
+plt.legend(['odom', 'ref'])
+
+plt.show()
+
 # plots combined pose errors
 plt.figure()
 plt.rcParams.update({'font.size': 12})
