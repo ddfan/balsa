@@ -229,53 +229,72 @@ with rosbag.Bag(BASE_PATH + 'gp3.bag', 'r') as bag:
 # plt.xlabel("Time (s)")
 # plt.legend(["GP"])
 
-# -- plots xy position
-start_idx = 30
-# f=plt.figure(num=1, figsize=(3,3), dpi=200)
-f=plt.figure()
-plt.subplot(221)
-plt.rcParams.update({'font.size': 14})
-plt.plot(nolearn_ref[start_idx:,0],nolearn_ref[start_idx:,1],'b',alpha=0.8)
-plt.plot(nolearn_odom[1:alpaca_time.shape[0]/2,0],nolearn_odom[1:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
-plt.plot(nolearn_odom[-alpaca_time.shape[0]/2:,0],nolearn_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
-# plt.legend(['ref','0-60s','60s-120s'])
-plt.title('No Learning')
-ax = plt.gca()
-ax.axes.get_xaxis().set_ticklabels([])
-
-plt.legend(['ref','0-60s','60-120s'],bbox_to_anchor=(0.6,1.22,1,0.22), loc="upper center", ncol=3)
 
 
-plt.subplot(222)
-plt.rcParams.update({'font.size': 14})
-plt.plot(gp_ref[start_idx:,0],gp_ref[start_idx:,1],'b',alpha=0.8)
-plt.plot(gp_odom[start_idx:alpaca_time.shape[0]/2,0],gp_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
-plt.plot(gp_odom[-alpaca_time.shape[0]/2:,0],gp_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
-# plt.legend(['ref','0-60s','60s-120s'])
-plt.title('GP')
-ax = plt.gca()
-ax.axes.get_xaxis().set_ticklabels([])
-ax.axes.get_yaxis().set_ticklabels([])
+############################################################################
+# ICRA PLOT!
+###############################################################################
 
-plt.subplot(223)
-plt.rcParams.update({'font.size': 14})
-plt.plot(vanilla_ref[start_idx:,0],vanilla_ref[start_idx:,1],'b',alpha=0.8)
-plt.plot(vanilla_odom[start_idx:alpaca_time.shape[0]/2,0],vanilla_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
-plt.plot(vanilla_odom[-alpaca_time.shape[0]/2:,0],vanilla_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
-# plt.legend(['ref','0-60s','60s-120s'])
-plt.title('Dropout NN')
+# # -- plots xy position
+# start_idx = 30
+# # f=plt.figure(num=1, figsize=(3,3), dpi=200)
+# f=plt.figure()
+# plt.subplot(221)
+# plt.rcParams.update({'font.size': 14})
+# plt.plot(nolearn_ref[start_idx:,0],nolearn_ref[start_idx:,1],'b',alpha=0.8)
+# plt.plot(nolearn_odom[1:alpaca_time.shape[0]/2,0],nolearn_odom[1:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
+# plt.plot(nolearn_odom[-alpaca_time.shape[0]/2:,0],nolearn_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
+# # plt.legend(['ref','0-60s','60s-120s'])
+# plt.title('No Learning')
+# ax = plt.gca()
+# ax.axes.get_xaxis().set_ticklabels([])
 
-plt.subplot(224)
-plt.rcParams.update({'font.size': 14})
-plt.plot(alpaca_ref[start_idx:,0],alpaca_ref[start_idx:,1],'b',alpha=0.8)
-plt.plot(alpaca_odom[start_idx:alpaca_time.shape[0]/2,0],alpaca_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
-plt.plot(alpaca_odom[-alpaca_time.shape[0]/2:,0],alpaca_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
-# plt.legend(['ref','0-60s','60s-120s'])
-plt.title('ALPaCA')
-ax = plt.gca()
-ax.axes.get_yaxis().set_ticklabels([])
+# plt.legend(['ref','0-60s','60-120s'],bbox_to_anchor=(0.6,1.22,1,0.22), loc="upper center", ncol=3)
 
 
-plt.show()
+# plt.subplot(222)
+# plt.rcParams.update({'font.size': 14})
+# plt.plot(gp_ref[start_idx:,0],gp_ref[start_idx:,1],'b',alpha=0.8)
+# plt.plot(gp_odom[start_idx:alpaca_time.shape[0]/2,0],gp_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
+# plt.plot(gp_odom[-alpaca_time.shape[0]/2:,0],gp_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
+# # plt.legend(['ref','0-60s','60s-120s'])
+# plt.title('GP')
+# ax = plt.gca()
+# ax.axes.get_xaxis().set_ticklabels([])
+# ax.axes.get_yaxis().set_ticklabels([])
 
-f.savefig('model_compare.pdf', bbox_inches='tight')
+# plt.subplot(223)
+# plt.rcParams.update({'font.size': 14})
+# plt.plot(vanilla_ref[start_idx:,0],vanilla_ref[start_idx:,1],'b',alpha=0.8)
+# plt.plot(vanilla_odom[start_idx:alpaca_time.shape[0]/2,0],vanilla_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
+# plt.plot(vanilla_odom[-alpaca_time.shape[0]/2:,0],vanilla_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
+# # plt.legend(['ref','0-60s','60s-120s'])
+# plt.title('Dropout NN')
+
+# plt.subplot(224)
+# plt.rcParams.update({'font.size': 14})
+# plt.plot(alpaca_ref[start_idx:,0],alpaca_ref[start_idx:,1],'b',alpha=0.8)
+# plt.plot(alpaca_odom[start_idx:alpaca_time.shape[0]/2,0],alpaca_odom[start_idx:alpaca_time.shape[0]/2,1],'r',alpha=0.8)
+# plt.plot(alpaca_odom[-alpaca_time.shape[0]/2:,0],alpaca_odom[-alpaca_time.shape[0]/2:,1],'g',alpha=0.8)
+# # plt.legend(['ref','0-60s','60s-120s'])
+# plt.title('ALPaCA')
+# ax = plt.gca()
+# ax.axes.get_yaxis().set_ticklabels([])
+
+
+# plt.show()
+
+# f.savefig('model_compare.pdf', bbox_inches='tight')
+
+start_idx = 40
+print("error nolearn 0-60: ", np.mean(nolearn_err[start_idx:alpaca_time.shape[0]/2]))
+print("error nolearn 60-120: ", np.mean(nolearn_err[-alpaca_time.shape[0]/2:]))
+
+print("error gp 0-60: ", np.mean(gp_err[start_idx:alpaca_time.shape[0]/2]))
+print("error gp 60-120: ", np.mean(gp_err[-alpaca_time.shape[0]/2:]))
+
+print("error vanilla 0-60: ", np.mean(vanilla_err[start_idx:alpaca_time.shape[0]/2]))
+print("error vanilla 60-120: ", np.mean(vanilla_err[-alpaca_time.shape[0]/2:]))
+
+print("error alpaca 0-60: ", np.mean(alpaca_err[start_idx:alpaca_time.shape[0]/2]))
+print("error alpaca 60-120: ", np.mean(alpaca_err[-alpaca_time.shape[0]/2:]))
