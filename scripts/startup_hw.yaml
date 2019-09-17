@@ -24,10 +24,10 @@ windows:
       - roslaunch bringup_ugv xmaxx.launch robot_namespace:=$ROBOT_NAME
     - shell_command:
       - sleep 2
-      - rosservice call /xmaxx1/move_base/clear_costmaps "{}" \
+      - rosservice call /xmaxx1/move_base/clear_costmaps "{}"; rosservice call /xmaxx1/voxblox_node/clear_map "{}" \
     - shell_command:
       - sleep 2
-      - rosservice call /xmaxx1/voxblox_node/clear_map "{}" \
+      - roslaunch realsense2_camera rs_camera.launch robot_namespace:=${ROBOT_NAME} serial_no:=828112073566
     - shell_command:
       - sleep 5
       - export ROS_NAMESPACE=$ROBOT_NAME
@@ -38,7 +38,8 @@ windows:
       - source /opt/ros/melodic/setup.bash
       - node_manager \
     - shell_command:
-      - roslaunch realsense2_camera rs_t265.launch robot_namespace:=${ROBOT_NAME}
+      - sleep 2
+      - roslaunch realsense2_camera rs_t265.launch robot_namespace:=${ROBOT_NAME} serial_no:=909212110360
     - shell_command:
       - sleep 2
       - ROS_NAMESPACE=xmaxx1 roslaunch xmaxx_move_base move_base.launch robot_namespace:=${ROBOT_NAME} \
