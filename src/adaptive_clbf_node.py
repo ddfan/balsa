@@ -13,7 +13,7 @@ from dynamic_reconfigure.client import Client as DynamicReconfigureClient
 from controller_adaptiveclbf.msg import DebugData
 
 from ackermann_msgs.msg import AckermannDriveStamped
-from std_msgs.msg import Empty, Bool
+from std_msgs.msg import Empty, Bool, Header
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
@@ -341,26 +341,35 @@ class AdaptiveClbfNode(object):
         try:
             t = self.tf.getLatestCommonTime(self.odom_frame, self.base_link_frame)
             position, quaternion = self.tf.lookupTransform(self.odom_frame, self.base_link_frame, t)
-            linear, angular = self.tf.lookupTwist(self.odom_frame, self.base_link_frame, t, rospy.Duration.from_sec(0.1))
-            self.odom.header = odom.header
-            self.odom.child_frame_id = self.base_link_frame
-            self.odom.pose.pose.position.x = position[0]
-            self.odom.pose.pose.position.y = position[1]
-            self.odom.pose.pose.position.z = position[2]
-            self.odom.pose.pose.orientation.x = quaternion[0]
-            self.odom.pose.pose.orientation.y = quaternion[1]
-            self.odom.pose.pose.orientation.z = quaternion[2]
-            self.odom.pose.pose.orientation.w = quaternion[3]
-            self.odom.twist.twist.linear.x = linear[0]
-            self.odom.twist.twist.linear.y = linear[1]
-            self.odom.twist.twist.linear.z = linear[2]
-            self.odom.twist.twist.angular.x = angular[0]
-            self.odom.twist.twist.angular.y = angular[1]
-            self.odom.twist.twist.angular.z = angular[2]
+            hdr = odom.header
+            hdr.frame_id = odom.header.child_frame_id
+            camera_to_bl = self.tf.asMatrix(self.base_link_frame,hdr)
         except:
             raise
-            rospy.logwarn("No tf transform between " + self.base_link_frame + " and " + self.odom_frame)
             return
+
+        self.odom.header = odom.header
+        self.odom.child_frame_id = self.base_link_frame
+        self.odom.pose.pose.position.x = position[0]
+        self.odom.pose.pose.position.y = position[1]
+        self.odom.pose.pose.position.z = position[2]
+        self.odom.pose.pose.orientation.x = quaternion[0]
+        self.odom.pose.pose.orientation.y = quaternion[1]
+        self.odom.pose.pose.orientation.z = quaternion[2]
+        self.odom.pose.pose.orientation.w = quaternion[3]
+
+        twist_rot = np.array([odom.twist.twist.angular.x,odom.twist.angular.linear.y,odom.twist.angular.linear.z])
+        twist_vel = np.array([odom.twist.twist.linear.x,odom.twist.twist.linear.y,odom.twist.twist.linear.z])
+
+        out_rot = np.matmul(camera_to_bl[0:3,0:3], twist_rot)
+        out_vel = np.matmul(camera_to_bl[0:3,0:3], twist_vel) + np.cross(camera_to_bl[0:3,-1],out_rot)
+        
+        self.odom.twist.twist.linear.x = out_vel[0]
+        self.odom.twist.twist.linear.y = out_vel[1]
+        self.odom.twist.twist.linear.z = out_vel[2]
+        self.odom.twist.twist.angular.x = out_rot[0]
+        self.odom.twist.twist.angular.y = out_rot[1]
+        self.odom.twist.twist.angular.z = out_rot[2]
 
         self.prev_odom_timestamp = odom.header.stamp
 
@@ -376,11 +385,11 @@ class AdaptiveClbfNode(object):
         current_roll = euler[0]
         current_pitch = euler[1]
         current_heading = euler[2]
-        self.current_vel_body_x = np.cos(current_heading) * self.odom.twist.twist.linear.x + np.sin(current_heading) * self.odom.twist.twist.linear.y
-        self.current_vel_body_y = -np.sin(current_heading) * self.odom.twist.twist.linear.x + np.cos(current_heading) * self.odom.twist.twist.linear.y
+        # self.current_vel_body_x = np.cos(current_heading) * self.odom.twist.twist.linear.x + np.sin(current_heading) * self.odom.twist.twist.linear.y
+        # self.current_vel_body_y = -np.sin(current_heading) * self.odom.twist.twist.linear.x + np.cos(current_heading) * self.odom.twist.twist.linear.y
         
-        #self.current_vel_body_x = self.odom.twist.twist.linear.x
-        #self.current_vel_body_y = self.odom.twist.twist.linear.y
+        self.current_vel_body_x = self.odom.twist.twist.linear.x
+        self.current_vel_body_y = self.odom.twist.twist.linear.y
         
         self.x=np.array([[self.odom.pose.pose.position.x,self.odom.pose.pose.position.y,current_heading,self.current_vel_body_x]]).T
         self.obs = np.array([[current_heading,
@@ -455,7 +464,7 @@ class AdaptiveClbfNode(object):
 
         # publish reference pose for visualization
         x_ref_msg = Odometry()
-        x_ref_msg.header.frame_id = rospy.get_namespace() + 'odom'
+        x_ref_msg.header.frame_id = self.odom_frame
         x_ref_msg.header.stamp = self.odom.header.stamp
         x_ref_msg.pose.pose.position.x = self.x_ref[0]
         x_ref_msg.pose.pose.position.y = self.x_ref[1]
