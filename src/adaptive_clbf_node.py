@@ -5,6 +5,7 @@ import rospy
 import copy
 import numpy as np
 import tf.transformations as tr
+from tf import TransformListener
 
 from dynamic_reconfigure.client import Client as DynamicReconfigureClient
 
@@ -23,6 +24,10 @@ from actionlib_msgs.msg import GoalStatus
 
 class AdaptiveClbfNode(object):
     def __init__(self):
+        self.tf = TransformListener()
+        self.odom_frame = rospy.get_namespace() + "odom_frame"
+        self.base_link_frame = rospy.get_namespace() + "base_link"
+
         self.adaptive_clbf = AdaptiveClbf(odim=6)
         self.prev_odom_timestamp = rospy.Time(0)
         self.prev_goal_timestamp = rospy.Time(0)
@@ -312,10 +317,9 @@ class AdaptiveClbfNode(object):
 
     def odometry_cb(self, odom):
         start_time = rospy.get_rostime()
-        self.odom = odom
 
         # TODO:  theory - maybe dt of rostime and header does not match dt of actual odometry data.  this might cause big problems.
-        dt = (self.odom.header.stamp - self.prev_odom_timestamp).to_sec()
+        dt = (odom.header.stamp - self.prev_odom_timestamp).to_sec()
 
         if dt < 0:
             rospy.logwarn("detected jump back in time!  resetting prev_odom_timestamp.")
@@ -328,7 +332,22 @@ class AdaptiveClbfNode(object):
             # rospy.logwarn("dt is too small! (%f)  skipping this odometry callback!", dt)
             return
 
-        self.prev_odom_timestamp = self.odom.header.stamp
+        # get current odom in base_link frame
+        if self.tf.frameExists(self.base_link_frame) and self.tf.frameExists(self.odom_frame):
+            position, quaternion = self.tf.lookupTransform(self.base_link_frame, self.odom_frame, start_time)
+            linear, angular = self.tf.lookupTwist(self.base_link_frame, self.odom_frame, start_time, 0.1)
+            self.odom.header = odom.header
+            self.odom.child_frame_id = self.base_link_frame
+            self.pose.pose.position = position
+            self.pose.pose.orientation = quaternion
+            self.twist.twist.linear = linear
+            self.twist.twist.angular = angular
+            print position, quaternion, linear, angular
+        else:
+            rospy.logwarn("No tf transform between " + self.base_link_frame + " and " + self.odom_frame)
+            return
+
+        self.prev_odom_timestamp = odom.header.stamp
 
         if not self.enable:
             return
@@ -449,6 +468,7 @@ class AdaptiveClbfNode(object):
         debug_msg.heading = current_heading
         debug_msg.vel_x_body = self.current_vel_body_x
         debug_msg.vel_y_body = self.current_vel_body_y
+        debug_msg.odom = self.odom
 
         debug_msg.z = self.adaptive_clbf.debug["z"]
         debug_msg.z_ref = self.adaptive_clbf.debug["z_ref"]

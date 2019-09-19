@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(controller_adaptiveclbf)
 
-find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure message_generation roscpp rospy std_msgs actionlib_msgs)
+find_package(catkin REQUIRED COMPONENTS dynamic_reconfigure message_generation roscpp rospy std_msgs actionlib_msgs nav_msgs)
 
 add_message_files(
   FILES
@@ -15,6 +15,7 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   actionlib_msgs
+  nav_msgs
 )
 
 generate_dynamic_reconfigure_options(
