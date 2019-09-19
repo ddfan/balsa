@@ -358,7 +358,7 @@ class AdaptiveClbfNode(object):
         self.odom.pose.pose.orientation.z = quaternion[2]
         self.odom.pose.pose.orientation.w = quaternion[3]
 
-        twist_rot = np.array([odom.twist.twist.angular.x,odom.twist.angular.linear.y,odom.twist.angular.linear.z])
+        twist_rot = np.array([odom.twist.twist.angular.x,odom.twist.angular.y,odom.twist.angular.z])
         twist_vel = np.array([odom.twist.twist.linear.x,odom.twist.twist.linear.y,odom.twist.twist.linear.z])
 
         out_rot = np.matmul(camera_to_bl[0:3,0:3], twist_rot)
