@@ -342,7 +342,7 @@ class AdaptiveClbfNode(object):
             t = self.tf.getLatestCommonTime(self.odom_frame, self.base_link_frame)
             position, quaternion = self.tf.lookupTransform(self.odom_frame, self.base_link_frame, t)
             hdr = odom.header
-            hdr.frame_id = odom.header.child_frame_id
+            hdr.frame_id = odom.child_frame_id
             camera_to_bl = self.tf.asMatrix(self.base_link_frame,hdr)
         except:
             raise
@@ -363,7 +363,7 @@ class AdaptiveClbfNode(object):
 
         out_rot = np.matmul(camera_to_bl[0:3,0:3], twist_rot)
         out_vel = np.matmul(camera_to_bl[0:3,0:3], twist_vel) + np.cross(camera_to_bl[0:3,-1],out_rot)
-        
+
         self.odom.twist.twist.linear.x = out_vel[0]
         self.odom.twist.twist.linear.y = out_vel[1]
         self.odom.twist.twist.linear.z = out_vel[2]
