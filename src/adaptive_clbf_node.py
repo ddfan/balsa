@@ -25,7 +25,7 @@ from actionlib_msgs.msg import GoalStatus
 class AdaptiveClbfNode(object):
     def __init__(self):
         self.tf = TransformListener()
-        self.odom_frame = rospy.get_namespace() + "odom_frame"
+        self.odom_frame = rospy.get_namespace() + "odom"
         self.base_link_frame = rospy.get_namespace() + "base_link"
 
         self.adaptive_clbf = AdaptiveClbf(odim=6)
@@ -240,7 +240,11 @@ class AdaptiveClbfNode(object):
             if self.sent_train_goal and (state == GoalStatus.PENDING or state == GoalStatus.ACTIVE):
                 return
             elif state == GoalStatus.SUCCEEDED:
-                self.adaptive_clbf.model_trained = self.adaptive_clbf.train_model_action_client.get_result().model_trained
+                result = self.adaptive_clbf.train_model_action_client.get_result() 
+                if hasattr(result, 'model_trained'):
+                    self.adaptive_clbf.model_trained = self.adaptive_clbf.train_model_action_client.get_result().model_trained
+                else:
+                    self.adaptive_clbf.model_trained = False
 
             self.sent_train_goal = False
 
@@ -333,17 +337,27 @@ class AdaptiveClbfNode(object):
             return
 
         # get current odom in base_link frame
-        if self.tf.frameExists(self.base_link_frame) and self.tf.frameExists(self.odom_frame):
-            position, quaternion = self.tf.lookupTransform(self.base_link_frame, self.odom_frame, start_time)
-            linear, angular = self.tf.lookupTwist(self.base_link_frame, self.odom_frame, start_time, 0.1)
+        try:
+            t = self.tf.getLatestCommonTime(self.base_link_frame, self.odom_frame)
+            position, quaternion = self.tf.lookupTransform(self.base_link_frame, self.odom_frame, t)
+            linear, angular = self.tf.lookupTwist(self.base_link_frame, self.odom_frame, t, rospy.Duration.from_sec(0.1))
             self.odom.header = odom.header
             self.odom.child_frame_id = self.base_link_frame
-            self.pose.pose.position = position
-            self.pose.pose.orientation = quaternion
-            self.twist.twist.linear = linear
-            self.twist.twist.angular = angular
-            print position, quaternion, linear, angular
-        else:
+            self.odom.pose.pose.position.x = position[0]
+            self.odom.pose.pose.position.y = position[1]
+            self.odom.pose.pose.position.z = position[2]
+            self.odom.pose.pose.orientation.x = quaternion[0]
+            self.odom.pose.pose.orientation.y = quaternion[1]
+            self.odom.pose.pose.orientation.z = quaternion[2]
+            self.odom.pose.pose.orientation.w = quaternion[3]
+            self.odom.twist.twist.linear.x = linear[0]
+            self.odom.twist.twist.linear.y = linear[1]
+            self.odom.twist.twist.linear.z = linear[2]
+            self.odom.twist.twist.angular.x = angular[0]
+            self.odom.twist.twist.angular.y = angular[1]
+            self.odom.twist.twist.angular.z = angular[2]
+        except:
+            raise
             rospy.logwarn("No tf transform between " + self.base_link_frame + " and " + self.odom_frame)
             return
 
