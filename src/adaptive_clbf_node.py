@@ -339,9 +339,9 @@ class AdaptiveClbfNode(object):
 
         # get current odom in base_link frame
         try:
-            t = self.tf.getLatestCommonTime(self.base_link_frame, self.odom_frame)
-            position, quaternion = self.tf.lookupTransform(self.base_link_frame, self.odom_frame, t)
-            linear, angular = self.tf.lookupTwist(self.base_link_frame, self.odom_frame, t, rospy.Duration.from_sec(0.1))
+            t = self.tf.getLatestCommonTime(self.odom_frame, self.base_link_frame)
+            position, quaternion = self.tf.lookupTransform(self.odom_frame, self.base_link_frame, t)
+            linear, angular = self.tf.lookupTwist(self.odom_frame, self.base_link_frame, t, rospy.Duration.from_sec(0.1))
             self.odom.header = odom.header
             self.odom.child_frame_id = self.base_link_frame
             self.odom.pose.pose.position.x = position[0]
