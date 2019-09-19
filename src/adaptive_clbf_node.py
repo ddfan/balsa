@@ -341,7 +341,7 @@ class AdaptiveClbfNode(object):
         try:
             t = self.tf.getLatestCommonTime(self.odom_frame, self.base_link_frame)
             position, quaternion = self.tf.lookupTransform(self.odom_frame, self.base_link_frame, t)
-            hdr = odom.header
+            hdr = copy.copy(odom.header)
             hdr.frame_id = odom.child_frame_id
             camera_to_bl = self.tf.asMatrix(self.base_link_frame,hdr)
         except:

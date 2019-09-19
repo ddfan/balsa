@@ -262,11 +262,11 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/odom_vis</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/xmaxx1/adaptive_clbf/debug</topic>
+                                    <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/twist/linear/x</field>
+                                    <field>vel_x_body</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -275,8 +275,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/odom_vis</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/xmaxx1/adaptive_clbf/debug</topic>
+                                    <type>controller_adaptiveclbf/DebugData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -299,7 +299,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>x</title>
+                            <title>x_body</title>
                         </curve_0>
                         <curve_1>
                             <axes>
@@ -313,11 +313,11 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/odom_vis</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/xmaxx1/adaptive_clbf/debug</topic>
+                                    <type>controller_adaptiveclbf/DebugData</type>
                                 </x_axis>
                                 <y_axis>
-                                    <field>twist/twist/linear/y</field>
+                                    <field>vel_y_body</field>
                                     <field_type>0</field_type>
                                     <scale>
                                         <absolute_maximum>1000</absolute_maximum>
@@ -326,8 +326,8 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/odom_vis</topic>
-                                    <type>nav_msgs/Odometry</type>
+                                    <topic>/xmaxx1/adaptive_clbf/debug</topic>
+                                    <type>controller_adaptiveclbf/DebugData</type>
                                 </y_axis>
                             </axes>
                             <color>
@@ -350,7 +350,7 @@
                                 <type>0</type>
                             </style>
                             <subscriber_queue_size>100</subscriber_queue_size>
-                            <title>y</title>
+                            <title>y_body</title>
                         </curve_1>
                         <curve_2>
                             <axes>
@@ -364,7 +364,7 @@
                                         <relative_minimum>-1000</relative_minimum>
                                         <type>0</type>
                                     </scale>
-                                    <topic>/xmaxx1/odom_vis</topic>
+                                    <topic>/xmaxx1/camera/odom/sample</topic>
                                     <type>nav_msgs/Odometry</type>
                                 </x_axis>
                                 <y_axis>
