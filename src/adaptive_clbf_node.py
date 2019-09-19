@@ -105,6 +105,7 @@ class AdaptiveClbfNode(object):
         self.pub_debug = rospy.Publisher('~debug', DebugData, queue_size=10)
         self.pub_control = rospy.Publisher('output', AckermannDriveStamped, queue_size = 1)
         self.pub_ref = rospy.Publisher('reference_vis', Odometry, queue_size = 1)
+        self.pub_odom = rospy.Publisher('odom_vis', Odometry, queue_size = 1)
 
         # Create subscribers
         rospy.Subscriber('pose_target', PoseStamped, self.pose_goal_cb, queue_size=1)
@@ -469,6 +470,8 @@ class AdaptiveClbfNode(object):
         x_ref_msg.pose.covariance[0] = self.adaptive_clbf.predict_error
         x_ref_msg.pose.covariance[7] = self.adaptive_clbf.predict_error
         self.pub_ref.publish(x_ref_msg)
+
+        self.pub_odom.publish(self.odom)
 
         cb_latency = (end_time-start_time).to_sec() * 1000.0
         if self.params["verbose"]:
