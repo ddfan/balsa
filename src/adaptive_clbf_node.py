@@ -69,6 +69,7 @@ class AdaptiveClbfNode(object):
         self.params["qp_p1_cost"] = rospy.get_param('~qp_p1_cost',1.0e6)
         self.params["qp_p2_cost"] = rospy.get_param('~qp_p2_cost',1.0e6)
         self.params["qp_ksig"] = rospy.get_param('~qp_ksig',1.0)
+        self.params["steering_weight"] = rospy.get_param('~steering_weight',1.0)
         self.params["qp_max_var"] = rospy.get_param('~qp_max_var',1.0)
         self.params["qp_verbose"] = rospy.get_param('~qp_verbose',False)
         self.params["max_velocity"] = rospy.get_param('~max_velocity',5.0)
@@ -463,6 +464,7 @@ class AdaptiveClbfNode(object):
         self.params["add_data"] = config["add_data"]
         self.params["check_model"] = config["check_model"]
         self.params["reverse_velocity_goal"] = config["reverse_velocity_goal"]
+        self.params["steering_weight"] = config["steering_weight"]
         self.kp_goal = config["kp_goal"]
         self.desired_vel = config["desired_vel"]
 

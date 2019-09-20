@@ -39,7 +39,9 @@ class QPSolve():
         # sigDelta = np.ones((self.xdim/2,1)) * self.max_var # for testing
 
         # build Q and p matrices to specify minimization expression
-        Q = np.diag(np.append(np.append(np.ones(self.xdim/2, dtype=np.float32)*(self.u_cost + self.u_prev_cost),self.p1_cost),self.p2_cost))
+        weights = np.ones(self.xdim/2, dtype=np.float32)
+        weights[0,0] = self.steering_weight
+        Q = np.diag(np.append(np.append(weights*(self.u_cost + self.u_prev_cost),self.p1_cost),self.p2_cost))
         self.Q = sparse.csc_matrix(Q)
         self.p = 2*np.append(np.append(-self.mu_qp_prev*self.u_prev_cost,0),0)
 

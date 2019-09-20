@@ -114,6 +114,7 @@ class AdaptiveClbf(object):
 		self.qpsolve.verbose = self.params["qp_verbose"]
 		self.qpsolve.ksig = self.params["qp_ksig"]
 		self.qpsolve.max_var = self.params["qp_max_var"]
+		self.qpsolve.steering_weight = self.params["steering_weight"]
 		self.verbose = self.params["verbose"]
 
 		self.dt = self.params["dt"]
