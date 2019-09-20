@@ -40,7 +40,7 @@ class QPSolve():
 
         # build Q and p matrices to specify minimization expression
         weights = np.ones(self.xdim/2, dtype=np.float32)
-        weights[0,0] = self.steering_weight
+        weights[0] = self.steering_weight
         Q = np.diag(np.append(np.append(weights*(self.u_cost + self.u_prev_cost),self.p1_cost),self.p2_cost))
         self.Q = sparse.csc_matrix(Q)
         self.p = 2*np.append(np.append(-self.mu_qp_prev*self.u_prev_cost,0),0)
