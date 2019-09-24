@@ -234,15 +234,15 @@ class ModelALPaCAService(ModelService):
 
 		# TODO: put config someplace better (e.g., yaml file)
 		self.config = {
-			'meta_batch_size': 50,
+			'meta_batch_size': 150,
 			'data_horizon': 20,
 			'test_horizon': 20,
-			'lr': 0.005,
+			'lr': 0.01,
 			'x_dim': model_xdim,
 			'y_dim': model_ydim,
 			'sigma_eps': [1.0, 1.0],
 			'nn_layers': [128,128,128],
-			'activation': 'tanh',
+			'activation': 'sigmoid',
 			# 'min_datapoints': 1000,
 			'min_datapoints': 500,
 			'save_data_interval': 1000,
