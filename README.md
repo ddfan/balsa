@@ -1,8 +1,7 @@
 
 # BALSA:  BAyesian Learning-based Safety and Adaptation
-> Bayesian Learning-Based Adaptive Control for Safety Critical Systems
 
-Fan, David D., Jennifer Nguyen, Rohan Thakker, Nikhilesh Alatur, Ali-akbar Agha-mohammadi, and Evangelos A. Theodorou. "Bayesian Learning-Based Adaptive Control for Safety Critical Systems." arXiv preprint arXiv:1910.02325 (2019).
+Fan, David D., Jennifer Nguyen, Rohan Thakker, Nikhilesh Alatur, Ali-akbar Agha-mohammadi, and Evangelos A. Theodorou. "Bayesian Learning-Based Adaptive Control for Safety Critical Systems." [arXiv preprint arXiv:1910.02325](https://arxiv.org/abs/1910.02325) (2019).
 
 ### Paper Abstract
 Deep learning has enjoyed much recent success, and applying state-of-the-art model learning methods to controls is an exciting prospect. However, there is a strong reluctance to use these methods on safety-critical systems, which have constraints on safety, stability, and real-time performance. We propose a framework which satisfies these constraints while allowing the use of deep neural networks for learning model uncertainties. Central to our method is the use of Bayesian model learning, which provides an avenue for maintaining appropriate degrees of caution in the face of the unknown. In the proposed approach, we develop an adaptive control framework leveraging the theory of stochastic CLFs (Control Lypunov Functions) and stochastic CBFs (Control Barrier Functions) along with tractable Bayesian model learning via Gaussian Processes or Bayesian neural networks. Under reasonable assumptions, we guarantee stability and safety while adapting to unknown dynamics with probability 1. We demonstrate this architecture for high-speed terrestrial mobility targeting potential applications in safety-critical high-speed Mars rover missions.
@@ -19,13 +18,13 @@ awesome-project "Do something!"  # prints "Nah."
 ```
 
 ## Citation
-'''@article{fan2019bayesian,
+```@article{fan2019bayesian,
   title={Bayesian Learning-Based Adaptive Control for Safety Critical Systems},
   author={Fan, David D and Nguyen, Jennifer and Thakker, Rohan and Alatur, Nikhilesh and Agha-mohammadi, Ali-akbar and Theodorou, Evangelos A},
   journal={arXiv preprint arXiv:1910.02325},
   year={2019}
 }
-'''
+```
 
 ## Licensing
 The code in this project is licensed under GNU General Public license.
