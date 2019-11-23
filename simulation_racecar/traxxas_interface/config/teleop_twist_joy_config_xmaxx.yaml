@@ -1,0 +1,9 @@
+axis_linear: 4
+scale_linear: 0.9
+scale_linear_turbo: 1.5
+
+axis_angular: 0
+scale_angular: 0.4
+
+enable_button: 5
+enable_turbo_button: 4

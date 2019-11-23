@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find racecar_rviz)/rviz/racecar.rviz" output="screen"/>
+</launch>

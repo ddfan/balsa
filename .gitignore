@@ -26,3 +26,13 @@ src/ALPaCA/alpaca.pyc
 src/ALPaCA/dataset.pyc
 src/ALPaCA/__init__.pyc
 alpaca.pyc
+controller_adaptiveclbf/src/adaptive_clbf.pyc
+controller_adaptiveclbf/src/cbf.pyc
+controller_adaptiveclbf/src/dynamics.pyc
+controller_adaptiveclbf/src/lyapunov.pyc
+controller_adaptiveclbf/src/model_service.pyc
+controller_adaptiveclbf/src/qp_solver.pyc
+controller_adaptiveclbf/src/scaledgp.pyc
+controller_adaptiveclbf/src/vanilla_nn.pyc
+controller_adaptiveclbf/src/ALPaCA/__init__.pyc
+controller_adaptiveclbf/src/ALPaCA/dataset.pyc

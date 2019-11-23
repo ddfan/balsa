@@ -1,0 +1,24 @@
+# General.
+running_sim: False
+
+# Vehicle's Geometric and Kinematic Properties.
+wheelbase: 0.27 # meter
+
+# Speed PID parameters.
+speed_PID_Kp: 0.1 
+speed_PID_Ki: 0.0
+speed_PID_Kd: 0.0
+
+# Speed PWM parameters.
+P2_MAP_OFFSET_PRM_SET: 0.15
+P2_MINCMD_PRM_SET: -10.0
+P2_MAXCMD_PRM_SET: 10.0
+P2_MINOUT_PRM_SET: -0.05
+P2_MAXOUT_PRM_SET: 0.05
+
+# Steering Angle PWM parameters.
+P1_MAP_OFFSET_PRM_SET: 0.1583
+P1_MINCMD_PRM_SET: -0.5
+P1_MAXCMD_PRM_SET: 0.5
+P2_MINOUT_PRM_SET: -0.045
+P1_MAXOUT_PRM_SET: 0.045

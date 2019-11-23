@@ -1,0 +1,263 @@
+<sdf version='1.6'>
+  <world name='track_porto'>
+    <scene>
+      <ambient>0.5 0.5 0.5 1</ambient>
+      <shadows>0</shadows>
+      <background>0.7 0.7 0.7 1</background>
+    </scene>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <light name='Light 1' type='point'>
+      <pose frame=''>0 0 15 0 -0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <constant>0.5</constant>
+        <linear>0.01</linear>
+        <quadratic>0</quadratic>
+        <range>50</range>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <cast_shadows>0</cast_shadows>
+    </light>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics name='default_physics' default='0' type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <state world_name='track_porto'>
+      <sim_time>16 59000000</sim_time>
+      <real_time>16 935023473</real_time>
+      <wall_time>1567297690 164890847</wall_time>
+      <iterations>16059</iterations>
+      <model name='porto_track'>
+        <pose frame=''>1 2 -0.5 0 0 -1.57</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>1.01908 2.00005 -0.5 0 0 -1.57</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <model name='mud_box'>
+          <pose frame=''>-10.7709 3.29308 -0.410104 0 0 -0.951447</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-10.7709 3.29308 -0.410104 0 0 -0.951447</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <light name='Light 1'>
+        <pose frame=''>0 0 15 0 -0 0</pose>
+      </light>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <model name='porto_track'>
+      <link name='link'>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <pose frame=''>-3.7e-05 0.019084 0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://racecar_description/meshes/porto_race_track.DAE</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <shader type='pixel'/>
+          </material>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <transparency>0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>/home/davidfan/traxxas_ws/src/ugv_traxxas/f110/simulator/racecar-simulator/racecar_gazebo/../racecar_description/meshes/porto_race_track.DAE</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <coefficient>1</coefficient>
+                <patch_radius>0</patch_radius>
+                <surface_radius>0</surface_radius>
+                <use_patch_radius>1</use_patch_radius>
+                <ode>
+                  <slip>0</slip>
+                </ode>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <model name='mud_box'>
+        <static>1</static>
+        <link name='link'>
+          <collision name='collision'>
+            <geometry>
+              <box>
+                <size>8 10 0.2</size>
+              </box>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <visual name='visual_1'>
+            <pose frame=''>-2 2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_2'>
+            <pose frame=''>2 2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_3'>
+            <pose frame=''>2 -2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_4'>
+            <pose frame=''>-2 -2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-1.30245 -11.7699 0.089896 0 -0 0.618553</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>1 2 -0.5 0 0 -1.57</pose>
+    </model>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>-6.65085 -10.6188 24.7567 0 1.06764 1.2562</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>

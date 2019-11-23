@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node pkg="tf" type="static_transform_publisher" name="stampede_broadcaster" args="0.1143 0.01778 -0.1651 0 0 0.7071068 0.7071068 qsf_vio stampede_rear_axle 100" />
+
+</launch>

@@ -1,0 +1,41 @@
+rosbag record \
+/ackermann_cmd \
+/ackermann_cmd_joy \
+/ackermann_cmd_openloop \
+/cmd_vel \
+/cmd_vel_joy \
+/cmd_vel_out \
+/downward/camera_info \
+/downward/exposure_times \
+/downward/fisheye/camera_info \
+/downward/imu_raw_array \
+/downward/snap_cam_nodelet/parameter_descriptions \
+/downward/snap_cam_nodelet/parameter_updates \
+/downward/vio/internal_states \
+/downward/vio/odometry \
+/downward/vio/pose \
+/downward/vio_nodelet_man/bond \
+/ext_imu \
+/flight_actuators_command \
+/imu_0 \
+/imu_state_update \
+/joint_states \
+/joy \
+/joy/set_feedback \
+/joy_priority \
+/odom_in \
+/odometry_0 \
+/pause_navigation \
+/rosout \
+/rosout_agg \
+/stop_closing_loop \
+/tf \
+/tf_static \
+/xmaxx/controller_xmaxx/debug \
+/xmaxx/controller_xmaxx/parameter_descriptions \
+/xmaxx/controller_xmaxx/parameter_updates \
+/xmaxx/controller_xmaxx/params \
+/xmaxx/controller_xmaxx/total_operation_time \
+/xmaxx/encoder/velocity_filtered \
+/xmaxx/resiliency_logic/status 
+/xmaxx/velodyne_points

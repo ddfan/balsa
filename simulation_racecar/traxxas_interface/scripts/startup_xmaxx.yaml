@@ -1,0 +1,54 @@
+session_name: xmaxx
+windows:
+  - window_name: xmaxx_startup
+    layout: tiled
+    shell_command_before:
+      - cd ~/ # run as a first command in all panes
+    panes:
+      - shell_command:
+        - sudo route add -net 192.168.2.0 netmask 255.255.255.0 gw 192.168.4.1 \
+      - shell_command:
+        - ssh linaro@192.168.4.1
+        - sudo bash
+        - mount -o rw,remount /
+        #- /etc/init.d/chrony stop
+        - ntpdate 192.168.4.4
+        #- /etc/init.d/chrony start
+        - watch -n 5 chronyc tracking
+      - shell_command:
+        - sleep 10
+        - ssh linaro@192.168.4.1
+        - sudo bash
+        - source /root/.bashrc
+        - cd /eng/load
+        - ./runCARREFgolden.sh
+      - shell_command:
+        - ssh linaro@192.168.4.1
+        - sudo bash
+        - source /root/.bashrc
+        - rosrun quest run_seq_client /seq/arm.bin \
+      - shell_command:
+        - ssh linaro@192.168.4.1
+        - sudo bash
+        - source /root/.bashrc
+        - source mvnew_ws/devel/setup.bash
+        - sleep 20
+        - roslaunch snap_vio standalone.launch
+      - shell_command:
+        - sleep 20
+        - roslaunch controller_xmaxx controller_xmaxx.launch
+      - shell_command:
+        - sleep 20
+        - roslaunch traxxas_2dnav xmaxx_configuration.launch
+      - shell_command:
+        - sleep 25
+        - roslaunch traxxas_2dnav move_base_teb_xmaxx.launch
+      - shell_command:
+        - cd ~/bags/xmaxx
+        - record_xmaxx \
+      - shell_command:
+        - rostopic echo /downward/vio/odometry/pose/pose
+      - shell_command:
+        - rostopic echo /downward/vio/odometry/twist/twist
+      - shell_command:
+        - rostopic echo /ackermann_cmd

@@ -1,0 +1,4538 @@
+<sdf version='1.6'>
+  <world name='track_porto'>
+    <scene>
+      <ambient>0.5 0.5 0.5 1</ambient>
+      <shadows>0</shadows>
+      <background>0.7 0.7 0.7 1</background>
+    </scene>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+    <light name='Light 1' type='point'>
+      <pose frame=''>0 0 15 0 -0 0</pose>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <constant>0.5</constant>
+        <linear>0.01</linear>
+        <quadratic>0</quadratic>
+        <range>50</range>
+      </attenuation>
+      <direction>0 0 -1</direction>
+      <cast_shadows>0</cast_shadows>
+    </light>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics name='default_physics' default='0' type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <wind/>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='rough_terrain_logs'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-4.95577 -1.57012 0 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-6.45577 -0.719767 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_0'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-6.89876 -2.75986 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_1'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-8.54475 -1.92252 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_2'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-8.31072 0.559689 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_3'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-8.09851 5.65997 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_4'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-5 6 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_5'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-1.47083 -0.654174 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_6'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>1.37718 1.09923 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_7'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>3.77785 3.14452 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_8'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>7.26301 2.02721 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_9'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>9.05505 0.274087 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_10'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>6.99467 6.13106 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_11'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>5.60813 6.39428 -0.387678 0 -0 0</pose>
+    </model>
+    <model name='rough_terrain_logs_clone_12'>
+      <model name='drc_practice_yellow_parking_block'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.550534 0.069657 0 0 0 -0.166064</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_0'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.172945 0.060502 0 0 -0 0.115284</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_1'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.178897 0.066727 0 0 0 -0.007702</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_2'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.530559 0.052325 0 0 0 -0.286959</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_3'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>0.024508 -0.683665 0 0 -0 1.33478</pose>
+      </model>
+      <model name='drc_practice_yellow_parking_block_4'>
+        <static>1</static>
+        <link name='link'>
+          <visual name='visual'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+          </visual>
+          <collision name='collision'>
+            <geometry>
+              <mesh>
+                <uri>model://drc_practice_yellow_parking_block/meshes/block.dae</uri>
+              </mesh>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-0.038535 0.434453 0 0 0 -1.13035</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>4.02152 6.05948 -0.387678 0 -0 0</pose>
+    </model>
+    <state world_name='track_porto'>
+      <sim_time>362 266000000</sim_time>
+      <real_time>195 423808551</real_time>
+      <wall_time>1567316828 138524931</wall_time>
+      <iterations>183027</iterations>
+      <model name='porto_track_0'>
+        <pose frame=''>0.812536 2.0643 -0.512376 0 0 -1.58509</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0.831619 2.06406 -0.512376 0 0 -1.58509</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <model name='mud_box'>
+          <pose frame=''>-10.9375 3.53488 -0.42248 0 0 -0.96654</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-10.9375 3.53488 -0.42248 0 0 -0.96654</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs'>
+        <pose frame=''>-4.95577 -1.57012 -0.387678 0 -0 1.0463</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-4.74037 -1.05871 -0.387678 0 -0 0.880239</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.74037 -1.05871 -0.387678 0 -0 0.880239</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-4.92153 -1.39013 -0.387678 0 -0 1.16159</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.92153 -1.39013 -0.387678 0 -0 1.16159</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-5.10311 -1.69155 -0.387678 0 -0 1.0386</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.10311 -1.69155 -0.387678 0 -0 1.0386</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-5.26675 -2.00316 -0.387678 0 -0 0.759344</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.26675 -2.00316 -0.387678 0 -0 0.759344</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-4.35173 -1.89127 -0.387678 0 -0 2.38108</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.35173 -1.89127 -0.387678 0 -0 2.38108</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-5.35112 -1.38591 -0.387678 0 0 -0.084047</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.35112 -1.38591 -0.387678 0 0 -0.084047</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone'>
+        <pose frame=''>-6.45577 -0.719768 -0.387678 0 0 -0.963086</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-6.08424 -1.13196 -0.387678 0 0 -1.12915</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.08424 -1.13196 -0.387678 0 0 -1.12915</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-6.30735 -0.827202 -0.387678 0 0 -0.847807</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.30735 -0.827202 -0.387678 0 0 -0.847807</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-6.50314 -0.5348 -0.387678 0 0 -0.970793</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.50314 -0.5348 -0.387678 0 0 -0.970793</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-6.71575 -0.254322 -0.387678 0 0 -1.25005</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.71575 -0.254322 -0.387678 0 0 -1.25005</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-7.00304 -1.13025 -0.387678 0 -0 0.371689</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.00304 -1.13025 -0.387678 0 -0 0.371689</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-6.1211 -0.440065 -0.387678 0 0 -2.09344</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.1211 -0.440065 -0.387678 0 0 -2.09344</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_0'>
+        <pose frame=''>-6.89876 -2.75986 -0.387678 0 0 -0.503136</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-6.38286 -2.96429 -0.387678 0 0 -0.6692</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.38286 -2.96429 -0.387678 0 0 -0.6692</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-6.71807 -2.79025 -0.387678 0 0 -0.387852</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.71807 -2.79025 -0.387678 0 0 -0.387852</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-7.02331 -2.61514 -0.387678 0 0 -0.510838</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.02331 -2.61514 -0.387678 0 0 -0.510838</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-7.33834 -2.4582 -0.387678 0 0 -0.790095</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.33834 -2.4582 -0.387678 0 0 -0.790095</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-7.20694 -3.37062 -0.387678 0 -0 0.831644</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.20694 -3.37062 -0.387678 0 -0 0.831644</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-6.72304 -2.36067 -0.387678 0 0 -1.63349</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-6.72304 -2.36067 -0.387678 0 0 -1.63349</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_1'>
+        <pose frame=''>-8.54475 -1.92253 -0.387678 0 -0 2.93895</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-9.09804 -1.87996 -0.387678 0 -0 2.77289</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-9.09804 -1.87996 -0.387678 0 -0 2.77289</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-8.72633 -1.94698 -0.387678 0 -0 3.05424</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.72633 -1.94698 -0.387678 0 -0 3.05424</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-8.38294 -2.02388 -0.387678 0 -0 2.93126</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.38294 -2.02388 -0.387678 0 -0 2.93126</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-8.03558 -2.08055 -0.387678 0 -0 2.652</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.03558 -2.08055 -0.387678 0 -0 2.652</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-8.43117 -1.24791 -0.387678 0 -0 -2.00945</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.43117 -1.24791 -0.387678 0 -0 -2.00945</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-8.59444 -2.35584 -0.387678 0 -0 1.80861</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.59444 -2.35584 -0.387678 0 -0 1.80861</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_10'>
+        <pose frame=''>6.99467 6.13106 -0.387678 0 -0 3.06036</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>6.4403 6.1063 -0.387678 0 -0 2.8943</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>6.4403 6.1063 -0.387678 0 -0 2.8943</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>6.81739 6.08479 -0.387678 0 -0 -3.10754</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>6.81739 6.08479 -0.387678 0 -0 -3.10754</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>7.16756 6.05004 -0.387678 0 -0 3.05266</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.16756 6.05004 -0.387678 0 -0 3.05266</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>7.51923 6.03586 -0.387678 0 -0 2.7734</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.51923 6.03586 -0.387678 0 -0 2.7734</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>7.02572 6.81446 -0.387678 0 -0 -1.88804</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.02572 6.81446 -0.387678 0 -0 -1.88804</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>6.99782 5.69491 -0.387678 0 -0 1.93001</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>6.99782 5.69491 -0.387678 0 -0 1.93001</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_11'>
+        <pose frame=''>5.60813 6.39428 -0.387678 0 0 -1.34249</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>5.80058 5.8738 -0.387678 0 0 -1.50855</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>5.80058 5.8738 -0.387678 0 0 -1.50855</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>5.7062 6.23952 -0.387678 0 0 -1.2272</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>5.7062 6.23952 -0.387678 0 0 -1.2272</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>5.63263 6.58364 -0.387678 0 0 -1.35019</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>5.63263 6.58364 -0.387678 0 0 -1.35019</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>5.53902 6.92291 -0.387678 0 0 -1.62945</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>5.53902 6.92291 -0.387678 0 0 -1.62945</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>4.94775 6.21567 -0.387678 0 0 -0.007707</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.94775 6.21567 -0.387678 0 0 -0.007707</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>6.02259 6.53015 -0.387678 0 0 -2.47284</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>6.02259 6.53015 -0.387678 0 0 -2.47284</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_12'>
+        <pose frame=''>4.02152 6.05948 -0.387678 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>4.57205 6.12914 -0.387678 0 0 -0.166064</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.57205 6.12914 -0.387678 0 0 -0.166064</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>4.19447 6.11998 -0.387678 0 -0 0.115284</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.19447 6.11998 -0.387678 0 -0 0.115284</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>3.84262 6.12621 -0.387678 0 0 -0.007702</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.84262 6.12621 -0.387678 0 0 -0.007702</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>3.49096 6.11181 -0.387678 0 0 -0.286959</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.49096 6.11181 -0.387678 0 0 -0.286959</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>4.04603 5.37582 -0.387678 0 -0 1.33478</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.04603 5.37582 -0.387678 0 -0 1.33478</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>3.98299 6.49393 -0.387678 0 0 -1.13035</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.98299 6.49393 -0.387678 0 0 -1.13035</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_2'>
+        <pose frame=''>-8.31072 0.55969 -0.387678 0 -0 1.28544</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-8.22259 1.10757 -0.387678 0 -0 1.11938</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.22259 1.10757 -0.387678 0 -0 1.11938</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-8.32009 0.742672 -0.387678 0 -0 1.40073</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.32009 0.742672 -0.387678 0 -0 1.40073</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-8.42511 0.406809 -0.387678 0 -0 1.27774</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.42511 0.406809 -0.387678 0 -0 1.27774</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-8.51028 0.065313 -0.387678 0 -0 0.998488</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.51028 0.065313 -0.387678 0 -0 0.998488</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-7.6478 0.39076 -0.387678 0 -0 2.62023</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.6478 0.39076 -0.387678 0 -0 2.62023</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-8.73845 0.645007 -0.387678 0 -0 0.155097</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.73845 0.645007 -0.387678 0 -0 0.155097</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_3'>
+        <pose frame=''>-8.09851 5.65997 -0.387678 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-7.54798 5.72963 -0.387678 0 0 -0.166064</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.54798 5.72963 -0.387678 0 0 -0.166064</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-7.92556 5.72047 -0.387678 0 -0 0.115284</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-7.92556 5.72047 -0.387678 0 -0 0.115284</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-8.27741 5.7267 -0.387678 0 0 -0.007702</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.27741 5.7267 -0.387678 0 0 -0.007702</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-8.62907 5.7123 -0.387678 0 0 -0.286959</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.62907 5.7123 -0.387678 0 0 -0.286959</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-8.074 4.9763 -0.387678 0 -0 1.33478</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.074 4.9763 -0.387678 0 -0 1.33478</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-8.13705 6.09442 -0.387678 0 0 -1.13035</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-8.13705 6.09442 -0.387678 0 0 -1.13035</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_4'>
+        <pose frame=''>-5 6 -0.387678 0 0 -2.81072</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-5.49804 5.75527 -0.387678 0 0 -2.97678</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.49804 5.75527 -0.387678 0 0 -2.97678</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-5.14391 5.88659 -0.387678 0 0 -2.69543</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.14391 5.88659 -0.387678 0 0 -2.69543</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-4.80913 5.99501 -0.387678 0 0 -2.81841</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.80913 5.99501 -0.387678 0 0 -2.81841</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-4.48122 6.12288 -0.387678 0 0 -3.09767</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.48122 6.12288 -0.387678 0 0 -3.09767</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-5.24528 6.63862 -0.387678 0 0 -1.47593</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-5.24528 6.63862 -0.387678 0 0 -1.47593</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-4.82241 5.60163 -0.387678 0 -0 2.34212</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-4.82241 5.60163 -0.387678 0 -0 2.34212</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_5'>
+        <pose frame=''>-1.47083 -0.654171 -0.387678 0 -0 2.51178</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>-1.95677 -0.386205 -0.387678 0 -0 2.34572</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.95677 -0.386205 -0.387678 0 -0 2.34572</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>-1.64623 -0.601204 -0.387678 0 -0 2.62706</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.64623 -0.601204 -0.387678 0 -0 2.62706</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>-1.36556 -0.813468 -0.387678 0 -0 2.50408</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.36556 -0.813468 -0.387678 0 -0 2.50408</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>-1.07289 -1.00896 -0.387678 0 -0 2.22482</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.07289 -1.00896 -0.387678 0 -0 2.22482</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>-1.08796 -0.087244 -0.387678 0 -0 -2.43663</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.08796 -0.087244 -0.387678 0 -0 -2.43663</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>-1.69558 -1.02797 -0.387678 0 -0 1.38143</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>-1.69558 -1.02797 -0.387678 0 -0 1.38143</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_6'>
+        <pose frame=''>1.37718 1.09923 -0.387678 0 0 -1.84488</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>1.29523 0.550391 -0.387678 0 0 -2.01094</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>1.29523 0.550391 -0.387678 0 0 -2.01094</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>1.38861 0.916365 -0.387678 0 0 -1.72959</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>1.38861 0.916365 -0.387678 0 0 -1.72959</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>1.48984 1.25339 -0.387678 0 0 -1.85258</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>1.48984 1.25339 -0.387678 0 0 -1.85258</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>1.57115 1.59582 -0.387678 0 0 -2.13183</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>1.57115 1.59582 -0.387678 0 0 -2.13183</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>0.712399 1.26068 -0.387678 0 0 -0.510093</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>0.712399 1.26068 -0.387678 0 0 -0.510093</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>1.80585 1.01874 -0.387678 0 0 -2.97522</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>1.80585 1.01874 -0.387678 0 0 -2.97522</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_7'>
+        <pose frame=''>3.77785 3.14452 -0.387678 0 -0 0.731669</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>4.14094 3.56417 -0.387678 0 -0 0.565605</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.14094 3.56417 -0.387678 0 -0 0.565605</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>3.86611 3.30508 -0.387678 0 -0 0.846953</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.86611 3.30508 -0.387678 0 -0 0.846953</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>3.60016 3.07465 -0.387678 0 -0 0.723967</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.60016 3.07465 -0.387678 0 -0 0.723967</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>3.34812 2.82898 -0.387678 0 -0 0.44471</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.34812 2.82898 -0.387678 0 -0 0.44471</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>4.25285 2.65221 -0.387678 0 -0 2.06645</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>4.25285 2.65221 -0.387678 0 -0 2.06645</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>3.45891 3.44203 -0.387678 0 0 -0.398681</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>3.45891 3.44203 -0.387678 0 0 -0.398681</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_8'>
+        <pose frame=''>7.263 2.02721 -0.387678 0 0 -0.962306</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>7.63486 1.61531 -0.387678 0 0 -1.12837</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.63486 1.61531 -0.387678 0 0 -1.12837</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>7.41151 1.91989 -0.387678 0 0 -0.847025</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.41151 1.91989 -0.387678 0 0 -0.847025</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>7.2155 2.21214 -0.387678 0 0 -0.970011</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.2155 2.21214 -0.387678 0 0 -0.970011</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>7.00266 2.49245 -0.387678 0 0 -1.24927</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.00266 2.49245 -0.387678 0 0 -1.24927</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>6.71606 1.6163 -0.387678 0 -0 0.372471</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>6.71606 1.6163 -0.387678 0 -0 0.372471</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>7.59746 2.30717 -0.387678 0 0 -2.09266</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>7.59746 2.30717 -0.387678 0 0 -2.09266</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <model name='rough_terrain_logs_clone_9'>
+        <pose frame=''>9.05505 0.274087 -0.387678 0 -0 0.666541</pose>
+        <scale>1 1 1</scale>
+        <model name='drc_practice_yellow_parking_block'>
+          <pose frame=''>9.44468 0.669214 -0.387678 0 -0 0.500477</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>9.44468 0.669214 -0.387678 0 -0 0.500477</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_0'>
+          <pose frame=''>9.15357 0.428566 -0.387678 0 -0 0.781825</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>9.15357 0.428566 -0.387678 0 -0 0.781825</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_1'>
+          <pose frame=''>8.87319 0.215925 -0.387678 0 -0 0.658839</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>8.87319 0.215925 -0.387678 0 -0 0.658839</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_2'>
+          <pose frame=''>8.6057 -0.012817 -0.387678 0 -0 0.379582</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>8.6057 -0.012817 -0.387678 0 -0 0.379582</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_3'>
+          <pose frame=''>9.497 -0.248097 -0.387678 0 -0 2.00132</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>9.497 -0.248097 -0.387678 0 -0 2.00132</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+        <model name='drc_practice_yellow_parking_block_4'>
+          <pose frame=''>8.75615 0.591727 -0.387678 0 0 -0.463809</pose>
+          <scale>1 1 1</scale>
+          <link name='link'>
+            <pose frame=''>8.75615 0.591727 -0.387678 0 0 -0.463809</pose>
+            <velocity>0 0 0 0 -0 0</velocity>
+            <acceleration>0 0 0 0 -0 0</acceleration>
+            <wrench>0 0 0 0 -0 0</wrench>
+          </link>
+        </model>
+      </model>
+      <light name='Light 1'>
+        <pose frame=''>0 0 15 0 -0 0</pose>
+      </light>
+      <light name='sun'>
+        <pose frame=''>0 0 10 0 -0 0</pose>
+      </light>
+    </state>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>-0.252831 -0.335144 15.5982 3e-06 1.5698 1.02021</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <model name='porto_track_0'>
+      <link name='link'>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+        <pose frame=''>-3.7e-05 0.019084 0 0 -0 0</pose>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://racecar_description/meshes/porto_race_track.DAE</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <shader type='pixel'/>
+          </material>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <transparency>0</transparency>
+          <cast_shadows>1</cast_shadows>
+        </visual>
+        <collision name='collision'>
+          <laser_retro>0</laser_retro>
+          <max_contacts>10</max_contacts>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>/home/davidfan/traxxas_ws/src/ugv_traxxas/f110/simulator/racecar-simulator/racecar_gazebo/../racecar_description/meshes/porto_race_track.DAE</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+                <fdir1>0 0 0</fdir1>
+                <slip1>0</slip1>
+                <slip2>0</slip2>
+              </ode>
+              <torsional>
+                <coefficient>1</coefficient>
+                <patch_radius>0</patch_radius>
+                <surface_radius>0</surface_radius>
+                <use_patch_radius>1</use_patch_radius>
+                <ode>
+                  <slip>0</slip>
+                </ode>
+              </torsional>
+            </friction>
+            <bounce>
+              <restitution_coefficient>0</restitution_coefficient>
+              <threshold>1e+06</threshold>
+            </bounce>
+            <contact>
+              <collide_without_contact>0</collide_without_contact>
+              <collide_without_contact_bitmask>1</collide_without_contact_bitmask>
+              <collide_bitmask>1</collide_bitmask>
+              <ode>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+                <max_vel>0.01</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+              <bullet>
+                <split_impulse>1</split_impulse>
+                <split_impulse_penetration_threshold>-0.01</split_impulse_penetration_threshold>
+                <soft_cfm>0</soft_cfm>
+                <soft_erp>0.2</soft_erp>
+                <kp>1e+13</kp>
+                <kd>1</kd>
+              </bullet>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+      <model name='mud_box'>
+        <static>1</static>
+        <link name='link'>
+          <collision name='collision'>
+            <geometry>
+              <box>
+                <size>8 10 0.2</size>
+              </box>
+            </geometry>
+            <max_contacts>10</max_contacts>
+            <surface>
+              <contact>
+                <ode/>
+              </contact>
+              <bounce/>
+              <friction>
+                <torsional>
+                  <ode/>
+                </torsional>
+                <ode/>
+              </friction>
+            </surface>
+          </collision>
+          <visual name='visual_1'>
+            <pose frame=''>-2 2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_2'>
+            <pose frame=''>2 2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_3'>
+            <pose frame=''>2 -2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <visual name='visual_4'>
+            <pose frame=''>-2 -2.5 0 0 -0 0</pose>
+            <cast_shadows>0</cast_shadows>
+            <geometry>
+              <box>
+                <size>4 5 0.2</size>
+              </box>
+            </geometry>
+            <material>
+              <script>
+                <uri>model://mud_box/materials/scripts</uri>
+                <uri>model://mud_box/materials/textures</uri>
+                <name>vrc/mud</name>
+              </script>
+            </material>
+          </visual>
+          <self_collide>0</self_collide>
+          <enable_wind>0</enable_wind>
+          <kinematic>0</kinematic>
+        </link>
+        <pose frame=''>-1.30245 -11.7699 0.089896 0 -0 0.618553</pose>
+      </model>
+      <static>1</static>
+      <allow_auto_disable>1</allow_auto_disable>
+      <pose frame=''>-2.80494 -21.5711 0 0 -0 0</pose>
+    </model>
+  </world>
+</sdf>

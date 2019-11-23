@@ -1,0 +1,45 @@
+session_name: xmaxx_sim
+windows:
+  - window_name: xmaxx_sim
+    layout: tiled
+    shell_command_before:
+      - cd ~/ # run as a first command in all panes
+    panes:
+      - shell_command:
+        - roscore
+        - rosparam set use_sim_time true
+      - shell_command:
+        - sleep 3
+        - roslaunch racecar_gazebo racecar.launch world_name:=racecar_box
+      - shell_command:
+        - sleep 3
+        # - roslaunch controller_xmaxx controller_xmaxx.launch
+        - roslaunch controller_adaptiveclbf controller_adaptiveclbf.launch
+      - shell_command:
+        - sleep 10
+        - roslaunch controller_adaptiveclbf figure_eight.launch \
+      - shell_command:
+        - sleep 3
+        - roslaunch controller_adaptiveclbf encoder_odometry.launch 
+      - shell_command:
+        - sleep 3
+        - rosrun tf static_transform_publisher 0 0 0 0 0 0 base_link imu 100
+        # - roslaunch traxxas_2dnav xmaxx_configuration.launch
+      - shell_command:
+        - sleep 3
+        - roslaunch racecar_rviz view_racecar.launch
+        # - roslaunch traxxas_2dnav move_base_teb_xmaxx.launch
+      - shell_command:
+        - sleep 3
+        - rostopic echo /ackermann_cmd
+      - shell_command:
+        - sleep 3
+        - rostopic echo /downward/vio/odometry/pose/pose
+      - shell_command:
+        - sleep 3
+        - rostopic echo /downward/vio/odometry/twist/twist
+      - shell_command:
+        - sleep 3
+        # - rostopic pub -r 10 /ackermann_cmd \
+        # - rosrun dynamic_reconfigure dynparam set /adaptive_clbf use_model True \
+        - rqt
