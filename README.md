@@ -15,7 +15,7 @@ The following packages can be installed with `pip`:
 * `scipy`
 * `progress`
 * `osqp`
-* 'GPy`
+* `GPy`
 * `tensorflow`
 * `keras`
 * `matplotlib`
